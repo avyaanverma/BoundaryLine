@@ -30,7 +30,7 @@ const authPlaceholderSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      state.role = UserRole.VIEWER;
+      state.role = UserRole.SCORER;
       state.token = null;
       state.isAuthenticated = false;
     },
