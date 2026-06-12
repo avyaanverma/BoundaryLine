@@ -10,7 +10,6 @@ export const ScorerProjectedScore = () => {
   const currentRuns = activeInnings.runs;
 
   const crr = oversBowled > 0 ? currentRuns / oversBowled : 0;
-  
   // Projected score calculations
   const projectedAtCurrent = Math.round(currentRuns + crr * (totalOvers - oversBowled));
   const projectedAtTwelve = Math.round(currentRuns + 12 * (totalOvers - oversBowled));

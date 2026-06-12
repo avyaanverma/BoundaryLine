@@ -1,7 +1,8 @@
+import React from "react";
 import { BarChart3 } from "lucide-react";
 
 export const BatterTrendChart = () => {
-  // hardcoded data hai after some time we can change also yee bss visuals k liye hai
+  // Hardcoded values matching the mock visual columns in Batter SR Trend (Image 1)
   const data = [
     { label: "Over 1", sr: 110, active: false },
     { label: "Over 6", sr: 125, active: false },
@@ -21,7 +22,7 @@ export const BatterTrendChart = () => {
         Batter SR Trend
       </h3>
 
-      {/* Bar chart */}
+      {/* SVG Bar chart */}
       <div className="h-44 w-full flex items-end justify-between gap-2.5 pt-4 px-1 pb-1 relative">
         {data.map((item, idx) => {
           const heightPercent = (item.sr / maxSR) * 100;
@@ -54,5 +55,4 @@ export const BatterTrendChart = () => {
     </div>
   );
 };
-
 export default BatterTrendChart;
