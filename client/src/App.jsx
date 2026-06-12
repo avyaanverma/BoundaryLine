@@ -1,8 +1,8 @@
-import React from 'react'
+import { AdminLoginPage } from './features/admin-login'
 
 const App = () => {
   return (
-    <div>App</div>
+    <AdminLoginPage />
   )
 }
 
