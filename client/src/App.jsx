@@ -32,7 +32,7 @@ const BoundaryLineApp = () => {
           <div className="flex items-center gap-1.5 bg-zinc-950 px-2.5 py-1 rounded-md border border-white/5">
             <Users className="w-3.5 h-3.5 text-zinc-400" />
             <span className="text-zinc-400 font-sans pr-1">Pre-select Role:</span>
-            {["VIEWER", "SCORER", "ADMIN", "SUPER_ADMIN"].map((r) => (
+            {["SCORER", "ADMIN", "SUPER_ADMIN"].map((r) => (
               <button
                 key={r}
                 onClick={() => dispatch(setRole(UserRole[r]))}
@@ -42,7 +42,7 @@ const BoundaryLineApp = () => {
                     : "text-zinc-500 hover:text-white hover:bg-white/5"
                 }`}
               >
-                {r === "VIEWER" ? "Public" : r}
+                {r}
               </button>
             ))}
           </div>
