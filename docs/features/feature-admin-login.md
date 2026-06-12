@@ -3,7 +3,7 @@ Feature Added: BoundaryLine Admin Login Page
 Date: 12-06-2026
 
 Files Added:
-- client/src/features/admin-login/AdminLoginPage.jsx
+- client/src/pages/admin/AdminLoginPage.jsx
 - client/src/features/admin-login/components/BrandPanel.jsx
 - client/src/features/admin-login/components/LoginForm.jsx
 - client/src/features/admin-login/index.js
@@ -18,7 +18,7 @@ Components Added:
 AdminLoginPage
 - Renders the full admin login screen for BoundaryLine.
 - Combines the feature-owned brand panel and login form in a responsive split layout.
-- Can be used as the route/page entry for the admin authentication flow.
+- Lives under pages/admin and can be used as the route/page entry for the admin authentication flow.
 - Does not require props currently.
 
 BrandPanel
