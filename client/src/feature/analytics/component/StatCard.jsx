@@ -1,31 +1,32 @@
+
+
 function StatCard({
+    icon: Icon,
     title,
     value,
-    change,
-    changeColor,
-    borderColor,
-    valueColor
+    badge,
 }) {
     return (
-        <div
-            className={`bg-[#18191d] border border-gray-700 border-l-4 ${borderColor} rounded-xl p-5 min-w-[300px]`}
-        >
-            <p className="text-gray-400 text-sm mb-2">
-                {title}
-            </p>
+        <div className="bg-[#171717] border border-lime-500/20 rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
+            <div className="flex items-start justify-between">
+                <Icon className="text-lime-400" size={28} />
 
-            <div className="flex items-center justify-between">
-                <h2 className={`text-4xl font-bold ${valueColor}`}>
-                    {value}
-                </h2>
-
-                <span className={`font-medium ${changeColor}`}>
-                    {change}
+                <span className="text-lime-400 text-sm font-medium">
+                    {badge}
                 </span>
+            </div>
+
+            <div className="mt-8">
+                <h3 className="text-gray-300 text-3xl font-mono mb-3">
+                    {title}
+                </h3>
+
+                <p className="text-6xl font-bold text-lime-400">
+                    {value}
+                </p>
             </div>
         </div>
     );
 }
 
 export default StatCard;
-

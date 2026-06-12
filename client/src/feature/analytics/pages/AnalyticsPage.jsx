@@ -1,25 +1,46 @@
 import StatCards from "../component/StatsCards";
-import ApiUsagesCard from '../component/ApiUsageCard'
-import GrowthChart from '../component/GrowthChart'
-import AdminManagement from "../component/AdminManagement";
 import AnalyticsHearder from "../component/AnalyticsHearder";
+import AnalyticsFilters from "../component/AnalyticsFilters";
+import TeamLeaderboard from "../component/TeamLeaderboard";
+import WicketDistribution from "../component/WicketDistribution";
+import TournamentMVPs from "../component/BestPerformer";
+import TournamentChart from "../component/TournamentChart";
+import { useState } from "react";
 
 
 function AnalyticsPage() {
+    const [selectedTeam, setSelectedTeam] =
+        useState("Mumbai Strikers");
     return (
-        <div className="grid gap-6 w-[100%] bg-[#111316] p-5">
-            <AnalyticsHearder />
-            <StatCards />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    <GrowthChart />
-                </div>
+        <div className="p-8 space-y-8 bg-[#121414]">
 
-                <div>
-                    <ApiUsagesCard />
-                </div>
+            {/* Header */}
+            <AnalyticsHearder />
+
+            {/* Filters */}
+            <AnalyticsFilters
+                selectedTeam={selectedTeam}
+                setSelectedTeam={setSelectedTeam}
+            />
+
+            {/* Stats */}
+            <StatCards
+                selectedTeam={selectedTeam}
+
+
+            />
+
+            {/* Leaderboard */}
+            <TeamLeaderboard />
+
+            {/* Charts Row */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                <TournamentChart />
+                <WicketDistribution />
             </div>
-            <AdminManagement />
+
+            {/* MVP Section */}
+            <TournamentMVPs />
 
         </div>
     )
