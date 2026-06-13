@@ -180,6 +180,7 @@ Route wiring:
 
 - Mount team routes in `server/src/app.js`
 - Mount match routes in `server/src/app.js`
+- Keep `/api/*` as the backend task prefix and expose `/v1/*` as a frontend-compatible alias
 - Keep `/health` working
 
 Commit target:
@@ -210,6 +211,8 @@ Manual API smoke checks after server runs:
 GET /health
 GET /api/teams
 GET /api/matches
+GET /v1/teams
+GET /v1/matches
 ```
 
 ## Notes

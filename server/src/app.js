@@ -14,6 +14,14 @@ function healthHandler(req, res) {
     });
 }
 
+function registerFeatureRoutes(app, prefix) {
+    // What: mount the feature routes under one API prefix.
+    // Why: frontend clients currently expect `/v1/*`, while backend docs also mention `/api/*`.
+    // How: reuse the same route modules for both prefixes so controllers stay single-source.
+    app.use(`${prefix}/teams`, teamRoute);
+    app.use(`${prefix}/matches`, matchRoute);
+}
+
 export default function createApp() {
     // What: Create the Express app instance used by both dev server and tests.
     // Why: Keeping app creation separate from listen/connect makes route wiring importable without side effects.
@@ -28,8 +36,8 @@ export default function createApp() {
 
     app.get("/health", healthHandler);
 
-    app.use("/api/teams", teamRoute);
-    app.use("/api/matches", matchRoute);
+    registerFeatureRoutes(app, "/api");
+    registerFeatureRoutes(app, "/v1");
 
     app.use(notFoundHandler);
     app.use(errorHandler);
