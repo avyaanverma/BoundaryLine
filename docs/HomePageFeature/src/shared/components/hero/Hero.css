@@ -1,0 +1,244 @@
+.hero {
+  width: 100%;
+  min-height: 90vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 40px 30px;
+
+  background: #121417;
+  color: white;
+}
+
+/* ==========================
+   Left Section
+========================== */
+
+.hero-left {
+  width: 55%;
+}
+
+.live-badge {
+  display: inline-block;
+
+  padding: 10px 18px;
+
+  border-radius: 999px;
+
+  background: rgba(155, 225, 93, 0.1);
+  border: 1px solid rgba(155, 225, 93, 0.3);
+
+  color: #9be15d;
+  font-size: 14px;
+  font-weight: 600;
+
+  margin-bottom: 25px;
+
+  animation: pulseLive 1.5s infinite;
+}
+
+@keyframes pulseLive {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.hero-left h1 {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.hero-left h1 span {
+  color: #9be15d;
+}
+
+.hero-left p {
+  max-width: 650px;
+
+  font-size: 1.1rem;
+  line-height: 1.7;
+
+  color: #cbd5e1;
+
+  margin-bottom: 35px;
+}
+   /* Buttons */
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-primary {
+  padding: 16px 28px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #9be15d;
+  color: #121417;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  border: 1px solid #9be15d;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  border: 1px solid #9be15d;
+  color: #9be15d;
+}
+
+.btn-secondary {
+  padding: 16px 28px;
+
+  border-radius: 12px;
+  border: 1px solid #9be15d;
+
+  background: transparent;
+  color: #9be15d;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #9be15d;
+  color: #121417;
+}
+
+/* ==========================
+   Right Section
+========================== */
+
+.hero-right {
+  width: 45%;
+
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 650px;
+
+  padding: 18px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(10px);
+}
+
+.dashboard-header {
+  margin-bottom: 15px;
+}
+
+.dashboard-header p {
+  color: #bcbcbc;
+  font-size: 14px;
+}
+
+.dashboard-image {
+  width: 100%;
+  display: block;
+
+  border-radius: 16px;
+
+  transition: transform 0.4s ease;
+}
+
+.dashboard-image:hover {
+  transform: scale(1.03);
+}
+
+/* ==========================
+   Tablet
+========================== */
+
+@media (max-width: 1024px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+
+    gap: 50px;
+  }
+
+  .hero-left,
+  .hero-right {
+    width: 100%;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-left h1 {
+    font-size: 3rem;
+  }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 30px 20px;
+  }
+
+  .hero-left h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero-left p {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+
+/* ==========================
+   Small Mobile
+========================== */
+
+@media (max-width: 480px) {
+  .hero-left h1 {
+    font-size: 2rem;
+  }
+
+  .live-badge {
+    font-size: 12px;
+  }
+
+  .hero-left p {
+    font-size: 0.95rem;
+  }
+}

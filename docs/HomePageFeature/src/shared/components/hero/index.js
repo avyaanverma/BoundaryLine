@@ -1,0 +1,1 @@
+import Hero from "../shared/components/Hero";

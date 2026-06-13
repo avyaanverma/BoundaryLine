@@ -1,0 +1,253 @@
+/* =======================
+   Footer
+======================= */
+
+.footer {
+  background: #040b14;
+  color: #fff;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =======================
+   Main Container
+======================= */
+
+.footer-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 60px 20px;
+
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 40px;
+}
+
+/* =======================
+   Brand
+======================= */
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.logo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo-wrapper h2 {
+  color: #9be15d;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.footer-brand p {
+  color: #cbd5e1;
+  line-height: 1.7;
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+/* =======================
+   Social Icons
+======================= */
+
+.social-icons {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.social-icons svg {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.social-icons svg:hover {
+  color: #9be15d;
+  transform: translateY(-4px);
+}
+
+/* =======================
+   Footer Columns
+======================= */
+
+.footer-column h3,
+.footer-app h3 {
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.footer-column ul {
+  list-style: none;
+}
+
+.footer-column li {
+  margin-bottom: 14px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.footer-column li:hover {
+  color: #9be15d;
+  transform: translateX(5px);
+}
+
+/* =======================
+   App Store Cards
+======================= */
+
+.store-card {
+  background: #111827;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 15px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  margin-bottom: 14px;
+
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.store-card:hover {
+  border-color: #9be15d;
+  transform: translateY(-4px);
+}
+
+.store-card small {
+  display: block;
+  color: #9ca3af;
+  font-size: 0.7rem;
+}
+
+.store-card h6 {
+  font-size: 1rem;
+  margin-top: 4px;
+  color: white;
+}
+
+.play-text {
+  font-weight: 600;
+}
+
+.google {
+  justify-content: space-between;
+}
+
+.google-text {
+  text-align: right;
+}
+
+.google-text h6 {
+  font-size: 1rem;
+}
+
+/* =======================
+   Bottom
+======================= */
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.footer-bottom p {
+  color: #9be15d;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  color: #d1d5db;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #9be15d;
+}
+
+/* =======================
+   Tablet
+======================= */
+
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =======================
+   Mobile
+======================= */
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* =======================
+   Small Mobile
+======================= */
+
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 40px 15px;
+  }
+
+  .logo-wrapper h2 {
+    font-size: 1.5rem;
+  }
+
+  .footer-column h3,
+  .footer-app h3 {
+    font-size: 1.1rem;
+  }
+
+  .store-card {
+    padding: 12px;
+  }
+
+  .footer-links {
+    gap: 14px;
+  }
+}

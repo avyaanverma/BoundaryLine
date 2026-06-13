@@ -1,0 +1,351 @@
+/* =========================
+   OVERVIEW SECTION
+========================= */
+
+.overview-section {
+  background: #070d16;
+  padding: 60px 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.overview-column {
+  height: 300px;
+  overflow-y: auto;
+}.overview-column::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overview-column::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overview-column::-webkit-scrollbar-thumb {
+  background: #070d16;
+  border-radius: 20px;
+}
+
+.overview-column::-webkit-scrollbar-thumb:hover {
+  background: #070d16
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.section-header h2 {
+  color: white;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.section-header button {
+  background: none;
+  border: none;
+  color: #9be15d;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.section-header button:hover {
+  transform: translateX(5px);
+  color: #b6ff77;
+}
+
+/* =========================
+   UPCOMING CARD
+========================= */
+
+.upcoming-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(17, 23, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  padding: 22px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.45s cubic-bezier(.2,.8,.2,1),
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+
+  animation: fadeUp .7s ease forwards;
+}
+
+/* Shine Sweep */
+
+.upcoming-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+
+  transform: skewX(-25deg);
+  transition: .8s;
+}
+
+.upcoming-card:hover::before {
+  left: 140%;
+}
+
+.upcoming-card:hover {
+  transform:
+    translateY(-10px)
+    scale(1.02);
+
+  border-color: rgba(155,225,93,.4);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.35),
+    0 0 25px rgba(155,225,93,.15);
+}
+
+/* =========================
+   DATE BOX
+========================= */
+
+.date-box {
+  width: 75px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,.08);
+  margin-right: 20px;
+  transition: all .4s ease;
+}
+
+.upcoming-card:hover .date-box {
+  transform: scale(1.08);
+}
+
+.date-box h3 {
+  color: #9be15d;
+  font-size: 32px;
+  transition: all .4s ease;
+}
+
+.upcoming-card:hover .date-box h3 {
+  text-shadow:
+    0 0 10px rgba(155,225,93,.8),
+    0 0 20px rgba(155,225,93,.4);
+}
+
+.date-box span {
+  color: #c0c0c0;
+}
+
+/* =========================
+   MATCH INFO
+========================= */
+
+.match-info {
+  flex: 1;
+}
+
+.match-info h4 {
+  color: white;
+  font-size: 20px;
+  transition: all .4s ease;
+}
+
+.upcoming-card:hover .match-info h4 {
+  color: #9be15d;
+}
+
+.match-info p {
+  color: #9e9e9e;
+  margin-top: 6px;
+}
+
+/* =========================
+   BELL ICON
+========================= */
+
+.bell-icon {
+  color: white;
+  font-size: 24px;
+  transition: all .4s ease;
+}
+
+.upcoming-card:hover .bell-icon {
+  color: #9be15d;
+  animation: bellRing .8s ease;
+}
+
+/* =========================
+   RESULT CARD
+========================= */
+
+.result-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(17,23,34,.9);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(10px);
+  transition:
+    transform .45s cubic-bezier(.2,.8,.2,1),
+    box-shadow .45s ease,
+    border-color .45s ease;
+  animation: fadeUp .7s ease forwards;
+}
+
+/* Shine Effect */
+
+.result-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.08),
+    transparent
+  );
+
+  transform: skewX(-25deg);
+
+  transition: .8s;
+}
+
+.result-card:hover::before {
+  left: 140%;
+}
+
+.result-card:hover {
+  transform:
+    translateY(-10px)
+    scale(1.02);
+
+  border-color: rgba(155,225,93,.4);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.35),
+    0 0 25px rgba(155,225,93,.15);
+}
+
+/* =========================
+   RESULT CONTENT
+========================= */
+
+.tournament {
+  color: #a5a5a5;
+  margin-bottom: 8px;
+}
+
+.result-left h4 {
+  color: white;
+  font-size: 20px;
+  transition: all .4s ease;
+}
+
+.result-card:hover .result-left h4 {
+  color: #9be15d;
+}
+
+.result-right {
+  text-align: right;
+}
+
+.winner-score {
+  color: #9be15d;
+  font-weight: 700;
+  margin-bottom: 8px;
+
+  transition: all .4s ease;
+}
+
+.result-card:hover .winner-score {
+  transform: scale(1.08);
+}
+
+.result-right p:last-child {
+  color: #d4d4d4;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes bellRing {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(15deg);
+  }
+
+  40% {
+    transform: rotate(-15deg);
+  }
+
+  60% {
+    transform: rotate(10deg);
+  }
+
+  80% {
+    transform: rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+  .overview-section {
+    grid-template-columns: 1fr;
+    padding: 40px 20px;
+  }
+
+  .section-header h2 {
+    font-size: 36px;
+  }
+
+  .match-info h4,
+  .result-left h4 {
+    font-size: 22px;
+  }
+}
