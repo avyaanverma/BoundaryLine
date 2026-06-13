@@ -10,7 +10,9 @@ const envSchema = z.object({
     LOGGER_LEVEL: z.string().default(appConstant.LOGGER_LEVEL),
     MORGAN_LOGGER : z.string().default(appConstant.MORGAN_LOGGER),
     RATELIMIT_WINDOWMS: z.coerce.number().default(appConstant.RATELIMIT_WINDOWMS),
-    RATELIMIT_MAX: z.coerce.number().default(appConstant.RATELIMIT_MAX)
+    RATELIMIT_MAX: z.coerce.number().default(appConstant.RATELIMIT_MAX),
+    CORS_ORIGIN: z.string().default(appConstant.CORS_ORIGIN),
+    DATA_LIMIT: z.string().default(appConstant.DATA_LIMIT)
 })
 
 // parsing env for correct format

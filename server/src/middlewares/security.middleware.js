@@ -6,9 +6,15 @@ import express from "express";
 import env from "../config/env.js"
 
 export default function securityMiddleware(app){
+    // adding cors middleware
+    app.use(cors({
+        origin: env.CORS_ORIGIN.split(",").map((origin)=> origin.trim()),
+        credentials: true
+    }));
+
     // adding security headers
     app.use(helmet());
-
+    
     // http parameter pollution check
     app.use(hpp());
 
@@ -21,8 +27,8 @@ export default function securityMiddleware(app){
     }))
 
     // parsing req.body
-    app.use(express.json({limit: "5mb"})); // limiting req.body to max 5mb
-    app.use(express.urlencoded({extended: true, limit: "3mb"})) // limitng html form data to max 10mb
+    app.use(express.json({limit: env.DATA_LIMIT})); // limiting req.body to max 5mb
+    app.use(express.urlencoded({extended: true, limit: env.DATA_LIMIT})) // limiting html form data to max 5mb
 
     // adding compression middleware to reduce the size of the response bodies
     app.use(compression());
