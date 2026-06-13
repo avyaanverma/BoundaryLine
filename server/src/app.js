@@ -9,5 +9,11 @@ export default function createApp(){
         app.use(morgan("dev"));
     }
 
+    app.get("/health", (req,res)=>{
+        res.json({
+            message: "healthy"
+        })
+    })
+
     return app;
 };
