@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import {z} from "zod";
 import appConstant from "../constant/app.constant.js";
 dotenv.config();
+
 // creating zod object to validate env Schema
 const envSchema = z.object({
     PORT: z.coerce.number().default(appConstant.PORT),
@@ -21,4 +22,5 @@ const parsed = envSchema.safeParse(process.env);
 if(!parsed.success){
     console.error(parsed.error.format());
 }
+
 export default parsed.data;

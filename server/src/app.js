@@ -13,11 +13,14 @@ export default function createApp(){
 
     securityMiddleware(app); // security middleware added 
 
+    // app.use(pass)
+    
     /**
      * @method GET
      * @route /health
      * @description to check the status of the server
-     * */ 
+     * */
+
     app.get("/health", (req,res)=>{
         res.json({
             message: "healthy"
