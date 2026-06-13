@@ -1,9 +1,9 @@
-import { TestRouter } from './routes/TestRouter'
+import React from "react";
+import CricPulse from "./features/landing page/pages/LandingPage";
+import ScorerWorkspace from "./features/scorer-console/pages/ScorerWorkspace";
 
 const App = () => {
-  return (
-    <TestRouter />
-  )
-}
+  return <div>App</div>;
+};
 
-export default App
+export default App;
