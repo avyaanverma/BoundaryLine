@@ -1,6 +1,6 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import matchReducer from "../../features/scoreboard/store/mathSlice.js";
-import { UserRole } from "../../type.js";
+import { UserRole } from "../../features/scorer-console/pages/type.js";
 
 const authPlaceholderSlice = createSlice({
   name: "auth",
@@ -10,7 +10,7 @@ const authPlaceholderSlice = createSlice({
       username: "boundaryline_scorer",
       email: "ommhatre379@gmail.com",
     },//s
-    role: UserRole.SCORER, // Default to SCORER so scorer controls are active!
+    role: UserRole.ADMIN, // Default to SCORER so scorer controls are active!
     token: "jwt-test-token",
     isAuthenticated: true,
   },
@@ -30,7 +30,7 @@ const authPlaceholderSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      state.role = UserRole.VIEWER;
+      state.role = UserRole.SCORER;
       state.token = null;
       state.isAuthenticated = false;
     },

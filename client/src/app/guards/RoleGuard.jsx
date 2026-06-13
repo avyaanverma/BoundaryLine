@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { UserRole } from "../../type";
+import { UserRole } from "../../features/scorer-console/pages/type.js";
 
 /**
  * Reusable utility to check if a user role matches permission policies.

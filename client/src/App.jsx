@@ -1,11 +1,12 @@
-import React from "react";
-import { RootProvider } from "./app/providers/RootProviders.jsx";
-import BoundaryLineConsole from "./features/boundryline console/pages/BoundryLineConsole.jsx";
+import RootProvider from "./app/providers/RootProviders.jsx";
+import AppRoutes from "./routes/AppRoutes.jsx";
 
-export default function App() {
+const App = () => {
   return (
     <RootProvider>
-      <BoundaryLineConsole />
+      <AppRoutes />
     </RootProvider>
   );
-}
+};
+
+export default App;
