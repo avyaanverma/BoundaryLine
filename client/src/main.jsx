@@ -1,9 +1,7 @@
-
-import { createRoot } from "react-dom/client"
+import { createRoot } from "react-dom/client";
 import "./index.css";
-import AnalyticsPage from './feature/analytics/pages/AnalyticsPage.jsx'
-import PointsTable from "./feature/analytics/pages/PointsTable.jsx";
+import App from "./App.jsx";
 
-createRoot(document.getElementById('root')).render(
-    <PointsTable />
-)
+createRoot(document.getElementById("root")).render(
+  <App />
+);
