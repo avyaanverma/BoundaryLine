@@ -4,6 +4,7 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import compression from "compression";
 import helmet from "helmet";
+import hpp from "hpp";
 
 export default function createApp(){
     const app = express();
@@ -15,6 +16,8 @@ export default function createApp(){
     // adding security headers
     app.use(helmet());
 
+    // http parameter pollution check
+    app.use(hpp());
 
     // rate limiter added to ensure maximum 100 requests per 15 minutes per ip address
     app.use(rateLimit({
