@@ -1,31 +1,32 @@
 import express from "express";
-import env from "./config/env.js"
+import env from "./config/env.js";
 import morgan from "morgan";
 import securityMiddleware from "./middlewares/security.middleware.js";
+import googleOAuthMiddleware from "./middlewares/googleOAuth.middleware.js";
 
-export default function createApp(){
-    const app = express();
+export default function createApp() {
+  const app = express();
 
-    // this code will only work in production
-    if(env.NODE_ENV === "development"){
-        app.use(morgan(env.MORGAN_LOGGER));
-    }
+  // this code will only work in production
+  if (env.NODE_ENV === "development") {
+    app.use(morgan(env.MORGAN_LOGGER));
+  }
 
-    securityMiddleware(app); // security middleware added 
+  securityMiddleware(app); // security middleware added
+  googleOAuthMiddleware(app);   // google auth middleware
 
-    // app.use(pass)
-    
-    /**
-     * @method GET
-     * @route /health
-     * @description to check the status of the server
-     * */
+  
+  /**
+   * @method GET
+   * @route /health
+   * @description to check the status of the server
+   * */
 
-    app.get("/health", (req,res)=>{
-        res.json({
-            message: "healthy"
-        })
-    })
+  app.get("/health", (req, res) => {
+    res.json({
+      message: "healthy",
+    });
+  });
 
-    return app;
-};
+  return app;
+}
