@@ -7,7 +7,7 @@ export default function createApp(){
     const app = express();
 
     // this code will only work in production
-    if(env.NODE_ENV === "production"){
+    if(env.NODE_ENV === "development"){
         app.use(morgan(env.MORGAN_LOGGER));
     }
 
