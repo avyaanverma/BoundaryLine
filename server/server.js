@@ -1,5 +1,12 @@
-import app from "./src/app.js";
+import createApp from "./src/app.js";
 
-app.listen(3000, ()=>{
-    console.log("Server is running on http://localhost:3000");
-});
+
+function startServer(){
+    const app = createApp();
+    
+    app.listen(3000, ()=>{
+        console.log("Server listening on http://localhost:3000");
+    });
+}
+
+startServer();

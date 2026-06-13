@@ -1,5 +1,7 @@
 import express from "express";
 
-const app = express();
+export default function createApp(){
+    const app = express();
 
-export default app;
+    return app;
+};
