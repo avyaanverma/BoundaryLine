@@ -6,6 +6,9 @@ import ScorerConsolePage from "../features/scorer-console/pages/ScorerConsolePag
 import ScorerWorkspace from "../features/scorer-console/pages/ScorerWorkspace.jsx";
 import { RoleGuard } from "../app/guards/RoleGuard.jsx";
 import { UserRole } from "../features/scorer-console/pages/type.js";
+import AnalyticsPage from "../feature/analytics/pages/AnalyticsPage.jsx";
+import MainLayout from '../layout/MainLayout.jsx'
+import DuplicateFixture from "../features/fixtures/pages/duplicateFixture.jsx";
 
 const ComingSoonPage = ({ title, description }) => {
   return (
@@ -70,6 +73,8 @@ const router = createBrowserRouter([
     path: "/workspace",
     element: <ScorerWorkspace />,
   },
+
+
   {
     path: "/admin",
     element: (
@@ -130,6 +135,29 @@ const router = createBrowserRouter([
     path: "*",
     element: <Navigate to="/" replace />,
   },
+
+  // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke 
+
+  {
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/analytics",
+        element: <AnalyticsPage />
+      },
+      {
+        path: "/matches",
+        element: <FixturesPage />
+      },
+      {
+        path: "testfx",
+        element: <DuplicateFixture />
+      }
+    ]
+  }
+
+  //....
+
 ]);
 
 const AppRoutes = () => {

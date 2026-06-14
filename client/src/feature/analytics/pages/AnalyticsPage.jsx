@@ -12,7 +12,7 @@ function AnalyticsPage() {
     const [selectedTeam, setSelectedTeam] =
         useState("Mumbai Strikers");
     return (
-        <div className="p-8 space-y-8 bg-[#121414]">
+        <div className="p-8 space-y-8 bg-[#121414] w-[100%]">
 
             {/* Header */}
             <AnalyticsHearder />
