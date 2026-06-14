@@ -8,7 +8,7 @@ import userRouter from "./modules/user/user.route.js";
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
 import commentaryRouter from "./modules/commentary/commentary.route.js"
-import { errorHandler, notFoundHandler } from "./shared/middleware/errorHandler.js";
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
 
 
 function registerFeatureRoutes(app, prefix) {

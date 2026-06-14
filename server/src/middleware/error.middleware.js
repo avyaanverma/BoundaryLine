@@ -1,10 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import NotFound from "../error/NotFound.js";
+import NotFound from "../shared/error/NotFound.js";
 
 export function notFoundHandler(req, _res, next) {
   // What: convert unmatched requests into a consistent application error.
   // Why: unknown routes should return JSON instead of Express's default HTML.
-  // How: forward a 404 AppError into the shared error handler.
+  // How: forward a 404 AppError into the global error handler.
   next(new NotFound(`Route not found: ${req.originalUrl}`));
 }
 
@@ -21,9 +21,6 @@ export function errorHandler(error, _req, res, _next) {
     console.error(error);
   }
 
-  // What: include details only for trusted operational errors.
-  // Why: unexpected errors may carry internal data that should not leak to clients.
-  // How: conditionally spread details after checking `isOperational`.
   res.status(statusCode).json({
     message,
     ...(details ? { details } : {}),
