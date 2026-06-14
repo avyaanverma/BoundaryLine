@@ -9,6 +9,10 @@ import { UserRole } from "../features/scorer-console/pages/type.js";
 import AnalyticsPage from "../feature/analytics/pages/AnalyticsPage.jsx";
 import MainLayout from '../layout/MainLayout.jsx'
 import DuplicateFixture from "../features/fixtures/pages/duplicateFixture.jsx";
+import UserRegisterForm from "../features/auth/user/component/UserRegisterForm.jsx";
+import UserLoginForm from "../features/auth/user/component/UserLoginForm.jsx";
+import AdminRegisterForm from "../features/auth/admin/components/AdminRegisterForm.jsx";
+import AdminLoginForm from "../features/auth/admin/components/AdminLoginForm.jsx";
 
 const ComingSoonPage = ({ title, description }) => {
   return (
@@ -152,8 +156,27 @@ const router = createBrowserRouter([
       {
         path: "testfx",
         element: <DuplicateFixture />
-      }
+      },
+      {
+        path: "adminlogin",
+        element: <AdminLoginForm />
+      },
+      {
+        path: "register",
+        element: <AdminRegisterForm />
+      },
+      {
+        path: "userregiste",
+        element: <UserRegisterForm />
+      },
+
+
     ]
+
+  },
+  {
+    path: "userlogin",
+    element: <UserLoginForm />
   }
 
   //....

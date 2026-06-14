@@ -6,7 +6,7 @@ const initialFormState = {
   remember: false,
 }
 
-export const LoginForm = () => {
+const AdminLoginForm = () => {
   const [formState, setFormState] = useState(initialFormState)
   const [message, setMessage] = useState('')
 
@@ -31,7 +31,6 @@ export const LoginForm = () => {
       setMessage('Password must be at least 6 characters.')
       return
     }
-
     setMessage('Login details look ready for API integration.')
   }
 
@@ -118,7 +117,6 @@ export const LoginForm = () => {
           </p>
         )}
       </form>
-
       <div className="my-8 flex items-center gap-4">
         <span className="h-px flex-1 bg-[#343b37]" />
         <span className="text-sm font-semibold uppercase text-[#a3aca5]">Or continue with</span>
@@ -148,3 +146,5 @@ export const LoginForm = () => {
     </div>
   )
 }
+
+export default AdminLoginForm

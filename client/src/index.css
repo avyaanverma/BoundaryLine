@@ -104,3 +104,19 @@ input {
   transform: translateX(-50%);
   box-shadow: 0 0 0 2px rgba(242, 245, 243, 0.12);
 }
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pulse {
+  animation: slideFadeIn 0.25s ease-out;
+}
