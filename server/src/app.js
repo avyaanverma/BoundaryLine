@@ -7,6 +7,7 @@ import authRouter from "./modules/auth/auth.route.js";
 import userRouter from "./modules/user/user.route.js";
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
+import commentaryRouter from "./modules/commentary/commentary.route.js"
 
 
 function registerFeatureRoutes(app, prefix) {
@@ -17,6 +18,8 @@ function registerFeatureRoutes(app, prefix) {
     app.use(`{prefix}/auth`, authRouter);
     app.use(`${prefix}/teams`, teamRoute);
     app.use(`${prefix}/matches`, matchRoute);
+    app.use(`${prefix}/commentary`, commentaryRouter);
+
 }
   
 export default function createApp() {
@@ -31,10 +34,7 @@ export default function createApp() {
   }
 
   securityMiddleware(app); // security middleware added
-  googleOAuthMiddleware(app); // google auth middleware
-
-  app.use("/api/auth", authRouter);
-   
+  googleOAuthMiddleware(app); // google auth middleware   
   
   registerFeatureRoutes(app, "/api");
 

@@ -1,7 +1,7 @@
 import UserService from "./user.service.js";
 
 export default class UserController{
-    contructor(){
+    constructor(){
         this.userService = new UserService();
     }
 
