@@ -1,11 +1,11 @@
-import * as commentaryRepository from "./commentary.repository.js";
+import commentaryRepository from "./commentary.respository.js"
 import { Match } from "../shared/models/reference.model.js";
 import { BadRequestError, NotFoundError } from "../../shared/errors/index.js";
-import { logger } from "../../shared/util/Logger.js";
+import { logger } from "../../shared/utils/logger.js";
 import { emitToMatch } from "../../shared/socket/emitToMatch.js";
 import { Commentary } from "./commentary.model.js";
 
-class ensureLiveMatch {
+class CommentaryService {
   constructor() {
     this.commentaryRepository = commentaryRepository;
   }
@@ -18,7 +18,7 @@ class ensureLiveMatch {
     const match = await Match.findOne({
       //finds the data from the databse
       _id: matchId,
-      isDeleted: flase,
+      isDeleted: false,
     });
 
     if (!match) {
@@ -108,12 +108,12 @@ class ensureLiveMatch {
       {
         commentaryId: id,
       },
-      "Deleting comentary entry",
+      "Deleting commentary  entry",
     );
 
-    const comentary = await this.commentaryRepository.findById(id); //jo commentary delete karna hai vo find karega
+    const commentary  = await this.commentaryRepository.findById(id); //jo commentary delete karna hai vo find karega
 
-    if (!comentary) {
+    if (!commentary ) {
       logger.warn({ commentaryId: id }, "Commentary entry not found");
       throw new NotFoundError("Commentary entry not found");
     }
@@ -132,9 +132,9 @@ class ensureLiveMatch {
     );
 
     // socket emit: live cliens ko delte event bhejte hai
-    emitToMatch(comentary.matchId.toString(), "commentary.deleted", { id });
+    emitToMatch(commentary .matchId.toString(), "commentary.deleted", { id });
 
-    return comentary;
+    return commentary ;
   }
 }
 
