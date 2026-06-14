@@ -5,10 +5,12 @@ import securityMiddleware from "./middleware/security.middleware.js";
 import googleOAuthMiddleware from "./middleware/googleOAuth.middleware.js";
 import authRouter from "./modules/auth/auth.route.js";
 import userRouter from "./modules/user/user.route.js";
+import healthRouter from "./modules/health/health.route.js"
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
 import commentaryRouter from "./modules/commentary/commentary.route.js"
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
+import HealthController from "./modules/health/health.controller.js";
 
 
 function registerFeatureRoutes(app, prefix) {
@@ -40,18 +42,8 @@ export default function createApp() {
   registerFeatureRoutes(app, "/api");
   registerFeatureRoutes(app, "/api/v1");
 
-  /**
-   * @method GET
-   * @route /health
-   * @description to check the status of the server
-   * */
-
-  app.get("/health", (req, res) => {
-    res.json({
-      message: "healthy",
-    });
-  });
-
+  
+  app.use(healthRouter);
   app.use(notFoundHandler);
   app.use(errorHandler);
 
