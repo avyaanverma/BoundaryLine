@@ -1,4 +1,4 @@
-import env from "../config/env.js"
+import env from "../../config/env.js"
 import pino from "pino";
 import morgan from "morgan";
 
