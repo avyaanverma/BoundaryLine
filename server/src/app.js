@@ -3,8 +3,9 @@ import env from "./config/env.js";
 import morgan from "morgan";
 import securityMiddleware from "./middlewares/security.middleware.js";
 import googleOAuthMiddleware from "./middlewares/googleOAuth.middleware.js";
-import userRouter from "./modules/user/user.route.js"
-import authRouter from "./modules/auth/auth.route.js"
+import userRouter from "./modules/user/user.route.js";
+import authRouter from "./modules/auth/auth.route.js";
+import commentaryRouter from "./modules/commentary/commentary.route.js"
 
 export default function createApp() {
   const app = express();
@@ -15,18 +16,19 @@ export default function createApp() {
   }
 
   securityMiddleware(app); // security middleware added
-  googleOAuthMiddleware(app);   // google auth middleware
+  googleOAuthMiddleware(app); // google auth middleware
 
+  app.use("/api/users", userRouter);
 
-  app.use("/api/users", userRouter )
-
-  app.use("/api/auth", authRouter)
+  app.use("/api/auth", authRouter);
+  
+  app.use("/api/commentary", commentaryRouter);
 
   /**
    * @method GET
    * @route /health
    * @description to check the status of the server
-   * */ 
+   * */
 
   app.get("/health", (req, res) => {
     res.json({
