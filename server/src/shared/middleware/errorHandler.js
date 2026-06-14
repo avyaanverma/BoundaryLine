@@ -1,10 +1,11 @@
-import AppError from "../errors/AppError.js";
+import AppError from "../error/AppError.js";
+import NotFound from "../error/NotFound.js";
 
 export function notFoundHandler(req, _res, next) {
   // What: convert unmatched requests into a consistent application error.
   // Why: unknown routes should return JSON instead of Express's default HTML.
   // How: forward a 404 AppError into the shared error handler.
-  next(AppError.notFound(`Route not found: ${req.originalUrl}`));
+  next(new NotFound(`Route not found: ${req.originalUrl}`));
 }
 
 export function errorHandler(error, _req, res, _next) {
