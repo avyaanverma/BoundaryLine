@@ -1,4 +1,5 @@
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
+import ApiResponse from "../../shared/utils/ApiResponse.js";
 import TeamService from "./team.service.js";
 
 class TeamController {
@@ -15,10 +16,7 @@ class TeamController {
     // How: call the service and wrap the result in a consistent success response.
     const teams = await this.teamService.listTeams();
 
-    res.json({
-      success: true,
-      data: teams,
-    });
+    return new ApiResponse(200, "Teams fetched successfully", teams).send(res);
   });
 
   getTeam = asyncHandler(async (req, res) => {
@@ -27,10 +25,7 @@ class TeamController {
     // How: read the validated route id and ask the service for the team.
     const team = await this.teamService.getTeamById(req.validated.params.id);
 
-    res.json({
-      success: true,
-      data: team,
-    });
+    return new ApiResponse(200, "Team fetched successfully", team).send(res);
   });
 
   createTeam = asyncHandler(async (req, res) => {
@@ -39,10 +34,7 @@ class TeamController {
     // How: pass validated body data to the service and return 201 Created.
     const team = await this.teamService.createTeam(req.validated.body);
 
-    res.status(201).json({
-      success: true,
-      data: team,
-    });
+    return new ApiResponse(201, "Team created successfully", team).send(res);
   });
 
   updateTeam = asyncHandler(async (req, res) => {
@@ -54,10 +46,7 @@ class TeamController {
       req.validated.body,
     );
 
-    res.json({
-      success: true,
-      data: team,
-    });
+    return new ApiResponse(200, "Team updated successfully", team).send(res);
   });
 
   deleteTeam = asyncHandler(async (req, res) => {
@@ -66,10 +55,7 @@ class TeamController {
     // How: soft-delete through the service and return the deleted team snapshot.
     const team = await this.teamService.deleteTeam(req.validated.params.id);
 
-    res.json({
-      success: true,
-      data: team,
-    });
+    return new ApiResponse(200, "Team deleted successfully", team).send(res);
   });
 }
 

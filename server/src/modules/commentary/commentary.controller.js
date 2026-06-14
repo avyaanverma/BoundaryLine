@@ -1,9 +1,6 @@
 import commentaryService from "./commentary.service.js";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
-
-import express from "express";
-import { success } from "zod";
-import data from "../../config/env.js";
+import ApiResponse from "../../shared/utils/ApiResponse.js";
 
 export default class CommentaryController {
   constructor() {
@@ -23,11 +20,7 @@ export default class CommentaryController {
       userId,
     );
 
-    return res.status(201).json({
-      success: true,
-      mesage: "Commmentary added successfully",
-      data: commentary,
-    });
+    return new ApiResponse(201, "Commentary added successfully", commentary).send(res);
   });
 
   /**
@@ -49,12 +42,11 @@ export default class CommentaryController {
       Number(page),
     );
 
-    return res.status(200).json({
-      success: true,
-      data: commentaries,
+    return new ApiResponse(200, "Commentary fetched successfully", {
+      commentaries,
       page: Number(page),
       limit: Number(limit),
-    });
+    }).send(res);
   });
 
   /**
@@ -71,10 +63,6 @@ export default class CommentaryController {
       userId,
     );
 
-    return res.status.json({
-      success: true,
-      mesage: "Commentary deleted sucessfully",
-      data: commentary,
-    });
+    return new ApiResponse(200, "Commentary deleted successfully", commentary).send(res);
   });
 }

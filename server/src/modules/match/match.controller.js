@@ -1,4 +1,5 @@
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
+import ApiResponse from "../../shared/utils/ApiResponse.js";
 import MatchService from "./match.service.js";
 
 class MatchController {
@@ -15,10 +16,7 @@ class MatchController {
     // How: call the service and return a consistent success response.
     const matches = await this.matchService.listMatches();
 
-    res.json({
-      success: true,
-      data: matches,
-    });
+    return new ApiResponse(200, "Matches fetched successfully", matches).send(res);
   });
 
   getMatch = asyncHandler(async (req, res) => {
@@ -27,10 +25,7 @@ class MatchController {
     // How: read the validated id from params and call the service.
     const match = await this.matchService.getMatchById(req.validated.params.id);
 
-    res.json({
-      success: true,
-      data: match,
-    });
+    return new ApiResponse(200, "Match fetched successfully", match).send(res);
   });
 
   createMatch = asyncHandler(async (req, res) => {
@@ -39,10 +34,7 @@ class MatchController {
     // How: pass validated body data to the service and return 201 Created.
     const match = await this.matchService.createMatch(req.validated.body);
 
-    res.status(201).json({
-      success: true,
-      data: match,
-    });
+    return new ApiResponse(201, "Match created successfully", match).send(res);
   });
 
   updateMatch = asyncHandler(async (req, res) => {
@@ -54,10 +46,7 @@ class MatchController {
       req.validated.body,
     );
 
-    res.json({
-      success: true,
-      data: match,
-    });
+    return new ApiResponse(200, "Match updated successfully", match).send(res);
   });
 
   deleteMatch = asyncHandler(async (req, res) => {
@@ -66,10 +55,7 @@ class MatchController {
     // How: soft-delete through the service and return the deleted record snapshot.
     const match = await this.matchService.deleteMatch(req.validated.params.id);
 
-    res.json({
-      success: true,
-      data: match,
-    });
+    return new ApiResponse(200, "Match deleted successfully", match).send(res);
   });
 }
 
