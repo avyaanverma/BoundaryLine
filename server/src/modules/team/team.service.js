@@ -1,5 +1,5 @@
 import AppError from "../../shared/errors/AppError.js";
-import TeamRepository from "./team.repository.js";
+import TeamRepository from "../../repository/team.repository.js";
 
 class TeamService {
   constructor(teamRepository = new TeamRepository()) {

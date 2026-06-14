@@ -19,8 +19,8 @@ export function errorHandler(error, _req, res, _next) {
   // Why: unexpected errors may carry internal data that should not leak to clients.
   // How: conditionally spread details after checking `isOperational`.
   res.status(statusCode).json({
-    success: false,
     message,
     ...(details ? { details } : {}),
+    success: false,
   });
 }

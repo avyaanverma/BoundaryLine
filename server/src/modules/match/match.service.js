@@ -1,5 +1,5 @@
 import AppError from "../../shared/errors/AppError.js";
-import MatchRepository from "./match.repository.js";
+import MatchRepository from "../../repository/match.repository.js";
 
 class MatchService {
   constructor(matchRepository = new MatchRepository()) {

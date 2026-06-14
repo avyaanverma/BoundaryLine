@@ -1,4 +1,4 @@
-import { Commentary } from "./commentary.model.js";
+import { Commentary } from "../model/commentary.model.js";
 
 export default class CommentaryRepo {
   async create(payload) {
@@ -16,7 +16,7 @@ export default class CommentaryRepo {
       .skip(skip) //it helps to skip the previous page's data
       .limit(limit); //max to max kitna data return karna hai uske liye limit use kiya hai
   }
-  async findyByMatchId(matchId, limit = 50, page = 1) {
+  async findByMatchId(matchId, limit = 50, page = 1) {
     const skip = (page - 1) * limit;
     return await Commentary.find({ matchId })
       .sort({ createdAt: -1 })
@@ -24,7 +24,7 @@ export default class CommentaryRepo {
       .limit(limit)
       .populate("createdBy");
   }
-  async deletedById(id) {
+  async deleteById(id) {
     return await Commentary.findByIdAndDelete(id);
   }
 }

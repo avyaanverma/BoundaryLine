@@ -5,7 +5,7 @@ import {
   createTeamSchema,
   teamIdParamSchema,
   updateTeamSchema,
-} from "./team.validator.js";
+} from "../../validators/team.validator.js";
 
 class TeamRoute {
   constructor(teamController = new TeamController()) {

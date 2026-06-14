@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MATCH_STATUS } from "./match.model.js";
+import { MATCH_STATUS } from "../model/match.model.js";
 
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId");
 const tossDecisionSchema = z.enum(["BAT", "BOWL"]);

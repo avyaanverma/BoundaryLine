@@ -5,7 +5,7 @@ import {
   createMatchSchema,
   matchIdParamSchema,
   updateMatchSchema,
-} from "./match.validator.js";
+} from "../../validators/match.validator.js";
 
 class MatchRoute {
   constructor(matchController = new MatchController()) {

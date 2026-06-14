@@ -4,7 +4,7 @@ import { ROLES } from "../constant/role.constant.js";
 
 const userSchema = new mongoose.Schema({
     name: {type: String, required: true, trim: true},
-    emai: {type: String, required: true, trim:true, lowercase:true},
+    email: {type: String, required: true, trim:true, lowercase:true},
     password: {type: String, required: true, minlength: 6},
     role: {type: String, enum: Object.values(ROLES), default: ROLES.SCORER},
     isDeleted: {type: Boolean, default: false},

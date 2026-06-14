@@ -1,13 +1,12 @@
-import commentaryRepository from "./commentary.respository.js"
-import { Match } from "../shared/models/reference.model.js";
+import CommentaryRepository from "../../repository/commentary.respository.js"
+import Match from "../../model/match.model.js";
 import { BadRequestError, NotFoundError } from "../../shared/errors/index.js";
 import { logger } from "../../shared/utils/logger.js";
 import { emitToMatch } from "../../shared/socket/emitToMatch.js";
-import { Commentary } from "./commentary.model.js";
 
 class CommentaryService {
   constructor() {
-    this.commentaryRepository = commentaryRepository;
+    this.commentaryRepository = new CommentaryRepository();
   }
 
   /**

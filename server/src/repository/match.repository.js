@@ -1,4 +1,4 @@
-import Match from "./match.model.js";
+import Match from "../model/match.model.js";
 
 class MatchRepository {
   async findAll() {
