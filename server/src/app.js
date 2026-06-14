@@ -8,6 +8,7 @@ import userRouter from "./modules/user/user.route.js";
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
 import commentaryRouter from "./modules/commentary/commentary.route.js"
+import { errorHandler, notFoundHandler } from "./shared/middleware/errorHandler.js";
 
 
 function registerFeatureRoutes(app, prefix) {
@@ -50,6 +51,9 @@ export default function createApp() {
       message: "healthy",
     });
   });
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   return app;
 }

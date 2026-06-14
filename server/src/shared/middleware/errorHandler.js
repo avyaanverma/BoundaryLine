@@ -1,4 +1,4 @@
-import AppError from "../error/AppError.js";
+import { StatusCodes } from "http-status-codes";
 import NotFound from "../error/NotFound.js";
 
 export function notFoundHandler(req, _res, next) {
@@ -12,9 +12,14 @@ export function errorHandler(error, _req, res, _next) {
   // What: normalize any thrown error into a JSON response.
   // Why: clients need predictable `{ success, message }` responses for failures.
   // How: prefer AppError fields, otherwise fall back to 500 Internal Server Error.
-  const statusCode = error.statusCode || 500;
-  const message = error.isOperational ? error.message : "Internal server error";
-  const details = error.isOperational && error.details ? error.details : null;
+  const statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+  const isOperational = error.isOperational === true;
+  const message = isOperational ? error.message : "Internal server error";
+  const details = isOperational && error.details ? error.details : null;
+
+  if (!isOperational) {
+    console.error(error);
+  }
 
   // What: include details only for trusted operational errors.
   // Why: unexpected errors may carry internal data that should not leak to clients.
