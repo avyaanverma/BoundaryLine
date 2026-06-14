@@ -9,7 +9,7 @@ export default class UserRepo {
 
   // function to find a user using email
   async findByEmail(email) {
-    return await userModel.findByEmail(email);
+    return await userModel.findOne({email});
   }
 
   // function to find a user using id
@@ -18,7 +18,7 @@ export default class UserRepo {
   }
 
   async findOne(payload){
-    return await UserModel.findOne(payload)
+    return await userModel.findOne(payload)
   }
 
   // function to find all users by ROLES.SUPER_ADMIN
