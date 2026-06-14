@@ -1,5 +1,5 @@
-
-import { createRoot } from "react-dom/client"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import AppRoutes from '../src/routes/AppRoutes'
 import App from './App'
