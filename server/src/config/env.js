@@ -8,14 +8,23 @@ const envSchema = z.object({
     PORT: z.coerce.number().default(appConstant.PORT),
     MONGO_URI: z.string().default(appConstant.MONGO_URI),
     NODE_ENV: z.string().default(appConstant.NODE_ENV),
-    LOGGER_LEVEL: z.string().default(appConstant.LOGGER_LEVEL)
+    LOGGER_LEVEL: z.string().default(appConstant.LOGGER_LEVEL),
+    MORGAN_LOGGER : z.string().default(appConstant.MORGAN_LOGGER),
+    RATELIMIT_WINDOWMS: z.coerce.number().default(appConstant.RATELIMIT_WINDOWMS),
+    RATELIMIT_MAX: z.coerce.number().default(appConstant.RATELIMIT_MAX),
+    CORS_ORIGIN: z.string().default(appConstant.CORS_ORIGIN),
+    DATA_LIMIT: z.string().default(appConstant.DATA_LIMIT),
+    GOOGLE_CLIENT_ID:z.string(),
+    GOOGLE_CLIENT_SECRET:z.string(),
+    GOOGLE_CALLBACK_URL:z.string(),
 })
 
 // parsing env for correct format
 const parsed = envSchema.safeParse(process.env);
 
-
 if(!parsed.success){
-    logger.error(parsed.error.format());
+    console.error(parsed.error.format());
+    process.exit(1);
 }
+
 export default parsed.data;

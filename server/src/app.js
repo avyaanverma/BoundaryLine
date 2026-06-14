@@ -1,49 +1,52 @@
 import express from "express";
 import env from "./config/env.js";
 import morgan from "morgan";
+import securityMiddleware from "./middleware/security.middleware.js";
+import googleOAuthMiddleware from "./middleware/googleOAuth.middleware.js";
+import userRouter from "./modules/user/user.route.js";
+import authRouter from "./modules/auth/auth.route.js";
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
-import { errorHandler, notFoundHandler } from "./shared/middleware/errorHandler.js";
 
-function healthHandler(req, res) {
-    // What: Return a tiny response that confirms the API process is reachable.
-    // Why: This gives developers and deployment checks a cheap endpoint before hitting Mongo-backed routes.
-    // How: Send a static JSON payload and avoid any database dependency here.
-    res.json({
-        message: "healthy"
-    });
-}
 
 function registerFeatureRoutes(app, prefix) {
     // What: mount the feature routes under one API prefix.
     // Why: frontend clients currently expect `/v1/*`, while backend docs also mention `/api/*`.
     // How: reuse the same route modules for both prefixes so controllers stay single-source.
+    app.use(`{prefix}/users`, userRouter);
+    app.use(`{prefix}/auth`, authRouter);
     app.use(`${prefix}/teams`, teamRoute);
     app.use(`${prefix}/matches`, matchRoute);
 }
-
+  
 export default function createApp() {
-    // What: Create the Express app instance used by both dev server and tests.
-    // Why: Keeping app creation separate from listen/connect makes route wiring importable without side effects.
-    // How: Register shared middleware first, feature routes next, and fallback error handling at the end.
-    const app = express();
+  const app = express();
 
-    app.use(express.json());
+  // What: enable compact request logging during local development.
+  // Why: `morgan("dev")` is noisy and is intended for debugging, not production traffic.
+  // How: only attach it when the environment is not production.
+  // this code will only work in production
+  if (env.NODE_ENV === "development") {
+    app.use(morgan(env.MORGAN_LOGGER));
+  }
 
-    // What: enable compact request logging during local development.
-    // Why: `morgan("dev")` is noisy and is intended for debugging, not production traffic.
-    // How: only attach it when the environment is not production.
-    if (env.NODE_ENV !== "production") {
-        app.use(morgan("dev"));
-    }
+  securityMiddleware(app); // security middleware added
+  googleOAuthMiddleware(app); // google auth middleware
+   
+  
+  registerFeatureRoutes(app, "/api");
 
-    app.get("/health", healthHandler);
+  /**
+   * @method GET
+   * @route /health
+   * @description to check the status of the server
+   * */
 
-    registerFeatureRoutes(app, "/api");
-    registerFeatureRoutes(app, "/v1");
+  app.get("/health", (req, res) => {
+    res.json({
+      message: "healthy",
+    });
+  });
 
-    app.use(notFoundHandler);
-    app.use(errorHandler);
-
-    return app;
+  return app;
 }
