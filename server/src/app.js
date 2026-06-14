@@ -3,6 +3,7 @@ import env from "./config/env.js";
 import morgan from "morgan";
 import securityMiddleware from "./middlewares/security.middleware.js";
 import googleOAuthMiddleware from "./middlewares/googleOAuth.middleware.js";
+import authRouter from "./modules/auth/auth.route.js";
 
 export default function createApp() {
   const app = express();
@@ -13,9 +14,10 @@ export default function createApp() {
   }
 
   securityMiddleware(app); // security middleware added
-  googleOAuthMiddleware(app);   // google auth middleware
+  googleOAuthMiddleware(app); // google auth middleware
 
-  
+  app.use("/api/auth", authRouter);
+
   /**
    * @method GET
    * @route /health

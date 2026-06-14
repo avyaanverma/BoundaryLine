@@ -1,4 +1,4 @@
-import { UserModel } from "../models/user.model";
+import { UserModel } from "../models/user.model.js";
 
 export default class UserRepo{
     async create(payload){
