@@ -22,6 +22,8 @@ import {
   Rss,
   MessageSquare,
 } from "lucide-react";
+import { path } from "motion/react-client";
+import { NavLink } from "react-router";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -56,9 +58,8 @@ function StatusBadge({ status }) {
   };
   return (
     <span
-      className={`px-2 py-1 rounded font-bold text-xs flex items-center gap-1 ${
-        map[status] ?? map.UPCOMING
-      }`}
+      className={`px-2 py-1 rounded font-bold text-xs flex items-center gap-1 ${map[status] ?? map.UPCOMING
+        }`}
     >
       {status === "LIVE" && (
         <span className="w-1.5 h-1.5 rounded-full bg-[#ffb4ab] animate-pulse" />
@@ -71,16 +72,15 @@ function StatusBadge({ status }) {
 /** Format pill (T20I / ODI / TEST) */
 function FormatPill({ format }) {
   const colors = {
-    T20I: "text-[#94d5a5]",
+    T20I: "text-[#94d5a9]",
     T20: "text-[#94d5a5]",
     ODI: "text-[#97d940]",
     TEST: "text-[#ff4d4d]",
   };
   return (
     <span
-      className={`text-[10px] bg-[#282a2d] px-1 py-[2px] rounded font-bold ${
-        colors[format] ?? "text-[#e2e2e6]"
-      }`}
+      className={`text-[10px] bg-[#282a2d] px-1 py-[2px] rounded font-bold ${colors[format] ?? "text-[#e2e2e6]"
+        }`}
     >
       {format}
     </span>
@@ -126,13 +126,12 @@ function MatchCardFull({ format, seriesName, subtitle, status, team1, team2, foo
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col">
             <span
-              className={`text-xs font-semibold uppercase ${
-                format === "test"
-                  ? "text-[#ff4d4d]"
-                  : format === "odi"
+              className={`text-xs font-semibold uppercase ${format === "test"
+                ? "text-[#ff4d4d]"
+                : format === "odi"
                   ? "text-[#97d940]"
                   : "text-[#94d5a5]"
-              }`}
+                }`}
             >
               {seriesName}
             </span>
@@ -146,9 +145,8 @@ function MatchCardFull({ format, seriesName, subtitle, status, team1, team2, foo
           {[team1, team2].map((team, i) => (
             <div
               key={i}
-              className={`flex items-center justify-between ${
-                i === 1 ? "opacity-80" : ""
-              }`}
+              className={`flex items-center justify-between ${i === 1 ? "opacity-80" : ""
+                }`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#282a2d] flex items-center justify-center border border-white/10 overflow-hidden">
@@ -166,13 +164,12 @@ function MatchCardFull({ format, seriesName, subtitle, status, team1, team2, foo
                 <span className="text-2xl font-semibold">{team.name}</span>
               </div>
               <span
-                className={`text-[40px] font-bold leading-none tracking-tight ${
-                  team.scoreStyle === "primary"
-                    ? "text-[#94d5a5]"
-                    : team.scoreStyle === "muted"
+                className={`text-[40px] font-bold leading-none tracking-tight ${team.scoreStyle === "primary"
+                  ? "text-[#94d5a5]"
+                  : team.scoreStyle === "muted"
                     ? "text-[#c0c9bf] italic"
                     : "text-[#e2e2e6]"
-                }`}
+                  }`}
               >
                 {team.score}
               </span>
@@ -375,12 +372,14 @@ function MiniMatchCard({ date, format, team1, team2 }) {
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: "Dashboard", active: false },
-  { icon: BarChart2, label: "Analytics", active: false },
-  { icon: Trophy, label: "Matches", active: true },
-  { icon: Settings, label: "Settings", active: false },
-  { icon: HelpCircle, label: "Support", active: false },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: BarChart2, label: "Analytics", path: "/analytics" },
+  { icon: Trophy, label: "Matches", path: "/matches" },
+  { icon: Settings, label: "Settings", path: "/settings" },
+  { icon: HelpCircle, label: "Support", path: "/helpcircle" },
 ];
+
+
 
 function Sidebar() {
   return (
@@ -390,23 +389,27 @@ function Sidebar() {
           Main Menu
         </h2>
         <div className="space-y-1">
-          {NAV_ITEMS.map(({ icon: Icon, label, active }) => (
-            <a
+          {NAV_ITEMS.map(({ icon: Icon, label, path }) => (
+            <NavLink
               key={label}
-              href="#"
-              className={`flex items-center gap-4 p-4 rounded-lg transition-transform hover:translate-x-1 group ${
-                active
+              to={path}
+              className={({ isActive }) =>
+                `flex items-center gap-4 p-4 rounded-lg transition-transform hover:translate-x-1 group ${isActive
                   ? "bg-[#004a26] text-[#79b98b] font-bold"
                   : "text-[#c0c9bf] hover:bg-[#333538]/50"
-              }`}
+                }`
+              }
             >
-              <Icon
-                className={`w-5 h-5 ${
-                  active ? "" : "group-hover:text-[#94d5a5]"
-                }`}
-              />
-              <span className="text-xs font-semibold">{label}</span>
-            </a>
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? "" : "group-hover:text-[#94d5a5]"
+                      }`}
+                  />
+                  <span className="text-xs font-semibold">{label}</span>
+                </>
+              )}
+            </NavLink>
           ))}
         </div>
       </div>
@@ -441,11 +444,10 @@ function TopNav() {
                 <a
                   key={item}
                   href="#"
-                  className={`text-base transition-colors ${
-                    item === "Schedule"
-                      ? "text-[#94d5a5] font-bold border-b-2 border-[#94d5a5] pb-1"
-                      : "text-[#c0c9bf] hover:text-[#94d5a5]"
-                  }`}
+                  className={`text-base transition-colors ${item === "Schedule"
+                    ? "text-[#94d5a5] font-bold border-b-2 border-[#94d5a5] pb-1"
+                    : "text-[#c0c9bf] hover:text-[#94d5a5]"
+                    }`}
                 >
                   {item}
                 </a>
@@ -497,11 +499,10 @@ function FiltersBar() {
             <button
               key={fmt}
               onClick={() => setActiveFormat(fmt)}
-              className={`px-4 py-1 rounded-full border text-xs font-semibold transition-all ${
-                activeFormat === fmt
-                  ? "border-[#94d5a5] text-[#94d5a5]"
-                  : "border-white/10 text-[#c0c9bf] hover:border-[#94d5a5]"
-              }`}
+              className={`px-4 py-1 rounded-full border text-xs font-semibold transition-all ${activeFormat === fmt
+                ? "border-[#94d5a5] text-[#94d5a5]"
+                : "border-white/10 text-[#c0c9bf] hover:border-[#94d5a5]"
+                }`}
             >
               {fmt}
             </button>
@@ -532,11 +533,10 @@ function FooterLinkGroup({ title, links }) {
           <li key={label}>
             <a
               href="#"
-              className={`text-sm transition-colors ${
-                active
-                  ? "text-[#94d5a5] underline"
-                  : "text-[#c0c9bf] hover:text-[#e2e2e6]"
-              }`}
+              className={`text-sm transition-colors ${active
+                ? "text-[#94d5a3] underline"
+                : "text-[#c0c9bf] hover:text-[#e2e2e6]"
+                }`}
             >
               {label}
             </a>
@@ -613,11 +613,10 @@ function ViewToggle({ view, onChange }) {
         <button
           key={id}
           onClick={() => onChange(id)}
-          className={`flex items-center gap-1 px-4 py-2 rounded-lg font-bold text-xs transition-all ${
-            view === id
-              ? "bg-[#94d5a5] text-[#00391c] shadow-lg shadow-[#94d5a5]/20"
-              : "text-[#c0c9bf] hover:text-[#94d5a5]"
-          }`}
+          className={`flex items-center gap-1 px-4 py-2 rounded-lg font-bold text-xs transition-all ${view === id
+            ? "bg-[#94d5a5] text-[#00391c] shadow-lg shadow-[#94d5a5]/20"
+            : "text-[#c0c9bf] hover:text-[#94d5a5]"
+            }`}
         >
           <Icon className="w-4 h-4" />
           {label}
