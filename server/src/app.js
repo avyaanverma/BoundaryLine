@@ -2,6 +2,8 @@ import express from "express";
 import env from "./config/env.js"
 import morgan from "morgan";
 import securityMiddleware from "./middlewares/security.middleware.js";
+import userRouter from "./modules/user/user.route.js"
+import authRouter from "./modules/auth/auth.route.js"
 
 export default function createApp(){
     const app = express();
@@ -12,6 +14,10 @@ export default function createApp(){
     }
 
     securityMiddleware(app); // security middleware added 
+
+    app.use("/api/users", userRouter )
+
+    app.use("/api/auth", authRouter)
 
     /**
      * @method GET
