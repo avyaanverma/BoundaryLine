@@ -1,4 +1,4 @@
-import { logger } from "../util/Logger";
+import { logger } from "../utils/logger.js";
 let ioInstance = null;
 
 export const setIoInstance = (io) => {
