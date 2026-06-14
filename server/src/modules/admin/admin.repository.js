@@ -1,5 +1,5 @@
-import { Player, Team, User } from "../shared/models/reference.model";
-import AdminDashboardDTO from "./dto/admin.dto";
+import {Player, User, Team, Match} from "../shared/models/reference.model.js";
+import AdminDashboardDTO from "./dto/admin.dto.js";
 
 class AdminRepository {
   // latest admin dashboard stats fetch karenge
