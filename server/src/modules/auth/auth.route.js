@@ -1,9 +1,9 @@
 import express from "express";
-import googleOAuthMiddleware from "../../middlewares/googleOAuth.middleware";
+import googleOAuthMiddleware from "../../middleware/googleOAuth.middleware.js";
 import passport from "passport";
 
 const router = express.Router();
-// const authController = 
+// const authController =
 router.get(
   "/google",
   passport.authenticate("google", {
