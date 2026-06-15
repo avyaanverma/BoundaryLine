@@ -7,26 +7,6 @@ class PlayerController {
     this.playerService = playerService;
   }
 
-  listPlayers = asyncHandler(async (req, res) => {
-    const players = await this.playerService.listPlayers(req.validated.query);
-
-    return new ApiResponse(
-      200,
-      "Players fetched successfully",
-      players,
-    ).send(res);
-  });
-
-  getPlayer = asyncHandler(async (req, res) => {
-    const player = await this.playerService.getPlayerById(
-      req.validated.params.id,
-    );
-
-    return new ApiResponse(200, "Player fetched successfully", player).send(
-      res,
-    );
-  });
-
   createPlayer = asyncHandler(async (req, res) => {
     const player = await this.playerService.createPlayer(req.validated.body);
 

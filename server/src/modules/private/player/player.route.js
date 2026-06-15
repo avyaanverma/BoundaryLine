@@ -16,16 +16,6 @@ class PlayerRoute {
   }
 
   registerRoutes() {
-    this.router.get(
-      "/",
-      validateRequest(listPlayersSchema),
-      this.playerController.listPlayers,
-    );
-    this.router.get(
-      "/:id",
-      validateRequest(playerIdParamSchema),
-      this.playerController.getPlayer,
-    );
     this.router.post(
       "/",
       validateRequest(createPlayerSchema),
