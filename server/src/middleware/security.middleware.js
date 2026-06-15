@@ -4,6 +4,7 @@ import helmet from "helmet";
 import hpp from "hpp";
 import express from "express";
 import env from "../config/env.js"
+import cors from "cors"
 
 export default function securityMiddleware(app){
     // adding cors middleware

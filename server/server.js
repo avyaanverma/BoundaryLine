@@ -1,7 +1,7 @@
 import createApp from "./src/app.js";
 import connectDB from "./src/config/db.js";
 import env from "./src/config/env.js";
-import { logger } from "./src/shared/util/Logger.js";
+import { logger } from "./src/shared/utils/logger.js";
 
 function startServer(){
     const app = createApp();
