@@ -21,7 +21,7 @@ export const app_config = () => {
     }, // expiry time
     cookie: {
       accessToken: {
-        httpOnly: true,
+        httpOnly: false, // so that react(frontend) can access this token we need it for the frontend
         secure: env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: env.NODE_ENV === "production" ? 60 * 60 * 1000 : 15 * 60 * 1000,

@@ -13,8 +13,8 @@ function registerFeatureRoutes(app, prefix) {
     // What: mount the feature routes under one API prefix.
     // Why: frontend clients currently expect `/v1/*`, while backend docs also mention `/api/*`.
     // How: reuse the same route modules for both prefixes so controllers stay single-source.
-    app.use(`{prefix}/users`, userRouter);
-    app.use(`{prefix}/auth`, authRouter);
+    app.use(`${prefix}/users`, userRouter);
+    app.use(`${prefix}/auth`, authRouter);
     app.use(`${prefix}/teams`, teamRoute);
     app.use(`${prefix}/matches`, matchRoute);
 }
@@ -33,7 +33,7 @@ export default function createApp() {
   securityMiddleware(app); // security middleware added
   googleOAuthMiddleware(app); // google auth middleware
 
-  app.use("/api/auth", authRouter);
+  // app.use("/api/auth", authRouter);
    
   
   registerFeatureRoutes(app, "/api");
