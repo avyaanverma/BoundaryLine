@@ -21,8 +21,6 @@ class MatchRoute {
     // What: map match HTTP endpoints to controller methods.
     // Why: route files should own URL shape, middleware order, and controller binding.
     // How: validate request input before calling class-based controller handlers.
-    this.router.get("/", this.matchController.listMatches);
-    this.router.get("/:id", validateRequest(matchIdParamSchema), this.matchController.getMatch);
     this.router.post("/", validateRequest(createMatchSchema), this.matchController.createMatch);
     this.router.patch("/:id", validateRequest(updateMatchSchema), this.matchController.updateMatch);
     this.router.delete("/:id", validateRequest(matchIdParamSchema), this.matchController.deleteMatch);
