@@ -9,7 +9,7 @@ export default class UserRepo {
 
   // function to find a user using email
   async findByEmail(email) {
-    return await userModel.findOne({email});
+    return await userModel.findOne({ email });
   }
 
   // function to find a user using id
@@ -17,12 +17,21 @@ export default class UserRepo {
     return await userModel.findById(id);
   }
 
-  async findOne(payload){
-    return await userModel.findOne(payload)
+  async findOne(payload) {
+    return await userModel.findOne(payload);
   }
 
   // function to find all users by ROLES.SUPER_ADMIN
   // async findAll(){
   //     return await userModel.findAll();
   // }
+
+
+  async findOneAndUpdate(filter, update) {
+    return await userModel.findOneAndUpdate(filter, update, { new: true });
+  }
+  
+  async updateRole(email, role) {
+    return await userModel.updateOne({ email }, { $set: { role } });
+  }
 }

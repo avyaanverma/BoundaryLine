@@ -6,6 +6,14 @@ export default class AuthController {
   constructor() {
     this.userService = new AuthService();
   }
+  async makeAdmin(req, res) {
+    await this.userService.makeAdmin("om@example.com");
+
+    res.json({
+      success: true,
+      message: "User promoted to ADMIN",
+    });
+  }
 
   async GoogleCallback(req, res) {
     const { accessToken, refreshToken } = await this.userService.CreateUser(
