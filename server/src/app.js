@@ -10,6 +10,7 @@ import publicMatchRoute from "./modules/public/match/match.route.js";
 import publicSeriesRoute from "./modules/public/series/series.route.js";
 import publicTournamentRoute from "./modules/public/tournament/tournament.route.js";
 import publicCommentaryRoute from "./modules/public/commentary/commentary.route.js";
+import publicSquadRoute from "./modules/public/squad/squad.route.js";
 import userRouter from "./modules/private/user/user.route.js";
 import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
@@ -18,6 +19,7 @@ import teamRoute from "./modules/private/team/team.route.js";
 import seriesRoute from "./modules/private/series/series.route.js";
 import tournamentRoute from "./modules/private/tournament/tournament.route.js";
 import commentaryRouter from "./modules/private/commentary/commentary.route.js";
+import squadRoute from "./modules/private/squad/squad.route.js";
 import {
   errorHandler,
   notFoundHandler,
@@ -41,6 +43,8 @@ function registerFeatureRoutes(app, prefix) {
   app.use(`${prefix}/private/tournaments`, tournamentRoute);
   app.use(`${prefix}/commentary`, publicCommentaryRoute);
   app.use(`${prefix}/private/commentary`, commentaryRouter);
+  app.use(`${prefix}/squads`, publicSquadRoute);
+  app.use(`${prefix}/private/squads`, squadRoute);
   app.use('/health', healthRouter);
 }
 
