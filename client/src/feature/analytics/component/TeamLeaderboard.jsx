@@ -47,65 +47,223 @@ const teams = [
 
 export default function TeamLeaderboard() {
     return (
-        <div className="mt-8 rounded-2xl border border-lime-500/30 overflow-hidden bg-[#171717]">
-
+        <section
+            className="
+                mt-10
+                overflow-hidden
+                rounded-3xl
+                border border-[#94d5a5]/10
+                bg-gradient-to-br
+                from-[#11161c]
+                via-[#151b20]
+                to-[#11161c]
+            "
+        >
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-6 border-b border-lime-500/20">
-                <h2 className="text-3xl font-medium text-white">
+            <div
+                className="
+                    flex
+                    flex-col
+                    md:flex-row
+                    md:items-center
+                    md:justify-between
+                    gap-3
+                    px-5
+                    md:px-8
+                    py-5
+                    border-b
+                    border-white/10
+                "
+            >
+                <h2 className="text-2xl md:text-3xl font-bold text-white">
                     Team Leaderboard
                 </h2>
 
-                <span className="text-lime-400 text-3xl font-mono font-semibold">
+                <span
+                    className="
+                        text-[#94d5a5]
+                        text-sm
+                        md:text-base
+                        font-medium
+                    "
+                >
                     Top 4 Standings
                 </span>
             </div>
 
-            {/* Table Header */}
-            <div className="grid grid-cols-6 px-8 py-5 bg-white/5 text-gray-300 font-mono text-xl">
-                <div>Team</div>
-                <div>Played</div>
-                <div>Wins</div>
-                <div>Losses</div>
-                <div className="text-lime-400">Points</div>
-                <div>NRR</div>
-            </div>
+            {/* Desktop Table */}
+            <div className="hidden lg:block">
 
-            {/* Rows */}
-            {teams.map((team) => (
                 <div
-                    key={team.id}
-                    className="grid grid-cols-6 px-8 py-6 border-t border-lime-500/10 items-center hover:bg-white/[0.02] transition"
+                    className="
+                        grid
+                        grid-cols-6
+                        px-8
+                        py-4
+                        text-xs
+                        uppercase
+                        tracking-wider
+                        text-gray-500
+                        border-b
+                        border-white/5
+                    "
                 >
-                    <div className="flex items-center gap-4">
-                        <div
-                            className={`w-12 h-12 rounded-full border flex items-center justify-center font-semibold ${team.color}`}
-                        >
-                            {team.code}
+                    <div>Team</div>
+                    <div>Played</div>
+                    <div>Wins</div>
+                    <div>Losses</div>
+                    <div className="text-[#94d5a5]">
+                        Points
+                    </div>
+                    <div>NRR</div>
+                </div>
+
+                {teams.map((team, index) => (
+                    <div
+                        key={team.id}
+                        className={`
+                            grid
+                            grid-cols-6
+                            items-center
+                            px-8
+                            py-5
+                            border-b
+                            border-white/5
+                            hover:bg-white/[0.02]
+                            transition-all
+                            ${index === 0 ? "bg-[#052312]/40" : ""}
+                        `}
+                    >
+                        <div className="flex items-center gap-4">
+
+                            <div
+                                className={`
+                                    h-11
+                                    w-11
+                                    rounded-full
+                                    border
+                                    flex
+                                    items-center
+                                    justify-center
+                                    font-semibold
+                                    ${team.color}
+                                `}
+                            >
+                                {team.code}
+                            </div>
+
+                            <span className="text-white font-medium">
+                                {team.name}
+                            </span>
+
                         </div>
 
-                        <span className="text-white text-2xl">
-                            {team.name}
-                        </span>
+                        <div className="text-gray-300">
+                            {team.played}
+                        </div>
+
+                        <div className="text-gray-300">
+                            {team.wins}
+                        </div>
+
+                        <div className="text-gray-300">
+                            {team.losses}
+                        </div>
+
+                        <div className="text-[#94d5a5] font-bold text-xl">
+                            {team.points}
+                        </div>
+
+                        <div
+                            className={`font-semibold ${team.nrr.startsWith("-")
+                                ? "text-red-400"
+                                : "text-[#94d5a5]"
+                                }`}
+                        >
+                            {team.nrr}
+                        </div>
                     </div>
+                ))}
+            </div>
 
-                    <div className="text-white text-2xl">{team.played}</div>
-                    <div className="text-white text-2xl">{team.wins}</div>
-                    <div className="text-white text-2xl">{team.losses}</div>
-
-                    <div className="text-lime-400 text-3xl font-bold">
-                        {team.points}
-                    </div>
-
+            {/* Mobile Cards */}
+            <div className="lg:hidden p-4 space-y-4">
+                {teams.map((team) => (
                     <div
-                        className={`text-2xl font-semibold ${team.nrr.startsWith("-")
-                            ? "text-red-400"
-                            : "text-green-400"
-                            }`}
+                        key={team.id}
+                        className="
+                            rounded-2xl
+                            border
+                            border-white/10
+                            bg-white/[0.02]
+                            p-4
+                        "
                     >
-                        {team.nrr}
+                        <div className="flex items-center gap-3 mb-4">
+
+                            <div
+                                className={`
+                                    h-10
+                                    w-10
+                                    rounded-full
+                                    border
+                                    flex
+                                    items-center
+                                    justify-center
+                                    font-semibold
+                                    ${team.color}
+                                `}
+                            >
+                                {team.code}
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-medium">
+                                    {team.name}
+                                </h3>
+
+                                <p className="text-sm text-gray-500">
+                                    Rank #{team.id}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+
+                            <div>
+                                <p className="text-gray-500">Played</p>
+                                <p className="text-white">{team.played}</p>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">Wins</p>
+                                <p className="text-white">{team.wins}</p>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">Points</p>
+                                <p className="text-[#94d5a5] font-bold">
+                                    {team.points}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">NRR</p>
+                                <p
+                                    className={`font-semibold ${team.nrr.startsWith("-")
+                                        ? "text-red-400"
+                                        : "text-[#94d5a5]"
+                                        }`}
+                                >
+                                    {team.nrr}
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </section>
     );
 }
