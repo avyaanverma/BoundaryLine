@@ -61,7 +61,7 @@ export const MASTER_ROSTERS = {
     { id: "p-deshpande-csk", name: "Tushar Deshpande", role: "BOWLER" },
     { id: "p-ali-csk", name: "Moeen Ali", role: "ALL_ROUNDER" },
     { id: "p-santner-csk", name: "Mitchell Santner", role: "ALL_ROUNDER" },
-  ]
+  ],
 };
 
 const initialMatchIndAus = {
@@ -87,34 +87,66 @@ const initialMatchIndAus = {
           playerId: "p-rohit",
           name: "Rohit Sharma",
           role: "BATTER",
-          battingStats: { runs: 42, balls: 28, fours: 4, sixes: 2, isOut: false },
+          battingStats: {
+            runs: 42,
+            balls: 28,
+            fours: 4,
+            sixes: 2,
+            isOut: false,
+          },
         },
         {
           playerId: "p-surya",
           name: "Suryakumar Yadav",
           role: "BATTER",
-          battingStats: { runs: 12, balls: 8, fours: 1, sixes: 0, isOut: false },
+          battingStats: {
+            runs: 12,
+            balls: 8,
+            fours: 1,
+            sixes: 0,
+            isOut: false,
+          },
         },
         {
           playerId: "p-ishan",
           name: "Ishan Kishan",
           role: "WICKET_KEEPER",
-          battingStats: { runs: 74, balls: 32, fours: 5, sixes: 6, isOut: true, howOut: "c Wade b Cummins" },
+          battingStats: {
+            runs: 74,
+            balls: 32,
+            fours: 5,
+            sixes: 6,
+            isOut: true,
+            howOut: "c Wade b Cummins",
+          },
         },
         {
           playerId: "p-hardik",
           name: "Hardik Pandya",
           role: "ALL_ROUNDER",
-          battingStats: { runs: 49, balls: 22, fours: 3, sixes: 4, isOut: true, howOut: "run out (Maxwell)" },
-        }
+          battingStats: {
+            runs: 49,
+            balls: 22,
+            fours: 3,
+            sixes: 4,
+            isOut: true,
+            howOut: "run out (Maxwell)",
+          },
+        },
       ],
       bowlers: [
         {
           playerId: "p-cummins",
           name: "Pat Cummins",
           role: "BOWLER",
-          bowlingStats: { overs: 3, balls: 2, maidens: 0, runsConceded: 28, wickets: 1 },
-        }
+          bowlingStats: {
+            overs: 3,
+            balls: 2,
+            maidens: 0,
+            runsConceded: 28,
+            wickets: 1,
+          },
+        },
       ],
     },
     {
@@ -127,7 +159,7 @@ const initialMatchIndAus = {
       extras: { wides: 0, noBalls: 0, byes: 0, legByes: 0, total: 0 },
       batters: [],
       bowlers: [],
-    }
+    },
   ],
   activeBatter1Id: "p-rohit", // Rohit (Striker)
   activeBatter2Id: "p-surya", // Surya Kumar
@@ -140,7 +172,8 @@ const initialMatchIndAus = {
       over: "18.2",
       type: "WICKET",
       title: "Wicket!",
-      description: "OUT! Caught! Cummins to Ishan Kishan, looking to clear the fence, caught on the boundary line by Wade!",
+      description:
+        "OUT! Caught! Cummins to Ishan Kishan, looking to clear the fence, caught on the boundary line by Wade!",
       timestamp: new Date().toISOString(),
     },
     {
@@ -148,9 +181,10 @@ const initialMatchIndAus = {
       over: "18.1",
       type: "BOUNDARY",
       title: "4 Runs",
-      description: "FOUR! Rohit Sharma pulls it magnificently past deep midwicket for a superb boundary!",
+      description:
+        "FOUR! Rohit Sharma pulls it magnificently past deep midwicket for a superb boundary!",
       timestamp: new Date().toISOString(),
-    }
+    },
   ],
   winProbability: {
     teamA: 62,
@@ -159,11 +193,17 @@ const initialMatchIndAus = {
   },
   aiInsights: [
     "Bowler Economy rising: Pat Cummins has conceded 12 runs in last 4 balls.",
-    "Batter Under Pressure: Suryakumar Yadav faces a 72% dot ball rate against leg spin."
+    "Batter Under Pressure: Suryakumar Yadav faces a 72% dot ball rate against leg spin.",
   ],
   fow: [
-    { batterName: "Ishan Kishan", runs: 120, wickets: 3, over: "12.4", detail: "c Wade b Cummins" }
-  ]
+    {
+      batterName: "Ishan Kishan",
+      runs: 120,
+      wickets: 3,
+      over: "12.4",
+      detail: "c Wade b Cummins",
+    },
+  ],
 };
 
 const initialMatchMiCsk = {
@@ -189,22 +229,40 @@ const initialMatchMiCsk = {
           playerId: "p-ishan-mi",
           name: "Ishan Kishan",
           role: "WICKET_KEEPER",
-          battingStats: { runs: 74, balls: 32, fours: 5, sixes: 6, isOut: false },
+          battingStats: {
+            runs: 74,
+            balls: 32,
+            fours: 5,
+            sixes: 6,
+            isOut: false,
+          },
         },
         {
           playerId: "p-surya-mi",
           name: "Suryakumar Yadav",
           role: "BATTER",
-          battingStats: { runs: 12, balls: 8, fours: 1, sixes: 0, isOut: false },
-        }
+          battingStats: {
+            runs: 12,
+            balls: 8,
+            fours: 1,
+            sixes: 0,
+            isOut: false,
+          },
+        },
       ],
       bowlers: [
         {
           playerId: "p-chahar-csk",
           name: "Deepak Chahar",
           role: "BOWLER",
-          bowlingStats: { overs: 3, balls: 2, maidens: 0, runsConceded: 28, wickets: 2 },
-        }
+          bowlingStats: {
+            overs: 3,
+            balls: 2,
+            maidens: 0,
+            runsConceded: 28,
+            wickets: 2,
+          },
+        },
       ],
     },
     {
@@ -217,7 +275,7 @@ const initialMatchMiCsk = {
       extras: { wides: 0, noBalls: 0, byes: 0, legByes: 0, total: 0 },
       batters: [],
       bowlers: [],
-    }
+    },
   ],
   activeBatter1Id: "p-ishan-mi", // striker
   activeBatter2Id: "p-surya-mi", // non-striker
@@ -230,7 +288,8 @@ const initialMatchMiCsk = {
       over: "18.2",
       type: "WICKET",
       title: "18.2 Wicket!",
-      description: "OUT! Caught! Chahar to Kishan, short delivery outside off. Kishan tries to pull but gets a top edge. Jadeja running in from deep mid-wicket takes a comfortable catch.",
+      description:
+        "OUT! Caught! Chahar to Kishan, short delivery outside off. Kishan tries to pull but gets a top edge. Jadeja running in from deep mid-wicket takes a comfortable catch.",
       timestamp: new Date().toISOString(),
     },
     {
@@ -238,9 +297,10 @@ const initialMatchMiCsk = {
       over: "18.1",
       type: "BOUNDARY",
       title: "18.1 6 Runs",
-      description: "SIX! Massive hit! Overpitched by Chahar, Kishan clears his front leg and lofts it high over long-on for a 95m maximum. The crowd is erupting!",
+      description:
+        "SIX! Massive hit! Overpitched by Chahar, Kishan clears his front leg and lofts it high over long-on for a 95m maximum. The crowd is erupting!",
       timestamp: new Date().toISOString(),
-    }
+    },
   ],
   winProbability: {
     teamA: 62,
@@ -249,28 +309,34 @@ const initialMatchMiCsk = {
   },
   aiInsights: [
     "Bowler Economy rising: Deepak Chahar has conceded 14 runs in last 4 balls.",
-    "Batter Under Pressure: Suryakumar Yadav faces a 72% dot ball rate against spin."
+    "Batter Under Pressure: Suryakumar Yadav faces a 72% dot ball rate against spin.",
   ],
   fow: [
-    { batterName: "Rohit Sharma", runs: 45, wickets: 1, over: "5.2", detail: "b Chahar" }
-  ]
+    {
+      batterName: "Rohit Sharma",
+      runs: 45,
+      wickets: 1,
+      over: "5.2",
+      detail: "b Chahar",
+    },
+  ],
 };
 
 const initialState = {
   matchesList: [
     { ...initialMatchIndAus, matchPhase: "SETUP" },
-    { ...initialMatchMiCsk, matchPhase: "SETUP" }
+    { ...initialMatchMiCsk, matchPhase: "SETUP" },
   ],
   currentMatch: { ...initialMatchIndAus, matchPhase: "SETUP" }, // Start in SETUP phase by default
   activeMatchId: "IND_AUS",
   history: [],
   isSynced: true,
   statusMessage: "Operational & Connected",
-  rosters: { ...MASTER_ROSTERS }
+  rosters: { ...MASTER_ROSTERS },
 };
 
 const updateMatchesList = (state) => {
-  const idx = state.matchesList.findIndex(m => m.id === state.activeMatchId);
+  const idx = state.matchesList.findIndex((m) => m.id === state.activeMatchId);
   if (idx !== -1) {
     state.matchesList[idx] = state.currentMatch;
   }
@@ -283,7 +349,9 @@ const matchSlice = createSlice({
     setActiveMatch: (state, action) => {
       state.history = [];
       state.activeMatchId = action.payload;
-      const targetMatch = state.matchesList.find(m => m.id === action.payload);
+      const targetMatch = state.matchesList.find(
+        (m) => m.id === action.payload,
+      );
       if (targetMatch) {
         state.currentMatch = targetMatch;
       }
@@ -327,7 +395,7 @@ const matchSlice = createSlice({
             extras: { wides: 0, noBalls: 0, byes: 0, legByes: 0, total: 0 },
             batters: [],
             bowlers: [],
-          }
+          },
         ],
         activeBatter1Id: "",
         activeBatter2Id: "",
@@ -340,7 +408,7 @@ const matchSlice = createSlice({
           trend: "Match balanced equally at start of play.",
         },
         aiInsights: [],
-        fow: []
+        fow: [],
       };
 
       state.matchesList.push(newMatch);
@@ -361,7 +429,7 @@ const matchSlice = createSlice({
       if (!state.rosters[teamId]) {
         state.rosters[teamId] = [];
       }
-      if (!state.rosters[teamId].some(p => p.id === player.id)) {
+      if (!state.rosters[teamId].some((p) => p.id === player.id)) {
         state.rosters[teamId].push(player);
       }
     },
@@ -370,8 +438,8 @@ const matchSlice = createSlice({
       if (!state.rosters[teamId]) {
         state.rosters[teamId] = [];
       }
-      players.forEach(p => {
-        if (!state.rosters[teamId].some(old => old.id === p.id)) {
+      players.forEach((p) => {
+        if (!state.rosters[teamId].some((old) => old.id === p.id)) {
           state.rosters[teamId].push(p);
         }
       });
@@ -397,7 +465,15 @@ const matchSlice = createSlice({
     },
     // Trigger start of professional cricket match after selections completes
     startMatchSetup: (state, action) => {
-      const { tossWinner, tossDecision, teamA_XI, teamB_XI, strikerId, nonStrikerId, bowlerId } = action.payload;
+      const {
+        tossWinner,
+        tossDecision,
+        teamA_XI,
+        teamB_XI,
+        strikerId,
+        nonStrikerId,
+        bowlerId,
+      } = action.payload;
       const match = state.currentMatch;
 
       state.history.push(JSON.parse(JSON.stringify(match)));
@@ -407,13 +483,24 @@ const matchSlice = createSlice({
       match.matchPhase = "LIVE";
       match.matchEvent = "POWERPLAY";
       match.tossWinner = tossWinner;
-      match.battingFirst = tossDecision === "BAT" ? tossWinner : (tossWinner === match.teamA.name ? match.teamB.name : match.teamA.name);
+      match.battingFirst =
+        tossDecision === "BAT"
+          ? tossWinner
+          : tossWinner === match.teamA.name
+            ? match.teamB.name
+            : match.teamA.name;
 
-      const battingTeamId = match.battingFirst === match.teamA.name ? match.teamA.id : match.teamB.id;
-      const bowlingTeamId = battingTeamId === match.teamA.id ? match.teamB.id : match.teamA.id;
+      const battingTeamId =
+        match.battingFirst === match.teamA.name
+          ? match.teamA.id
+          : match.teamB.id;
+      const bowlingTeamId =
+        battingTeamId === match.teamA.id ? match.teamB.id : match.teamA.id;
 
       // Populate batting lineup
-      const activeBatters = (match.battingFirst === match.teamA.name ? teamA_XI : teamB_XI).map((p) => {
+      const activeBatters = (
+        match.battingFirst === match.teamA.name ? teamA_XI : teamB_XI
+      ).map((p) => {
         return {
           playerId: p.id,
           name: p.name,
@@ -429,7 +516,9 @@ const matchSlice = createSlice({
       });
 
       // Populate bowling lineup
-      const activeBowlers = (match.battingFirst === match.teamA.name ? teamB_XI : teamA_XI).map((p) => ({
+      const activeBowlers = (
+        match.battingFirst === match.teamA.name ? teamB_XI : teamA_XI
+      ).map((p) => ({
         playerId: p.id,
         name: p.name,
         role: p.role,
@@ -458,13 +547,19 @@ const matchSlice = createSlice({
 
       match.innings[1] = {
         teamId: bowlingTeamId,
-        teamName: match.battingFirst === match.teamA.name ? match.teamB.name : match.teamA.name,
+        teamName:
+          match.battingFirst === match.teamA.name
+            ? match.teamB.name
+            : match.teamA.name,
         runs: 0,
         wickets: 0,
         overs: 0,
         balls: 0,
         extras: { wides: 0, noBalls: 0, byes: 0, legByes: 0, total: 0 },
-        batters: (match.battingFirst === match.teamA.name ? teamB_XI : teamA_XI).map((p) => ({
+        batters: (match.battingFirst === match.teamA.name
+          ? teamB_XI
+          : teamA_XI
+        ).map((p) => ({
           playerId: p.id,
           name: p.name,
           role: p.role,
@@ -476,7 +571,10 @@ const matchSlice = createSlice({
             isOut: false,
           },
         })),
-        bowlers: (match.battingFirst === match.teamA.name ? teamA_XI : teamB_XI).map((p) => ({
+        bowlers: (match.battingFirst === match.teamA.name
+          ? teamA_XI
+          : teamB_XI
+        ).map((p) => ({
           playerId: p.id,
           name: p.name,
           role: p.role,
@@ -505,9 +603,9 @@ const matchSlice = createSlice({
           over: "0.0",
           type: "MILESTONE",
           title: "Match Commenced!",
-          description: `${tossWinner} won the toss and elected to ${tossDecision.toLowerCase()} first. ${match.innings[0].batters.find(b => b.playerId === strikerId)?.name} & ${match.innings[0].batters.find(b => b.playerId === nonStrikerId)?.name} are opening the batting. ${match.innings[0].bowlers.find(b => b.playerId === bowlerId)?.name} has the ball. Let's play!`,
+          description: `${tossWinner} won the toss and elected to ${tossDecision.toLowerCase()} first. ${match.innings[0].batters.find((b) => b.playerId === strikerId)?.name} & ${match.innings[0].batters.find((b) => b.playerId === nonStrikerId)?.name} are opening the batting. ${match.innings[0].bowlers.find((b) => b.playerId === bowlerId)?.name} has the ball. Let's play!`,
           timestamp: new Date().toISOString(),
-        }
+        },
       ];
 
       match.winProbability = {
@@ -537,7 +635,9 @@ const matchSlice = createSlice({
       match.activeBowlerId = action.payload.bowlerId;
 
       // Ensure active bowler object is initialized in bowlingStats
-      const targetBowler = activeInnings.bowlers.find((b) => b.playerId === action.payload.bowlerId);
+      const targetBowler = activeInnings.bowlers.find(
+        (b) => b.playerId === action.payload.bowlerId,
+      );
       if (targetBowler && !targetBowler.bowlingStats) {
         targetBowler.bowlingStats = {
           overs: 0,
@@ -563,22 +663,35 @@ const matchSlice = createSlice({
 
     // Commit a professional wicket fall with rich metadata
     commitWicketState: (state, action) => {
-      const { dismissalType, outBatterId, newBatterId, fielderId, bowlerId, keeperId } = action.payload;
+      const {
+        dismissalType,
+        outBatterId,
+        newBatterId,
+        fielderId,
+        bowlerId,
+        keeperId,
+      } = action.payload;
       const match = state.currentMatch;
       const activeInnings = match.innings[match.currentInningsNum - 1];
 
       state.history.push(JSON.parse(JSON.stringify(match)));
       state.isSynced = false;
 
-      const outBatter = activeInnings.batters.find((b) => b.playerId === outBatterId);
-      const activeBowler = activeInnings.bowlers.find((b) => b.playerId === match.activeBowlerId);
+      const outBatter = activeInnings.batters.find(
+        (b) => b.playerId === outBatterId,
+      );
+      const activeBowler = activeInnings.bowlers.find(
+        (b) => b.playerId === match.activeBowlerId,
+      );
 
       let fielderName = "";
       let bowlerName = activeBowler?.name || "Bowler";
       let keeperName = "";
 
       if (fielderId) {
-        const fObj = activeInnings.bowlers.find((b) => b.playerId === fielderId) || activeInnings.batters.find((b) => b.playerId === fielderId);
+        const fObj =
+          activeInnings.bowlers.find((b) => b.playerId === fielderId) ||
+          activeInnings.batters.find((b) => b.playerId === fielderId);
         fielderName = fObj?.name || "";
       }
       if (bowlerId) {
@@ -600,9 +713,11 @@ const matchSlice = createSlice({
           detailDesc = `BOWLED! Clean bowled. ${bowlerName} breaks through the defense.`;
           break;
         case "CAUGHT":
-          notation = fielderName ? `c ${fielderName} b ${bowlerName}` : `c & b ${bowlerName}`;
-          detailDesc = fielderName 
-            ? `CAUGHT! High catch taken beautifully by ${fielderName} off ${bowlerName}'s delivery.` 
+          notation = fielderName
+            ? `c ${fielderName} b ${bowlerName}`
+            : `c & b ${bowlerName}`;
+          detailDesc = fielderName
+            ? `CAUGHT! High catch taken beautifully by ${fielderName} off ${bowlerName}'s delivery.`
             : `CAUGHT! Exceptional return catch caught & bowled by ${bowlerName}.`;
           break;
         case "LBW":
@@ -614,7 +729,9 @@ const matchSlice = createSlice({
           detailDesc = `RUN OUT! Superb direct throw from ${fielderName || "fielder"} catches the batter short of crease.`;
           break;
         case "STUMPED":
-          notation = keeperName ? `st ${keeperName} b ${bowlerName}` : `stumped b ${bowlerName}`;
+          notation = keeperName
+            ? `st ${keeperName} b ${bowlerName}`
+            : `stumped b ${bowlerName}`;
           detailDesc = `STUMPED! Smart awareness and quick hands behind the stumps off ${bowlerName}'s delivery.`;
           break;
         case "HIT_WICKET":
@@ -658,7 +775,13 @@ const matchSlice = createSlice({
       });
 
       // Update bowler statistics if it is a bowler-credited wicket
-      const isBowlerWicket = ["BOWLED", "CAUGHT", "LBW", "STUMPED", "HIT_WICKET"].includes(dismissalType);
+      const isBowlerWicket = [
+        "BOWLED",
+        "CAUGHT",
+        "LBW",
+        "STUMPED",
+        "HIT_WICKET",
+      ].includes(dismissalType);
       if (isBowlerWicket && activeBowler && activeBowler.bowlingStats) {
         activeBowler.bowlingStats.wickets += 1;
       }
@@ -714,7 +837,9 @@ const matchSlice = createSlice({
         }
 
         // Initialize new batter stats if needed
-        const newBatterObj = activeInnings.batters.find((b) => b.playerId === newBatterId);
+        const newBatterObj = activeInnings.batters.find(
+          (b) => b.playerId === newBatterId,
+        );
         if (newBatterObj && !newBatterObj.battingStats) {
           newBatterObj.battingStats = {
             runs: 0,
@@ -726,7 +851,12 @@ const matchSlice = createSlice({
         }
       } else {
         // All Out / Innings Complete check
-        const activeYetToBat = activeInnings.batters.filter(b => !b.battingStats?.isOut && b.playerId !== match.activeBatter1Id && b.playerId !== match.activeBatter2Id);
+        const activeYetToBat = activeInnings.batters.filter(
+          (b) =>
+            !b.battingStats?.isOut &&
+            b.playerId !== match.activeBatter1Id &&
+            b.playerId !== match.activeBatter2Id,
+        );
         if (activeYetToBat.length === 0 || activeInnings.wickets >= 10) {
           match.matchPhase = "COMPLETED";
           match.status = "COMPLETED";
@@ -735,7 +865,10 @@ const matchSlice = createSlice({
       }
 
       // Win probability recalculation on wickets
-      match.winProbability.teamA = Math.max(10, Math.min(90, match.winProbability.teamA - 15));
+      match.winProbability.teamA = Math.max(
+        10,
+        Math.min(90, match.winProbability.teamA - 15),
+      );
       match.winProbability.teamB = 100 - match.winProbability.teamA;
       match.winProbability.trend = `Wicket fell on ${currentOverStr}. Heavy shift in momentum towards bowling side.`;
 
@@ -774,7 +907,7 @@ const matchSlice = createSlice({
       const commentaryPhrasesRuns = [
         "Pushed softly into the gap for a quick run.",
         "Played into deep canvas, strikers gather a brace comfortably.",
-        "Smart placement through single channel for runs."
+        "Smart placement through single channel for runs.",
       ];
 
       switch (type) {
@@ -851,10 +984,18 @@ const matchSlice = createSlice({
       match.thisOver.push(ballRepresentative);
 
       // Update Batters stats
-      const striker = activeInnings.batters.find((b) => b.playerId === match.activeBatter1Id);
+      const striker = activeInnings.batters.find(
+        (b) => b.playerId === match.activeBatter1Id,
+      );
       if (striker) {
         if (!striker.battingStats) {
-          striker.battingStats = { runs: 0, balls: 0, fours: 0, sixes: 0, isOut: false };
+          striker.battingStats = {
+            runs: 0,
+            balls: 0,
+            fours: 0,
+            sixes: 0,
+            isOut: false,
+          };
         }
         if (type === "RUN" || type === "NB" || type === "NB_RUNS") {
           striker.battingStats.runs += runsToAdding;
@@ -867,10 +1008,18 @@ const matchSlice = createSlice({
       }
 
       // Update Bowler stats
-      const activeBowler = activeInnings.bowlers.find((b) => b.playerId === match.activeBowlerId);
+      const activeBowler = activeInnings.bowlers.find(
+        (b) => b.playerId === match.activeBowlerId,
+      );
       if (activeBowler) {
         if (!activeBowler.bowlingStats) {
-          activeBowler.bowlingStats = { overs: 0, balls: 0, maidens: 0, runsConceded: 0, wickets: 0 };
+          activeBowler.bowlingStats = {
+            overs: 0,
+            balls: 0,
+            maidens: 0,
+            runsConceded: 0,
+            wickets: 0,
+          };
         }
         activeBowler.bowlingStats.runsConceded += runsIncurred;
         if (isBallValid) {
@@ -893,11 +1042,17 @@ const matchSlice = createSlice({
 
       if (runsToAdding === 6) {
         cTitle = `SIX! ${bowlerName} to ${batterName}`;
-        cDesc = commentaryPhrases6[Math.floor(Math.random() * commentaryPhrases6.length)];
+        cDesc =
+          commentaryPhrases6[
+            Math.floor(Math.random() * commentaryPhrases6.length)
+          ];
         cCategory = "BOUNDARY";
       } else if (runsToAdding === 4) {
         cTitle = `FOUR! ${bowlerName} to ${batterName}`;
-        cDesc = commentaryPhrases4[Math.floor(Math.random() * commentaryPhrases4.length)];
+        cDesc =
+          commentaryPhrases4[
+            Math.floor(Math.random() * commentaryPhrases4.length)
+          ];
         cCategory = "BOUNDARY";
       } else if (type === "WD" || type === "WD_RUNS") {
         cTitle = `WIDE! ${bowlerName} to ${batterName}`;
@@ -909,7 +1064,10 @@ const matchSlice = createSlice({
         cCategory = "EXTRA";
       } else if (runsIncurred === 0) {
         cTitle = `${commentaryOver} • ${bowlerName} to ${batterName}`;
-        cDesc = commentaryPhrasesDot[Math.floor(Math.random() * commentaryPhrasesDot.length)];
+        cDesc =
+          commentaryPhrasesDot[
+            Math.floor(Math.random() * commentaryPhrasesDot.length)
+          ];
       } else {
         cTitle = `${runsIncurred} Run${runsIncurred === 1 ? "" : "s"} • ${bowlerName} to ${batterName}`;
         cDesc = `${batterName} guides ${bowlerName}'s delivery through the gap to pick up ${runsIncurred} run${runsIncurred === 1 ? "" : "s"}.`;
@@ -924,10 +1082,15 @@ const matchSlice = createSlice({
         timestamp: new Date().toISOString(),
       };
       match.commentary.unshift(item);
-
       // Strike Rotation: odd runs rotation and Over complete rotation
       let swapNeeded = false;
-      if ((runsToAdding === 1 || runsToAdding === 3 || type === "BYE" || type === "LB") && isBallValid) {
+      if (
+        (runsToAdding === 1 ||
+          runsToAdding === 3 ||
+          type === "BYE" ||
+          type === "LB") &&
+        isBallValid
+      ) {
         swapNeeded = !swapNeeded;
       }
       if (justCompletedOver) {
@@ -942,7 +1105,10 @@ const matchSlice = createSlice({
 
       // Re-calculate win probability slightly for nice dynamic visual transitions
       let delta = runsIncurred > 3 ? 3 : runsIncurred === 0 ? -1 : 0.5;
-      const newProbA = Math.max(10, Math.min(90, match.winProbability.teamA + delta));
+      const newProbA = Math.max(
+        10,
+        Math.min(90, match.winProbability.teamA + delta),
+      );
       const newProbB = 100 - newProbA;
       match.winProbability.teamA = newProbA;
       match.winProbability.teamB = newProbB;
@@ -953,11 +1119,42 @@ const matchSlice = createSlice({
 
       updateMatchesList(state);
     },
+    addCommentaryRealtime: (state, action) => {
+      const match = state.currentMatch;
+      if (!match?.commentary) return;
+
+      const payload = action.payload;
+
+      // normalize id (support both id and _id)
+      const newId = payload.id || payload._id;
+
+      // avoid duplicates
+      const exists = match.commentary.some((c) => {
+        const existingId = c.id || c._id;
+        return existingId === newId;
+      });
+
+      if (!exists) {
+        match.commentary.unshift(payload);
+      }
+    },
+
+    removeCommentaryRealtime: (state, action) => {
+      const match = state.currentMatch;
+      if (!match?.commentary) return;
+
+      const targetId = action.payload;
+
+      match.commentary = match.commentary.filter((item) => {
+        const itemId = item.id || item._id;
+        return itemId !== targetId;
+      });
+    },
     syncScores: (state) => {
       state.isSynced = true;
       updateMatchesList(state);
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -974,7 +1171,9 @@ export const {
   changeBowler,
   triggerMatchFlowEvent,
   commitWicketState,
-  dismissBanner
+  dismissBanner,
+  addCommentaryRealtime,
+  removeCommentaryRealtime,
 } = matchSlice.actions;
 
 export default matchSlice.reducer;
