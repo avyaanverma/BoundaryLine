@@ -41,7 +41,6 @@ export default function createApp() {
   googleOAuthMiddleware(app); // google auth middleware
 
   registerFeatureRoutes(app, "/api");
-  registerFeatureRoutes(app, "/api/v1");
 
   app.use(notFoundHandler);
   app.use(errorHandler);
