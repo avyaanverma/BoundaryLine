@@ -40,63 +40,107 @@ const mvps = [
 export default function TournamentMVPs() {
     return (
         <section className="mt-10">
-            <h2 className="text-3xl font-semibold text-white mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
                 Tournament MVPs
             </h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
                 {mvps.map((player) => (
                     <div
                         key={player.id}
-                        className="bg-[#171717] border border-lime-500/20 rounded-2xl overflow-hidden"
+                        className="
+                            overflow-hidden
+                            rounded-3xl
+                            border border-[#94d5a5]/10
+                            bg-gradient-to-br
+                            from-[#11161c]
+                            via-[#151b20]
+                            to-[#11161c]
+                            hover:border-[#94d5a5]/25
+                            hover:-translate-y-1
+                            transition-all
+                            duration-300
+                        "
                     >
-                        <div className="relative h-60">
+                        {/* Image */}
+                        <div className="relative h-56 overflow-hidden">
+
                             <img
                                 src={player.image}
                                 alt={player.name}
-                                className="w-full h-full object-cover"
+                                className="
+                                    w-full
+                                    h-full
+                                    object-cover
+                                    transition-transform
+                                    duration-500
+                                    hover:scale-105
+                                "
                             />
 
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#11161c] via-transparent to-transparent" />
+
                             <div className="absolute bottom-4 left-4">
-                                <span className="bg-lime-400 text-black px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wide">
+                                <span
+                                    className="
+                                        px-4
+                                        py-2
+                                        rounded-full
+                                        bg-[#94d5a5]
+                                        text-[#08110b]
+                                        text-xs
+                                        md:text-sm
+                                        font-bold
+                                        uppercase
+                                        tracking-wide
+                                    "
+                                >
                                     {player.title}
                                 </span>
                             </div>
+
                         </div>
 
+                        {/* Content */}
                         <div className="p-6">
-                            <h3 className="text-3xl text-white font-medium">
+
+                            <h3 className="text-2xl md:text-3xl font-bold text-white">
                                 {player.name}
                             </h3>
 
-                            <p className="text-gray-400 mt-2 text-xl">
+                            <p className="mt-2 text-gray-400">
                                 {player.team}
                             </p>
 
-                            <div className="flex justify-between mt-8">
+                            <div className="mt-8 flex items-end justify-between">
+
                                 <div>
-                                    <p className="text-gray-500 text-sm uppercase">
+                                    <p className="text-xs uppercase tracking-wider text-gray-500">
                                         {player.statLabel1}
                                     </p>
 
-                                    <p className="text-lime-400 text-5xl font-bold mt-2">
+                                    <p className="mt-2 text-4xl md:text-5xl font-bold text-[#94d5a5]">
                                         {player.statValue1}
                                     </p>
                                 </div>
 
                                 <div className="text-right">
-                                    <p className="text-gray-500 text-sm uppercase">
+                                    <p className="text-xs uppercase tracking-wider text-gray-500">
                                         {player.statLabel2}
                                     </p>
 
-                                    <p className="text-white text-3xl font-semibold mt-2">
+                                    <p className="mt-2 text-2xl md:text-3xl font-bold text-white">
                                         {player.statValue2}
                                     </p>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
                 ))}
+
             </div>
         </section>
     );
