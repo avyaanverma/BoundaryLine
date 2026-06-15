@@ -3,13 +3,13 @@ import userModel from "../model/user.model.js";
 
 export default class UserRepo {
   // function to create a user using payload in {}
-  async createUser(payload) {
+  async create(payload) {
     return await userModel.create(payload);
   }
 
   // function to find a user using email
   async findByEmail(email) {
-    return await userModel.findOne({ email });
+    return await userModel.findOne({ email }).select("+password");
   }
 
   // function to find a user using id
@@ -18,7 +18,7 @@ export default class UserRepo {
   }
 
   async findOne(payload) {
-    return await userModel.findOne(payload);
+    return await userModel.findOne(payload).select("+password");
   }
 
   // function to find all users by ROLES.SUPER_ADMIN
