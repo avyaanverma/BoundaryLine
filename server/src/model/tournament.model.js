@@ -1,7 +1,7 @@
 import mongoose, { mongo } from "mongoose";
 import { format } from "../constant/format.constant";
 
-const seriesSchema = mongoose.Schema({
+const tournamentSchema = mongoose.Schema({
     name: {type: String, required: true, trim: true},
     format: {
         type: String,
@@ -12,8 +12,8 @@ const seriesSchema = mongoose.Schema({
     endDate: {type: Date, required: true},
     status: {
         type: String,
-        enum: Object.values(SERIES_STATUS),
-        default: SERIES_STATUS.UPCOMING
+        enum: Object.values(TOURNAMENT_STATUS),
+        default: TOURNAMENT_STATUS.UPCOMING
     },
     teams:[
         {
@@ -50,4 +50,4 @@ seriesSchema.path("teams").validate(
     "Series must have atleast 2 teams"
 )
 
-export const SeriesModel = mongoose.model("Series", seriesSchema);
+export const TournamentModel = mongoose.model("Tournament", tournamentSchema);

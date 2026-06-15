@@ -3,3 +3,9 @@ export const SERIES_STATUS = {
     ONGOING: "ONGOING",
     COMPLETED: "COMPLETED"
 }
+
+export const TOURNAMENT_STATUS = {
+    UPCOMING: "UPCOMING",
+    ONGOING: "ONGOING",
+    COMPLETED: "COMPLETED"
+}
