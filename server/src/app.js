@@ -6,6 +6,7 @@ import googleOAuthMiddleware from "./middleware/googleOAuth.middleware.js";
 import authRouter from "./modules/public/auth/auth.route.js";
 import publicPlayerRoute from "./modules/public/player/player.route.js";
 import publicTeamRoute from "./modules/public/team/team.route.js";
+import publicMatchRoute from "./modules/public/match/match.route.js";
 import userRouter from "./modules/private/user/user.route.js";
 import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
@@ -29,7 +30,8 @@ function registerFeatureRoutes(app, prefix) {
   app.use(`${prefix}/private/players`, privatePlayerRoute);
   app.use(`${prefix}/teams`, publicTeamRoute);
   app.use(`${prefix}/private/teams`, teamRoute);
-  app.use(`${prefix}/matches`, matchRoute);
+  app.use(`${prefix}/matches`, publicMatchRoute);
+  app.use(`${prefix}/private/matches`, matchRoute);
   app.use(`${prefix}/series`, seriesRoute);
   app.use(`${prefix}/tournaments`, tournamentRoute);
   app.use(`${prefix}/commentary`, commentaryRouter);
