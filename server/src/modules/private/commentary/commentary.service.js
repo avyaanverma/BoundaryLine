@@ -1,13 +1,12 @@
-import CommentaryRepository from "../../../repository/commentary.respository.js"
+import commentaryRepository from "../../../repository/commentary.respository.js";
 import Match from "../../../model/match.model.js";
-import BadRequest from "../../../shared/error/BadRequest.js";
-import NotFound from "../../../shared/error/NotFound.js";
 import { logger } from "../../../shared/utils/logger.js";
 import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
+import CommentaryDTO from "./dto/commentary.dto.js";
 
 class CommentaryService {
   constructor() {
-    this.commentaryRepository = new CommentaryRepository();
+    this.commentaryRepository = commentaryRepository;
   }
 
   /**
@@ -72,7 +71,7 @@ class CommentaryService {
       commentary,
     );
 
-    return commentary;
+    return new CommentaryDTO(commentary);
   }
 
   /**
@@ -100,7 +99,7 @@ class CommentaryService {
       "Fetching commentaries by match ID",
     );
 
-    return await this.commentaryRepository.findByMatchId(matchId, limit, page);
+    return this.commentaryRepository.findByMatchId(matchId, limit, page);
   }
 
   async deleteCommentary(id, userId) {
@@ -111,9 +110,9 @@ class CommentaryService {
       "Deleting commentary  entry",
     );
 
-    const commentary  = await this.commentaryRepository.findById(id); //jo commentary delete karna hai vo find karega
+    const commentary = await this.commentaryRepository.findById(id); //jo commentary delete karna hai vo find karega
 
-    if (!commentary ) {
+    if (!commentary) {
       logger.warn({ commentaryId: id }, "Commentary entry not found");
       throw new NotFound("Commentary entry not found");
     }
@@ -132,9 +131,9 @@ class CommentaryService {
     );
 
     // socket emit: live cliens ko delte event bhejte hai
-    emitToMatch(commentary .matchId.toString(), "commentary.deleted", { id });
+    emitToMatch(commentary.matchId.toString(), "commentary.deleted", { id });
 
-    return commentary ;
+    return new CommentaryDTO(commentary);
   }
 }
 

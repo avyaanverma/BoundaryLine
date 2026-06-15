@@ -73,3 +73,12 @@ export function authorizeRoles(allowedRoles = []) {
     next();
   };
 }
+
+export const authenticate = authenticateRequest;
+
+export function authorize(...allowedRoles) {
+  // What: preserve the shorter upstream middleware API.
+  // Why: new route modules may import `authorize("ADMIN")` instead of `authorizeRoles([...])`.
+  // How: adapt the variadic arguments to the shared role-authorizer.
+  return authorizeRoles(allowedRoles);
+}

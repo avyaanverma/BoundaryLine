@@ -1,6 +1,6 @@
 import { Commentary } from "../model/commentary.model.js";
 
-export default class CommentaryRepo {
+class CommentaryRepo {
   async create(payload) {
     return await Commentary.create(payload);
   }
@@ -28,3 +28,6 @@ export default class CommentaryRepo {
     return await Commentary.findByIdAndDelete(id);
   }
 }
+
+export default new CommentaryRepo();
+
