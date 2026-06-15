@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import AuthController from "./auth.controller.js";
-import { asyncHandler } from "../../shared/utils/asyncHandler.js";
+import { asyncHandler } from "../../../shared/utils/asyncHandler.js";
 
 const router = express.Router();
 const authController = new AuthController();
