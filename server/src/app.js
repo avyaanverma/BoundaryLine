@@ -9,6 +9,7 @@ import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
 import teamRoute from "./modules/private/team/team.route.js";
 import seriesRoute from "./modules/private/series/series.route.js";
+import tournamentRoute from "./modules/private/tournament/tournament.route.js";
 import commentaryRouter from "./modules/private/commentary/commentary.route.js";
 import {
   errorHandler,
@@ -24,6 +25,7 @@ function registerFeatureRoutes(app, prefix) {
   app.use(`${prefix}/teams`, teamRoute);
   app.use(`${prefix}/matches`, matchRoute);
   app.use(`${prefix}/series`, seriesRoute);
+  app.use(`${prefix}/tournaments`, tournamentRoute);
   app.use(`${prefix}/commentary`, commentaryRouter);
   app.use('/health', healthRouter);
 }

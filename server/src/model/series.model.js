@@ -1,5 +1,6 @@
-import mongoose, { mongo } from "mongoose";
-import { format } from "../constant/format.constant";
+import mongoose from "mongoose";
+import { FORMAT } from "../constant/format.constant.js";
+import { SERIES_STATUS } from "../constant/series.constant.js";
 
 const seriesSchema = mongoose.Schema({
     name: {type: String, required: true, trim: true},
