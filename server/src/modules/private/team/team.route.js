@@ -21,12 +21,6 @@ class TeamRoute {
     // What: map team HTTP endpoints to controller methods.
     // Why: route files should own URL shape, middleware order, and controller binding.
     // How: validate inputs first, then call class-based controller handlers.
-    this.router.get("/", this.teamController.listTeams);
-    this.router.get(
-      "/:id",
-      validateRequest(teamIdParamSchema),
-      this.teamController.getTeam,
-    );
     this.router.post(
       "/",
       validateRequest(createTeamSchema),
