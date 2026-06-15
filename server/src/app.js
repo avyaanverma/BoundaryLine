@@ -8,6 +8,7 @@ import publicPlayerRoute from "./modules/public/player/player.route.js";
 import publicTeamRoute from "./modules/public/team/team.route.js";
 import publicMatchRoute from "./modules/public/match/match.route.js";
 import publicSeriesRoute from "./modules/public/series/series.route.js";
+import publicTournamentRoute from "./modules/public/tournament/tournament.route.js";
 import userRouter from "./modules/private/user/user.route.js";
 import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
@@ -35,7 +36,8 @@ function registerFeatureRoutes(app, prefix) {
   app.use(`${prefix}/private/matches`, matchRoute);
   app.use(`${prefix}/series`, publicSeriesRoute);
   app.use(`${prefix}/private/series`, seriesRoute);
-  app.use(`${prefix}/tournaments`, tournamentRoute);
+  app.use(`${prefix}/tournaments`, publicTournamentRoute);
+  app.use(`${prefix}/private/tournaments`, tournamentRoute);
   app.use(`${prefix}/commentary`, commentaryRouter);
   app.use('/health', healthRouter);
 }
