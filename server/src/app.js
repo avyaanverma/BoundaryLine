@@ -5,8 +5,12 @@ import securityMiddleware from "./middleware/security.middleware.js";
 import googleOAuthMiddleware from "./middleware/googleOAuth.middleware.js";
 import authRouter from "./modules/auth/auth.route.js";
 import userRouter from "./modules/user/user.route.js";
+import healthRouter from "./modules/health/health.route.js"
 import matchRoute from "./modules/match/match.route.js";
 import teamRoute from "./modules/team/team.route.js";
+import commentaryRouter from "./modules/commentary/commentary.route.js"
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
+import HealthController from "./modules/health/health.controller.js";
 
 
 function registerFeatureRoutes(app, prefix) {
@@ -17,6 +21,8 @@ function registerFeatureRoutes(app, prefix) {
     app.use(`${prefix}/auth`, authRouter);
     app.use(`${prefix}/teams`, teamRoute);
     app.use(`${prefix}/matches`, matchRoute);
+    app.use(`${prefix}/commentary`, commentaryRouter);
+
 }
   
 export default function createApp() {
@@ -31,24 +37,15 @@ export default function createApp() {
   }
 
   securityMiddleware(app); // security middleware added
-  googleOAuthMiddleware(app); // google auth middleware
-
-  // app.use("/api/auth", authRouter);
-   
+  googleOAuthMiddleware(app); // google auth middleware   
   
   registerFeatureRoutes(app, "/api");
+  registerFeatureRoutes(app, "/api/v1");
 
-  /**
-   * @method GET
-   * @route /health
-   * @description to check the status of the server
-   * */
-
-  app.get("/health", (req, res) => {
-    res.json({
-      message: "healthy",
-    });
-  });
+  
+  app.use(healthRouter);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   return app;
 }

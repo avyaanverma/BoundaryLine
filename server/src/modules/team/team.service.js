@@ -1,5 +1,6 @@
-import AppError from "../../shared/errors/AppError.js";
-import TeamRepository from "./team.repository.js";
+import Conflict from "../../shared/error/Conflict.js";
+import NotFound from "../../shared/error/NotFound.js";
+import TeamRepository from "../../repository/team.repository.js";
 
 class TeamService {
   constructor(teamRepository = new TeamRepository()) {
@@ -26,7 +27,7 @@ class TeamService {
       // What: stop the request when the team does not exist.
       // Why: controllers should return a clear 404 response instead of null data.
       // How: throw a shared AppError consumed by error middleware.
-      throw AppError.notFound("Team not found");
+      throw new NotFound("Team not found");
     }
 
     return team;
@@ -57,7 +58,7 @@ class TeamService {
       // What: guard against a race where the team was deleted after the first lookup.
       // Why: returning null would make the API response inconsistent.
       // How: throw the same 404 used by normal missing-team lookups.
-      throw AppError.notFound("Team not found");
+      throw new NotFound("Team not found");
     }
 
     return updatedTeam;
@@ -74,7 +75,7 @@ class TeamService {
       // What: guard against concurrent deletion.
       // Why: the service should always return a predictable not-found error.
       // How: throw AppError after the repository reports no updated document.
-      throw AppError.notFound("Team not found");
+      throw new NotFound("Team not found");
     }
 
     return deletedTeam;
@@ -101,13 +102,13 @@ class TeamService {
       // What: report a duplicate full team name.
       // Why: users need to know exactly which field caused the conflict.
       // How: throw a 409 conflict AppError.
-      throw AppError.conflict("Team name already exists");
+      throw new Conflict("Team name already exists");
     }
 
     // What: report a duplicate short team code.
     // Why: shortName is used heavily in scorecards and match rows.
     // How: throw a 409 conflict AppError.
-    throw AppError.conflict("Team short name already exists");
+    throw new Conflict("Team short name already exists");
   }
 }
 

@@ -11,10 +11,10 @@ const envSchema = z.object({
 
   // Loggers
   LOGGER_LEVEL: z.string().default(appConstant.LOGGER_LEVEL),
-  MORGAN_LOGGER: z.string().default(appConstant.MORGAN_LOGGER),
+  MORGAN_LOGGER: z.string().trim().default(appConstant.MORGAN_LOGGER),
 
   // CORS origins
-  CORS_ORIGIN: z.string().default(appConstant.CORS_ORIGIN),
+  CORS_ORIGIN: z.string().trim().default(appConstant.CORS_ORIGIN),
 
   // Rate limitation
   RATELIMIT_WINDOWMS: z.coerce.number().default(appConstant.RATELIMIT_WINDOWMS),

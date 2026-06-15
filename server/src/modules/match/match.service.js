@@ -1,5 +1,6 @@
-import AppError from "../../shared/errors/AppError.js";
-import MatchRepository from "./match.repository.js";
+import BadRequest from "../../shared/error/BadRequest.js";
+import NotFound from "../../shared/error/NotFound.js";
+import MatchRepository from "../../repository/match.repository.js";
 
 class MatchService {
   constructor(matchRepository = new MatchRepository()) {
@@ -26,7 +27,7 @@ class MatchService {
       // What: stop processing when the match does not exist.
       // Why: callers should receive a clear 404 instead of null data.
       // How: throw a shared not-found AppError.
-      throw AppError.notFound("Match not found");
+      throw new NotFound("Match not found");
     }
 
     return match;
@@ -57,7 +58,7 @@ class MatchService {
       // What: handle a race where the match was deleted after the first lookup.
       // Why: returning null would make the API response inconsistent.
       // How: throw the same not-found error used by normal lookups.
-      throw AppError.notFound("Match not found");
+      throw new NotFound("Match not found");
     }
 
     return updatedMatch;
@@ -74,7 +75,7 @@ class MatchService {
       // What: guard against concurrent deletion.
       // Why: services should expose predictable not-found behavior.
       // How: throw AppError when repository returns no updated document.
-      throw AppError.notFound("Match not found");
+      throw new NotFound("Match not found");
     }
 
     return deletedMatch;
@@ -85,7 +86,7 @@ class MatchService {
     // Why: a match where team1 equals team2 is invalid cricket data.
     // How: compare ObjectId strings after converting both values to strings.
     if (String(team1) === String(team2)) {
-      throw AppError.badRequest("team1 and team2 must be different teams");
+      throw new BadRequest("team1 and team2 must be different teams");
     }
   }
 }

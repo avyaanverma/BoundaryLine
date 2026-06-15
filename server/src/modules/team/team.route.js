@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { validateRequest } from "../../shared/middleware/validateRequest.js";
+import { validateRequest } from "../../middleware/validateRequest.js";
 import TeamController from "./team.controller.js";
 import {
   createTeamSchema,
   teamIdParamSchema,
   updateTeamSchema,
-} from "./team.validator.js";
+} from "../../validators/team.validator.js";
 
 class TeamRoute {
   constructor(teamController = new TeamController()) {
