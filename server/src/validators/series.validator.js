@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { z } from "zod";
 
-import { FORMAT } from "../../../constant/format.constant.js";
-import { SERIES_STATUS } from "../../../constant/series.constant.js";
+import { FORMAT } from "../constant/format.constant.js";
+import { SERIES_STATUS } from "../constant/series.constant.js";
 
 const objectIdSchema = z.string().refine(
   (value) => mongoose.Types.ObjectId.isValid(value),
