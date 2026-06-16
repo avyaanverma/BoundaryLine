@@ -17,6 +17,7 @@ import NewsPage from "../features/news/pages/NewsPage.jsx";
 import TeamPage from "../features/all-team/page/TeamPage.jsx";
 import RankingPage from "../features/ranking/pages/RankingPage.jsx";
 
+
 const ComingSoonPage = ({ title, description }) => {
   return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6">
@@ -138,47 +139,47 @@ const router = createBrowserRouter([
     element: <Navigate to="/" replace />,
   },
 
-
   // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke
 
-//   {
-//     element: <MainLayout />,
-//     children: [
-//       {
-//         path: "/analytics",
-//         element: <AnalyticsPage />,
-//       },
-//       {
-//         path: "/matches",
-//         element: <FixturesPage />,
-//       },
-//       {
-//         path: "testfx",
-//         element: <DuplicateFixture />,
-//       },
-//       {
-//         path: "adminlogin",
-//         element: <AdminLoginForm />,
-//       },
-//       {
-//         path: "register",
-//         element: <AdminRegisterForm />,
-//       },
-//       {
-// <<<<<<< HEAD
-//         path: "userregister",
-//         element: <UserRegisterForm />
-// =======
-//         path: "userregiste",
-//         element: <UserRegisterForm />,
-// >>>>>>> fc4e7af147e9c21515bba9b38a90c75352657654
-//       },
-//     ],
-//   },
-//   {
-//     path: "userlogin",
-//     element: <UserLoginForm />,
-//   },
+  {
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/analytics",
+        element: <AnalyticsPage />,
+      },
+      {
+        path: "/matches",
+        element: <FixturesPage />,
+      },
+      {
+        path: "testfx",
+        element: <DuplicateFixture />,
+      },
+    ],
+  },
+
+  {
+    path:"fixture",
+    element: <FixturesPage />,
+  },
+
+  {
+    path: "register",
+    element: <AdminRegisterForm />,
+  },
+  {
+    path: "userregister",
+    element: <UserRegisterForm />,
+  },
+  {
+    path: "adminlogin",
+    element: <AdminLoginForm />,
+  },
+  {
+    path: "userlogin",
+    element: <UserLoginForm />,
+  },
 
   //....
 ]);

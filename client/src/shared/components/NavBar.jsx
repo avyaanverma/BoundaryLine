@@ -1,9 +1,9 @@
 import { Menu } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const navItems = [
     { label: "Scores", path: "/" },
-    { label: "Schedule", path: "/matches" },
+    // { label: "Schedule", path: "/matches" },
     { label: "Teams", path: "/teams" },
     { label: "Rankings", path: "/ranking" },
     { label: "News", path: "/news" },
