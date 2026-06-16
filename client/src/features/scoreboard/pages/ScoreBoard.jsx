@@ -17,9 +17,8 @@ import {
 } from "../../scoreboard/store/mathSlice.js";
 import ScorecardTab from "../components/ScorecardTab.jsx";
 import PlayingXITab from "../components/PlayingXITab.jsx";
-import { SOCKET_EVENTS } from "../../../shared/services/socket/socket-events.js";
 
-import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";
+import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";  
 
 
 export const ScoreboardPage = () => {
