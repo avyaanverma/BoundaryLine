@@ -1,7 +1,7 @@
 
 import { Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { UserRegisterHook } from "../hook/userDetailsHook";
+import { UserRegisterHook } from "../hook/UserDetailsHook";
 
 function UserRegisterForm() {
     const navigate = useNavigate();
