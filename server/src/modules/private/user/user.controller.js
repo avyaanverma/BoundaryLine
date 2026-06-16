@@ -1,69 +1,74 @@
-import { StatusCodes } from "http-status-codes";
-
-import PrivateUserService from "./user.service.js";
-
 import { asyncHandler } from "../../../shared/utils/asyncHandler.js";
 import ApiResponse from "../../../shared/utils/ApiResponse.js";
+import UserService from "./user.service.js";
 
-export default class PrivateUserController {
-  constructor(
-    userService = new PrivateUserService()
-  ) {
+class UserController {
+  constructor(userService = new UserService()) {
     this.userService = userService;
   }
 
-  getCurrentUser = asyncHandler(
-    async (req, res) => {
-      const user =
-        await this.userService.getUserById(
-          req.user._id
-        );
-
-      return new ApiResponse(
-        StatusCodes.OK,
-        "Current user fetched successfully",
-        user
-      ).send(res);
-    }
-  );
-
-  listUsers = asyncHandler(async (_req, res) => {
-    const users =
-      await this.userService.getUsers();
+  createUser = asyncHandler(async (req, res) => {
+    const user = await this.userService.createUser(
+      req.validated.body
+    );
 
     return new ApiResponse(
-      StatusCodes.OK,
+      201,
+      "User created successfully",
+      user
+    ).send(res);
+  });
+
+  getAllUsers = asyncHandler(async (req, res) => {
+    const users = await this.userService.getAllUsers(
+      req.validated.query
+    );
+
+    return new ApiResponse(
+      200,
       "Users fetched successfully",
       users
     ).send(res);
   });
 
-  updateCurrentUser = asyncHandler(
-    async (req, res) => {
-      const user =
-        await this.userService.updateUser(
-          req.user._id,
-          req.validated?.body || req.body
-        );
+  getUserById = asyncHandler(async (req, res) => {
+    const user = await this.userService.getUserById(
+      req.validated.params.id
+    );
 
-      return new ApiResponse(
-        StatusCodes.OK,
-        "User updated successfully",
-        user
-      ).send(res);
-    }
-  );
+    return new ApiResponse(
+      200,
+      "User fetched successfully",
+      user
+    ).send(res);
+  });
 
-  deleteUser = asyncHandler(async (req, res) => {
-    const user =
-      await this.userService.deleteUser(
-        req.params.id
+  updateUserRole = asyncHandler(async (req, res) => {
+    const updatedUser =
+      await this.userService.updateUserRole(
+        req.validated.params.id,
+        req.validated.body.role
       );
 
-      return new ApiResponse(
-        StatusCodes.OK,
-        "User deleted successfully",
-        user
-      ).send(res);
+    return new ApiResponse(
+      200,
+      "User role updated successfully",
+      updatedUser
+    ).send(res);
+  });
+
+  deleteUser = asyncHandler(async (req, res) => {
+    const deletedUser =
+      await this.userService.deleteUser(
+        req.validated.params.id
+      );
+
+    return new ApiResponse(
+      200,
+      "User deleted successfully",
+      deletedUser
+    ).send(res);
   });
 }
+
+export default UserController;

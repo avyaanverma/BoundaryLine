@@ -19,7 +19,7 @@ export const SOCKET_EVENTS = {
   SCORE_DELETED: "score.deleted",
 
   // Commentary Events
-  COMMENTARY_CREATED: "commentary.created",
+  COMMENTARY_CREATED: "commenta-ry.created",
   COMMENTARY_UPDATED: "commentary.updated",
   COMMENTARY_DELETED: "commentary.deleted",
 

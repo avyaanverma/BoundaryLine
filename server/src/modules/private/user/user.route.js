@@ -1,48 +1,81 @@
-import express from "express";
-
+import { Router } from "express";
 import UserController from "./user.controller.js";
+import { validateRequest } from "../../../middleware/validateRequest.js";
 
 import {
-  authMiddleware,
-  authorizationMiddleware,
+  authenticateRequest,
+  authorizeRoles,
 } from "../../../middleware/auth.middleware.js";
 
 import { ROLES } from "../../../constant/role.constant.js";
 
-const router = express.Router();
+import {
+  createUserSchema,
+  updateUserRoleSchema,
+  userIdParamSchema,
+  userQuerySchema,
+} from "../../../validators/user.validator.js";
 
-const userController = new UserController();
+class UserRoute {
+  constructor(userController = new UserController()) {
+    this.router = Router();
+    this.userController = userController;
 
-router.get(
-  "/me",
-  authMiddleware,
-  userController.getCurrentUser
-);
+    this.registerRoutes();
+  }
 
-router.patch(
-  "/me",
-  authMiddleware,
-  userController.updateCurrentUser
-);
+  registerRoutes() {
+    const adminOnly = [
+      authenticateRequest,
+      authorizeRoles([ROLES.ADMIN, ROLES.SUPER_ADMIN]),
+    ];
 
-router.get(
-  "/",
-  authMiddleware,
-  authorizationMiddleware([
-    ROLES.ADMIN,
-    ROLES.SUPER_ADMIN,
-  ]),
-  userController.listUsers
-);
+    // Create User
+    this.router.post(
+      "/",
+      ...adminOnly,
+      validateRequest(createUserSchema),
+      this.userController.createUser,
+    );
 
-router.delete(
-  "/:id",
-  authMiddleware,
-  authorizationMiddleware([
-    ROLES.ADMIN,
-    ROLES.SUPER_ADMIN,
-  ]),
-  userController.deleteUser
-);
+    // Get All Users
+    this.router.get(
+      "/",
+      ...adminOnly,
+      validateRequest(userQuerySchema),
+      this.userController.getAllUsers,
+    );
 
-export default router;
+    // Get User By Id
+    this.router.get(
+      "/:id",
+      ...adminOnly,
+      validateRequest(userIdParamSchema),
+      this.userController.getUserById,
+    );
+
+    // Update User Role
+    this.router.patch(
+      "/:id/role",
+      ...adminOnly,
+      validateRequest(updateUserRoleSchema),
+      this.userController.updateUserRole,
+    );
+
+    // Soft Delete User
+    this.router.delete(
+      "/:id",
+      ...adminOnly,
+      validateRequest(userIdParamSchema),
+      this.userController.deleteUser,
+    );
+  }
+
+  getRouter() {
+    return this.router;
+  }
+}
+
+const userRoute = new UserRoute();
+
+export default userRoute.getRouter();

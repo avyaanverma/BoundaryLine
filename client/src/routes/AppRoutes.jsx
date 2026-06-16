@@ -7,13 +7,12 @@ import ScorerWorkspace from "../features/scorer-console/pages/ScorerWorkspace.js
 import { RoleGuard } from "../app/guards/RoleGuard.jsx";
 import { UserRole } from "../features/scorer-console/pages/type.js";
 import AnalyticsPage from "../feature/analytics/pages/AnalyticsPage.jsx";
-import MainLayout from '../layout/MainLayout.jsx'
+import MainLayout from "../layout/MainLayout.jsx";
 import DuplicateFixture from "../features/fixtures/pages/duplicateFixture.jsx";
 import UserRegisterForm from "../features/auth/user/component/UserRegisterForm.jsx";
 import UserLoginForm from "../features/auth/user/component/UserLoginForm.jsx";
 import AdminRegisterForm from "../features/auth/admin/components/AdminRegisterForm.jsx";
-import { AdminLoginPage } from "../pages/admin/AdminLoginPage.jsx";
-import AdminDashboardPage from "../pages/admin/AdminDashboardPage.jsx";
+import AdminLoginForm from "../features/auth/admin/components/AdminLoginForm.jsx";
 import NewsPage from "../features/news/pages/NewsPage.jsx";
 import TeamPage from "../feature/all-team/page/TeamPage.jsx";
 import RankingPage from "../features/ranking/pages/RankingPage.jsx";
@@ -34,7 +33,9 @@ const ComingSoonPage = ({ title, description }) => {
 
 const ProtectedScorerRoute = ({ children }) => {
   return (
-    <RoleGuard allowedRoles={[UserRole.SCORER, UserRole.ADMIN, UserRole.SUPER_ADMIN]}>
+    <RoleGuard
+      allowedRoles={[UserRole.SCORER, UserRole.ADMIN, UserRole.SUPER_ADMIN]}
+    >
       {children}
     </RoleGuard>
   );
@@ -82,22 +83,16 @@ const router = createBrowserRouter([
     element: <ScorerWorkspace />,
   },
 
-
   {
     path: "/admin",
-    element: <AdminDashboardPage />,
-  },
-  {
-    path: "/admin/dashboard",
-    element: <Navigate to="/admin" replace />,
-  },
-  {
-    path: "/admin/login",
-    element: <AdminLoginPage />,
-  },
-  {
-    path: "/admin/register",
-    element: <AdminRegisterForm />,
+    element: (
+      <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.SUPER_ADMIN]}>
+        <ComingSoonPage
+          title="Admin Panel"
+          description="Tournament setup, teams, players, venues, permissions, and match operations will live here."
+        />
+      </RoleGuard>
+    ),
   },
   {
     path: "/tournaments",
@@ -132,13 +127,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/news",
-    element: (
-      <NewsPage />
-    ),
+    element: <NewsPage />,
   },
   {
     path: "/ranking",
-    element: <RankingPage />
+    element: <RankingPage />,
   },
   {
     path: "*",
@@ -152,40 +145,36 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/analytics",
-        element: <AnalyticsPage />
+        element: <AnalyticsPage />,
       },
       {
         path: "/matches",
-        element: <FixturesPage />
+        element: <FixturesPage />,
       },
       {
         path: "testfx",
-        element: <DuplicateFixture />
+        element: <DuplicateFixture />,
       },
       {
         path: "adminlogin",
-        element: <Navigate to="/admin/login" replace />
+        element: <AdminLoginForm />,
       },
       {
         path: "register",
-        element: <Navigate to="/admin/register" replace />
+        element: <AdminRegisterForm />,
       },
       {
         path: "userregiste",
-        element: <UserRegisterForm />
+        element: <UserRegisterForm />,
       },
-
-
-    ]
-
+    ],
   },
   {
     path: "userlogin",
-    element: <UserLoginForm />
-  }
+    element: <UserLoginForm />,
+  },
 
   //....
-
 ]);
 
 const AppRoutes = () => {
