@@ -423,9 +423,10 @@ export default function BoundaryLine() {
               </p>
 
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                <Button variant="primary">
-                  View Live Scores <Zap className="w-5 h-5" />
-                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => navigate("/scoreboard")}
+                > View Live Scores </Button>
                 <Button variant="secondary">Get Started</Button>
               </div>
             </div>
