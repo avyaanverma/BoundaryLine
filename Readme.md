@@ -18,34 +18,34 @@ The platform enables organizers, scorers, players, and spectators to follow matc
 |---|---------|------|
 | 1 | Project Overview | [./README.md](#1-project-overview) |
 | 2 | Features | [./README.md](#2-features) |
-| 3 | Architecture Overview | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md) |
-| 4 | Folder Structure Explanation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#folder-structure) |
-| 5 | Database Design | [docs/backend/DATABASE.md](backend/DATABASE.md) |
-| 6 | ER Diagram Description | [docs/backend/DATABASE.md](backend/DATABASE.md#er-diagram-description) |
-| 7 | Authentication Flow | [docs/backend/SECURITY.md](backend/SECURITY.md#authentication-flow) |
-| 8 | Authorization Flow | [docs/backend/SECURITY.md](backend/SECURITY.md#authorization-flow) |
-| 9 | Request Lifecycle | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#request-lifecycle) |
-| 10 | API Architecture | [docs/backend/API.md](backend/API.md#api-architecture) |
-| 11 | Socket Architecture | [docs/backend/SOCKET.md](backend/SOCKET.md) |
-| 12 | Module-wise Documentation | [docs/backend/MODULES.md](backend/MODULES.md) |
-| 13 | Database Schemas Explanation | [docs/backend/DATABASE.md](backend/DATABASE.md#database-schemas) |
-| 14 | API Endpoints Documentation | [docs/backend/API.md](backend/API.md) |
-| 15 | Validation Layer Documentation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#validation-layer) |
-| 16 | Middleware Documentation | [docs/backend/SECURITY.md](backend/SECURITY.md#middleware-layer) |
-| 17 | Repository Pattern Documentation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#repository-layer) |
-| 18 | Service Layer Documentation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#service-layer) |
-| 19 | Controller Layer Documentation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#controller-layer) |
-| 20 | Route Layer Documentation | [docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#route-layer) |
-| 21 | Frontend Architecture | [docs/frontend/ARCHITECTURE.md](frontend/ARCHITECTURE.md) |
-| 22 | React Query Usage | [docs/frontend/STATE_MANAGEMENT.md](frontend/STATE_MANAGEMENT.md#react-query) |
-| 23 | Redux Store Design | [docs/frontend/STATE_MANAGEMENT.md](frontend/STATE_MANAGEMENT.md#redux-store) |
-| 24 | Real-Time Communication Flow | [docs/backend/SOCKET.md](backend/SOCKET.md#real-time-communication-flow) |
-| 25 | Deployment Guide | [docs/DEPLOYMENT.md](DEPLOYMENT.md) |
-| 26 | Environment Variables | [docs/DEPLOYMENT.md](DEPLOYMENT.md#environment-variables) |
-| 27 | Security Best Practices | [docs/backend/SECURITY.md](backend/SECURITY.md#security-best-practices) |
-| 28 | Scalability Considerations | [docs/DEPLOYMENT.md](DEPLOYMENT.md#scalability) |
-| 29 | Future Improvements | [docs/DEPLOYMENT.md](DEPLOYMENT.md#future-improvements) |
-| 30 | Developer Onboarding Guide | [docs/CONTRIBUTING.md](CONTRIBUTING.md) |
+| 3 | Architecture Overview | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md) |
+| 4 | Folder Structure Explanation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#folder-structure) |
+| 5 | Database Design | [.docs/backend/DATABASE.md](backend/DATABASE.md) |
+| 6 | ER Diagram Description | [.docs/backend/DATABASE.md](backend/DATABASE.md#er-diagram-description) |
+| 7 | Authentication Flow | [.docs/backend/SECURITY.md](backend/SECURITY.md#authentication-flow) |
+| 8 | Authorization Flow | [.docs/backend/SECURITY.md](backend/SECURITY.md#authorization-flow) |
+| 9 | Request Lifecycle | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#request-lifecycle) |
+| 10 | API Architecture | [.docs/backend/API.md](backend/API.md#api-architecture) |
+| 11 | Socket Architecture | [.docs/backend/SOCKET.md](backend/SOCKET.md) |
+| 12 | Module-wise Documentation | [.docs/backend/MODULES.md](backend/MODULES.md) |
+| 13 | Database Schemas Explanation | [.docs/backend/DATABASE.md](backend/DATABASE.md#database-schemas) |
+| 14 | API Endpoints Documentation | [.docs/backend/API.md](backend/API.md) |
+| 15 | Validation Layer Documentation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#validation-layer) |
+| 16 | Middleware Documentation | [.docs/backend/SECURITY.md](backend/SECURITY.md#middleware-layer) |
+| 17 | Repository Pattern Documentation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#repository-layer) |
+| 18 | Service Layer Documentation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#service-layer) |
+| 19 | Controller Layer Documentation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#controller-layer) |
+| 20 | Route Layer Documentation | [.docs/backend/ARCHITECTURE.md](backend/ARCHITECTURE.md#route-layer) |
+| 21 | Frontend Architecture | [.docs/frontend/ARCHITECTURE.md](frontend/ARCHITECTURE.md) |
+| 22 | React Query Usage | [.docs/frontend/STATE_MANAGEMENT.md](frontend/STATE_MANAGEMENT.md#react-query) |
+| 23 | Redux Store Design | [.docs/frontend/STATE_MANAGEMENT.md](frontend/STATE_MANAGEMENT.md#redux-store) |
+| 24 | Real-Time Communication Flow | [.docs/backend/SOCKET.md](backend/SOCKET.md#real-time-communication-flow) |
+| 25 | Deployment Guide | [.docs/DEPLOYMENT.md](DEPLOYMENT.md) |
+| 26 | Environment Variables | [.docs/DEPLOYMENT.md](DEPLOYMENT.md#environment-variables) |
+| 27 | Security Best Practices | [.docs/backend/SECURITY.md](backend/SECURITY.md#security-best-practices) |
+| 28 | Scalability Considerations | [.docs/DEPLOYMENT.md](DEPLOYMENT.md#scalability) |
+| 29 | Future Improvements | [.docs/DEPLOYMENT.md](DEPLOYMENT.md#future-improvements) |
+| 30 | Developer Onboarding Guide | [.docs/CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ---
 
@@ -149,6 +149,6 @@ BoundaryLine/
 │   ├── server.js               # Entry point
 │   └── package.json
 │
-├── docs/                       # Documentation
+├── .docs/                       # Documentation
 └── Readme.md                   # Project readme
 ```
