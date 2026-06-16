@@ -6,6 +6,9 @@ import SquadRepository from "../../../repository/squad.repository.js";
 import NotFound from "../../../shared/error/NotFound.js";
 import Conflict from "../../../shared/error/Conflict.js";
 import AppError from "../../../shared/error/AppError.js";
+import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
+import { logger } from "../../../shared/utils/logger.js";
+import { SOCKET_EVENTS } from "../../../constant/socket-events.constant.js";
 
 class PlayingXIService {
   constructor(
@@ -100,13 +103,47 @@ class PlayingXIService {
       throw new AppError("All players must belong to squad", 400);
     }
 
-    return this.playingXIRepository.create(payload);
+    const playingXI = await this.playingXIRepository.create(payload);
+
+    emitToMatch(matchId.toString(), SOCKET_EVENTS.PLAYING_XI_SUBMITTED, {
+        matchId,
+        teamId,
+        playingXIId: playingXI._id
+    });
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.PLAYING_XI_SUBMITTED,
+        matchId,
+        teamId,
+      },
+      "Socket event emitted"
+    );
+
+    return playingXI;
   }
 
   async updatePlayingXI(id, payload) {
-    await this.getPlayingXIById(id);
+    const existing = await this.getPlayingXIById(id);
 
-    return this.playingXIRepository.updateById(id, payload);
+    const updated = await this.playingXIRepository.updateById(id, payload);
+
+    emitToMatch(existing.matchId.toString(), SOCKET_EVENTS.PLAYING_XI_UPDATED, {
+        matchId: existing.matchId,
+        teamId: existing.teamId,
+        playingXIId: updated._id
+    });
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.PLAYING_XI_UPDATED,
+        matchId: existing.matchId,
+        teamId: existing.teamId,
+      },
+      "Socket event emitted"
+    );
+
+    return updated;
   }
 
   async deletePlayingXI(id) {
