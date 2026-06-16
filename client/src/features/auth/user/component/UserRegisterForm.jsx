@@ -1,21 +1,22 @@
 
 import { Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {UserRegisterHook,UserLoginHook} from "../hook/UserDetailsHook"
 
 function UserRegisterForm() {
     const navigate = useNavigate();
 
-    const { register, handleSubmit, onSubmit, errors, password } = UserRegisterForm()
+    const { register, handleSubmit, onSubmit, errors, password } = UserRegisterHook()
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-[#020806] via-[#04120C] to-[#072013] flex items-center justify-center px-4 py-10">
             <div className="w-full max-w-xl">
                 {/* Logo */}
-                <div className="mb-10 flex justify-center">
+                {/* <div className="mb-10 flex justify-center">
                     <h1 className="text-4xl font-bold text-[#8FE39C]">
                         BoundaryLine
                     </h1>
-                </div>
+                </div> */}
 
                 {/* Card */}
                 <div className="rounded-2xl border border-[#2D3B35] bg-[#0E1720] p-8 shadow-xl">
@@ -243,6 +244,7 @@ function UserRegisterForm() {
                         </p>
                     </form>
                 </div>
+                
             </div>
         </div>
     );

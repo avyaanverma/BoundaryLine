@@ -21,6 +21,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { NavLink } from "react-router";
+import Navbar from "../../../shared/components/NavBar";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -740,7 +741,8 @@ export default function FixturesPage() {
         }
       `}</style>
 
-      <TopNav />
+      {/* <TopNav /> */}
+      <Navbar/>
       <Sidebar />
 
       <main
