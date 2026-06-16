@@ -45,11 +45,13 @@ export default class AuthController {
   }
 
   async makeAdmin(req, res) {
-    const user = await this.userService.makeAdmin(req.validated.body.email);
+    const { email, role } = req.validated.body;
+
+    const user = await this.userService.makeAdmin(email, role);
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      message: "User promoted to ADMIN",
+      message: `User role updated to ${role}`,
       data: user,
     });
   }

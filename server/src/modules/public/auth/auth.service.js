@@ -30,19 +30,24 @@ export default class AuthService {
     // Why: all login flows should share one token policy.
     // How: use the runtime app config for expiry options.
     const config = app_config(env.NODE_ENV);
-    const accessToken = jwt.sign(payload, env.ACCESS_TOKEN_SECRET, config.jwt.accessToken);
-    const refreshToken = jwt.sign(payload, env.REFRESH_TOKEN_SECRET, config.jwt.refreshToken);
+    const accessToken = jwt.sign(
+      payload,
+      env.ACCESS_TOKEN_SECRET,
+      config.jwt.accessToken,
+    );
+    const refreshToken = jwt.sign(
+      payload,
+      env.REFRESH_TOKEN_SECRET,
+      config.jwt.refreshToken,
+    );
 
     return { accessToken, refreshToken };
   }
 
-  async makeAdmin(email) {
-    // What: promote one existing user to ADMIN.
-    // Why: role changes must be explicit and auditable through a protected endpoint.
-    // How: update by email and return a safe profile payload.
+  async makeAdmin(email, role) {
     const promotedUser = await this.userRepo.findOneAndUpdate(
       { email: email.toLowerCase() },
-      { role: ROLES.ADMIN },
+      { role },
     );
 
     if (!promotedUser) {
@@ -68,7 +73,9 @@ export default class AuthService {
       return existingGoogleUser;
     }
 
-    const existingEmailUser = await this.userRepo.findByEmail(normalizedPayload.email);
+    const existingEmailUser = await this.userRepo.findByEmail(
+      normalizedPayload.email,
+    );
 
     if (existingEmailUser) {
       if (!existingEmailUser.googleId && normalizedPayload.googleId) {
@@ -89,7 +96,9 @@ export default class AuthService {
       ...payload,
       email: payload.email.toLowerCase(),
     };
-    const existingUser = await this.userRepo.findByEmail(normalizedPayload.email);
+    const existingUser = await this.userRepo.findByEmail(
+      normalizedPayload.email,
+    );
 
     if (existingUser) {
       throw new AppError("User already exists.", StatusCodes.CONFLICT);
@@ -110,7 +119,10 @@ export default class AuthService {
     }
 
     if (!user.password) {
-      throw new AppError("Password login is not enabled for this account.", StatusCodes.UNAUTHORIZED);
+      throw new AppError(
+        "Password login is not enabled for this account.",
+        StatusCodes.UNAUTHORIZED,
+      );
     }
 
     const isMatch = await user.comparePassword(payload.password);
@@ -129,7 +141,10 @@ export default class AuthService {
     const email = googleProfile.emails?.[0]?.value;
 
     if (!email) {
-      throw new AppError("Google profile email is required.", StatusCodes.BAD_REQUEST);
+      throw new AppError(
+        "Google profile email is required.",
+        StatusCodes.BAD_REQUEST,
+      );
     }
 
     const user = await this.createOrFindUser({
