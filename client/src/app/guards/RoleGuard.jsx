@@ -1,14 +1,5 @@
 import { useSelector } from "react-redux";
-import { UserRole } from "../../features/scorer-console/pages/type.js";
-
-/**
- * Reusable utility to check if a user role matches permission policies.
- */
-export const checkPermissions = (userRole, allowedRoles) => {
-  // SUPER_ADMIN has full master control, easily bypass all role restraints
-  if (userRole === UserRole.SUPER_ADMIN) return true;
-  return allowedRoles.includes(userRole);
-};
+import { checkPermissions } from "./permissions.js";
 
 /**
  * RoleGuard Component: Restricts complete page trees based on the active user role.
@@ -16,6 +7,7 @@ export const checkPermissions = (userRole, allowedRoles) => {
 export const RoleGuard = ({ children, allowedRoles, fallback }) => {
   const currentRole = useSelector((state) => state.auth.role);
   const hasAccess = checkPermissions(currentRole, allowedRoles);
+  const visibleRole = currentRole ?? "GUEST";
 
   if (!hasAccess) {
     if (fallback) return <>{fallback}</>;
@@ -29,7 +21,7 @@ export const RoleGuard = ({ children, allowedRoles, fallback }) => {
         </div>
         <h2 className="text-2xl font-bold font-display text-white">Access Violation</h2>
         <p className="text-gray-400 font-sans max-w-sm">
-          Your current security clearance level (<span className="text-brand-green font-semibold">{currentRole}</span>) is insufficient to access this action console.
+          Your current security clearance level (<span className="text-brand-green font-semibold">{visibleRole}</span>) is insufficient to access this action console.
         </p>
       </div>
     );

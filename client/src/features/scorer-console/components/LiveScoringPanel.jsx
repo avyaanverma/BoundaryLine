@@ -18,7 +18,6 @@ export const LiveScoringPanel = ({
   setActiveModal,
   handleScoreBall,
   handlePubLive,
-  handleBowlerSelect,
   onViewScoreboard,
   setOutBatterId,
   setNewBatterId,
@@ -26,8 +25,6 @@ export const LiveScoringPanel = ({
   setFielderId,
   setKeeperId,
   initWicketFlow,
-  setSetupStep,
-  tempRuns,
   setTempRuns,
 }) => {
   const localDispatch = useDispatch();

@@ -1,8 +1,6 @@
-import env from "../config/env.js";
-
 export default {
   PORT: 3000,
-  MONGO_URI: "http://localhost:27101",
+  MONGO_URI: "mongodb://127.0.0.1:27017/boundaryline",
   NODE_ENV: "development",
   MORGAN_LOGGER: "dev",
   LOGGER_LEVEL: "info",
@@ -13,7 +11,7 @@ export default {
 };
 
 // i have changed the app_config object into function because i was facing the clash while importing app constant in env.js
-export const app_config = () => {
+export const app_config = (nodeEnv = process.env.NODE_ENV || "development") => {
   return {
     jwt: {
       accessToken: { expiresIn: "1h" },
@@ -22,17 +20,17 @@ export const app_config = () => {
     cookie: {
       accessToken: {
         httpOnly: true,
-        secure: env.NODE_ENV === "production",
+        secure: nodeEnv === "production",
         sameSite: "lax",
-        maxAge: env.NODE_ENV === "production" ? 60 * 60 * 1000 : 15 * 60 * 1000,
+        maxAge: nodeEnv === "production" ? 60 * 60 * 1000 : 15 * 60 * 1000,
       },
 
       refreshToken: {
         httpOnly: true,
-        secure: env.NODE_ENV === "production",
+        secure: nodeEnv === "production",
         sameSite: "lax",
         maxAge:
-          env.NODE_ENV === "production"
+          nodeEnv === "production"
             ? 30 * 24 * 60 * 60 * 1000
             : 15 * 60 * 1000,
       },

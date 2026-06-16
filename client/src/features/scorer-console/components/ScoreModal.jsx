@@ -47,7 +47,6 @@ export const ScorerModals = ({
   setSelectedXI_A,
   setSelectedXI_B,
   setSetupStep,
-  triggerMatchFlowEvent: parentTriggerMatchFlowEvent,
 }) => {
   return (
     <AnimatePresence>

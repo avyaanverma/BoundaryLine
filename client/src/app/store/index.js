@@ -1,47 +1,76 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import matchReducer from "../../features/scoreboard/store/mathSlice.js";
-import { UserRole } from "../../features/scorer-console/pages/type.js";
 
-const authPlaceholderSlice = createSlice({
+const AUTH_STORAGE_KEY = "boundaryline_auth_user";
+
+export const clearStoredAuth = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+  window.localStorage.removeItem("boundaryline_token");
+  window.localStorage.removeItem("boundaryline_refresh_token");
+};
+
+const readStoredAuth = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const storedValue =
+    window.localStorage.getItem(AUTH_STORAGE_KEY) ||
+    window.sessionStorage.getItem(AUTH_STORAGE_KEY);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue);
+  } catch {
+    clearStoredAuth();
+    return null;
+  }
+};
+
+const storedAuth = readStoredAuth();
+
+const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: {
-      id: "u-1",
-      username: "boundaryline_scorer",
-      email: "ommhatre379@gmail.com",
-    },//s
-    role: UserRole.ADMIN, // Default to SCORER so scorer controls are active!
-    token: "jwt-test-token",
-    isAuthenticated: true,
+    user: storedAuth?.user ?? null,
+    role: storedAuth?.role ?? null,
+    token: storedAuth?.token ?? null,
+    isAuthenticated: Boolean(storedAuth?.user && storedAuth?.role),
   },
   reducers: {
     setRole: (state, action) => {
       state.role = action.payload;
     },
     login: (state, action) => {
-      state.user = {
-        id: "u-usr",
-        username: action.payload.username,
-        email: action.payload.email,
-      };
-      state.role = action.payload.role;
-      state.token = "jwt-mocked-token-string";
+      const user = action.payload.user ?? action.payload;
+      state.user = user;
+      state.role = user.role;
+      state.token = action.payload.token ?? null;
       state.isAuthenticated = true;
     },
     logout: (state) => {
       state.user = null;
-      state.role = UserRole.SCORER;
+      state.role = null;
       state.token = null;
       state.isAuthenticated = false;
+      clearStoredAuth();
     },
   },
 });
 
-export const { setRole, login, logout } = authPlaceholderSlice.actions;
+export const { setRole, login, logout } = authSlice.actions;
 
 export const store = configureStore({
   reducer: {
-    auth: authPlaceholderSlice.reducer,
+    auth: authSlice.reducer,
     match: matchReducer,
   },
 });

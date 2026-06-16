@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Users, Layout } from "lucide-react";
 import { RoleGuard } from "../../../app/guards/RoleGuard";
 import { useSelector, useDispatch } from "react-redux";
-import { setRole, logout } from "../../../app/store/index.js";
-import { UserRole } from "../../../type.js";
+import { setRole } from "../../../app/store/index.js";
+import { UserRole } from "../../scorer-console/pages/type.js";
 import ScoreboardPage from "../../scoreboard/pages/ScoreBoard.jsx";
 import ScorerConsolePage from "../../scorer-console/pages/ScorerConsolePage.jsx";
 
 const BoundaryLineConsole = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, role, user } = useSelector((state) => state.auth);
+  const { role } = useSelector((state) => state.auth);
   // Active view router: "SCOREBOARD" or "SCORER_CONSOLE"
   const [activeLayout, setActiveLayout] = useState("SCORER_CONSOLE");
 

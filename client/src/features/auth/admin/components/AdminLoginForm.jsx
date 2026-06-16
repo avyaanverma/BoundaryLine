@@ -1,4 +1,12 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { login } from '../../../../app/store/index.js'
+import {
+  getGoogleAuthUrl,
+  loginAdmin,
+  persistAdminSession,
+} from '../api/adminAuthApi.js'
 
 const initialFormState = {
   email: '',
@@ -7,8 +15,11 @@ const initialFormState = {
 }
 
 const AdminLoginForm = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [formState, setFormState] = useState(initialFormState)
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const updateField = (event) => {
     const { name, type, checked, value } = event.target
@@ -19,7 +30,7 @@ const AdminLoginForm = () => {
     }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
     if (!formState.email.includes('@')) {
@@ -31,7 +42,31 @@ const AdminLoginForm = () => {
       setMessage('Password must be at least 6 characters.')
       return
     }
-    setMessage('Login details look ready for API integration.')
+
+    try {
+      setIsSubmitting(true)
+      setMessage('')
+      const user = await loginAdmin({
+        email: formState.email,
+        password: formState.password,
+      })
+
+      persistAdminSession({ user, remember: formState.remember })
+      dispatch(login({ user }))
+      navigate('/admin', { replace: true })
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+        error.message ||
+        'Admin login failed. Please check your credentials.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleGoogleLogin = () => {
+    window.location.href = getGoogleAuthUrl()
   }
 
   return (
@@ -105,10 +140,11 @@ const AdminLoginForm = () => {
         </div>
 
         <button
-          className="min-h-14 w-full rounded-lg bg-[#075f32] px-5 text-lg font-extrabold text-[#d8f6df] transition hover:bg-[#08713b] focus:outline-none focus:ring-4 focus:ring-[#9adca7]/20 active:scale-[0.99]"
+          className="min-h-14 w-full rounded-lg bg-[#075f32] px-5 text-lg font-extrabold text-[#d8f6df] transition hover:bg-[#08713b] focus:outline-none focus:ring-4 focus:ring-[#9adca7]/20 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+          disabled={isSubmitting}
           type="submit"
         >
-          Login
+          {isSubmitting ? 'Signing in...' : 'Login'}
         </button>
 
         {message && (
@@ -125,6 +161,7 @@ const AdminLoginForm = () => {
 
       <button
         className="min-h-12 w-full rounded-lg border border-[#38423d] bg-[#171b1e] px-4 text-base font-semibold text-[#eef2ef] transition hover:border-[#9adca7] hover:bg-[#1d2225] focus:outline-none focus:ring-4 focus:ring-[#9adca7]/20"
+        onClick={handleGoogleLogin}
         type="button"
       >
         <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded bg-[#eef2ef] text-sm font-extrabold text-[#151719]">

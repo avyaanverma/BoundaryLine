@@ -15,7 +15,7 @@ export const useLiveMatchQuery = (matchId) => {
       try {
         const response = await apiClient.get(`/matches/${matchId}`);
         return response.data;
-      } catch (err) {
+      } catch {
         console.warn("[BoundaryLine Query] Backend not available. Serving local Redux live match engine state.");
         return currentReduxState;
       }
@@ -36,7 +36,7 @@ export const useMatchesQuery = () => {
       try {
         const response = await apiClient.get("/matches");
         return response.data;
-      } catch (err) {
+      } catch {
         // Fallback list of matches
         return [
           {
@@ -89,7 +89,7 @@ export const usePlayersQuery = (teamId) => {
       try {
         const response = await apiClient.get(`/teams/${teamId}/players`);
         return response.data;
-      } catch (err) {
+      } catch {
         // Return standard cricket squad
         return [
           { playerId: "1", name: "Rohit Sharma", role: "BATTER" },

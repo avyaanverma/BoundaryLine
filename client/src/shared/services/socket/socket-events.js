@@ -24,5 +24,8 @@ export const SOCKET_EVENTS = {
   SCORER_ASSIGNED: "SCORER_ASSIGNED",
   MATCH_PAUSED: "MATCH_PAUSED",
   INNINGS_ENDED: "INNINGS_ENDED",
-  COMMENTARY_ADDED: "COMMENTARY_ADDED",
+
+  // Commentary realtime
+  COMMENTARY_UPDATED: "commentary.updated",
+  COMMENTARY_DELETED: "commentary.deleted",
 };

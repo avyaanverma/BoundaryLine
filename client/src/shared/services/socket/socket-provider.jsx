@@ -1,9 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import socketService from "./socket.js";
 import { SOCKET_EVENTS } from "./socket-events.js";
-
-export const SocketContext = createContext(null);
+import { SocketContext } from "./socket-context.js";
 
 export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
