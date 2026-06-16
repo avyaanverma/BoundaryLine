@@ -86,9 +86,7 @@ function Navbar() {
                     <div className="flex items-center gap-3">
 
                         <button
-                            onClick={() =>
-                                navigate("/userlogin")
-                            }
+
                             className="
                                 hidden
                                 sm:block
@@ -103,9 +101,7 @@ function Navbar() {
                         </button>
 
                         <button
-                            onClick={() =>
-                                navigate("/userregister")
-                            }
+
                             className="
                                 hidden
                                 sm:flex
