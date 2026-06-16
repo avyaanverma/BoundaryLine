@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import { clearStoredAuth, logout, store } from "../../app/store/index.js";
 
 const API_BASE_URL =
@@ -31,8 +32,16 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
+      const wasLoggedIn = !!store.getState().auth.isAuthenticated;
       clearStoredAuth();
       store.dispatch(logout());
+
+      if (wasLoggedIn) {
+        toast.warn("Session expired. Please log in again.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      }
     }
 
     return Promise.reject(error);

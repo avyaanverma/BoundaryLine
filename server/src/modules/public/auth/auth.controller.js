@@ -3,6 +3,7 @@ import AuthService from "./auth.service.js";
 import { StatusCodes } from "http-status-codes";
 import env from "../../../config/env.js";
 import buildSuccessResponse from "../../../shared/successResponse/buildSuccessResponse.js";
+import { setAuthCookies } from "../../../shared/utils/authCookies.js";
 
 export default class AuthController {
   constructor() {
