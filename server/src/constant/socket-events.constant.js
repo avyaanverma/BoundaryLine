@@ -1,4 +1,8 @@
 export const SOCKET_EVENTS = {
+  // Room Events
+  MATCH_JOIN: "match.join",
+  MATCH_LEAVE: "match.leave",
+
   // Match Events
   MATCH_CREATED: "match.created",
   MATCH_UPDATED: "match.updated",
