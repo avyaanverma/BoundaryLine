@@ -13,6 +13,7 @@ import publicCommentaryRoute from "./modules/public/commentary/commentary.route.
 import publicSquadRoute from "./modules/public/squad/squad.route.js";
 import publicScoreRoute from "./modules/public/score/score.route.js";
 import publicPlayingXIRoute from "./modules/public/playingXI/playingXI.route.js";
+import adminRoute from "./modules/admin/admin.routes.js";
 import userRouter from "./modules/private/user/user.route.js";
 import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
@@ -35,6 +36,7 @@ function registerFeatureRoutes(app, prefix) {
   // How: reuse the same route modules for both prefixes so controllers stay single-source.
   app.use(`${prefix}/users`, userRouter);
   app.use(`${prefix}/auth`, authRouter);
+  app.use(`${prefix}/admin`, adminRoute);
   app.use(`${prefix}/players`, publicPlayerRoute);
   app.use(`${prefix}/private/players`, privatePlayerRoute);
   app.use(`${prefix}/teams`, publicTeamRoute);
@@ -53,7 +55,6 @@ function registerFeatureRoutes(app, prefix) {
   app.use(`${prefix}/private/scores`, scoreRoute);
   app.use(`${prefix}/playing-xis`, publicPlayingXIRoute);
   app.use(`${prefix}/private/playing-xis`, playingXIRoute);
-  app.use('/health', healthRouter);
 }
 
 export default function createApp() {
@@ -62,7 +63,6 @@ export default function createApp() {
   // What: enable compact request logging during local development.
   // Why: `morgan("dev")` is noisy and is intended for debugging, not production traffic.
   // How: only attach it when the environment is not production.
-  // this code will only work in production
   if (env.NODE_ENV === "development") {
     app.use(morgan(env.MORGAN_LOGGER));
   }
@@ -71,6 +71,10 @@ export default function createApp() {
   googleOAuthMiddleware(app); // google auth middleware
 
   registerFeatureRoutes(app, "/api");
+  registerFeatureRoutes(app, "/api/v1");
+  app.use("/health", healthRouter);
+  app.use("/api/health", healthRouter);
+  app.use("/api/v1/health", healthRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

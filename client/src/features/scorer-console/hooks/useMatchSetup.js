@@ -6,7 +6,6 @@ import { createDynamicMatch, startMatchSetup } from "../../scoreboard/store/math
  */
 export const useMatchSetup = (p1, p2, p3, p4) => {
   const isObj = p1 && typeof p1 === "object" && ("match" in p1 || "selectedXI_A" in p1 || "dispatch" in p1);
-  const match = isObj ? p1.match : p1;
   const selectedXI_A = isObj ? p1.selectedXI_A : p2;
   const selectedXI_B = isObj ? p1.selectedXI_B : p3;
   const dispatch = isObj ? p1.dispatch : p4;

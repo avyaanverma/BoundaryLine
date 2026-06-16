@@ -1,13 +1,24 @@
 import { io } from "socket.io-client";
 import { SOCKET_EVENTS } from "./socket-events.js";
 
-const SOCKET_URL = (import.meta.env.VITE_SOCKET_URL) || "https://api-dev.boundaryline.com"//backend ka server ka url or Dev server;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";
+
+const createNoopSocket = () => ({
+  connected: false,
+  connect: () => {},
+  disconnect: () => {},
+  emit: () => {},
+  off: () => {},
+  on: () => {},
+  removeAllListeners: () => {},
+});
 
 class SocketService {
   constructor() {
     this.socket = null;
     this.listeners = new Map();
     this.localChannel = null;
+    this.hasWarnedMissingSocketUrl = false;
 
     if (typeof window !== "undefined" && "BroadcastChannel" in window) {
       try {
@@ -37,6 +48,20 @@ class SocketService {
    * Initializes the socket.io-client connection
    */
   connect(token) {
+    if (!SOCKET_URL) {
+      if (!this.hasWarnedMissingSocketUrl) {
+        console.warn(
+          "[BoundaryLine Socket] VITE_SOCKET_URL is not set; realtime socket is running in no-op mode."
+        );
+        this.hasWarnedMissingSocketUrl = true;
+      }
+
+      if (!this.socket) {
+        this.socket = createNoopSocket();
+      }
+      return this.socket;
+    }
+
     if (this.socket) {
       if (this.socket.connected) return this.socket;
       this.socket.connect();
@@ -65,6 +90,10 @@ class SocketService {
    * Disconnects the socket client safely
    */
   disconnect() {
+    if (!SOCKET_URL) {
+      return;
+    }
+
     if (this.socket) {
       console.log("[BoundaryLine Socket] Disconnecting from server");
       this.socket.disconnect();
@@ -82,8 +111,8 @@ class SocketService {
     if (this.localChannel) {
       try {
         this.localChannel.postMessage({ event, data });
-      } catch (err) {
-        console.log(err)
+      } catch (error) {
+        console.warn("[BoundaryLine Local Sync] Broadcast emit failed:", error);
       }
     }
   }

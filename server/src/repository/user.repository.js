@@ -7,9 +7,17 @@ export default class UserRepo {
     return await userModel.create(payload);
   }
 
+  async createUser(payload) {
+    return this.create(payload);
+  }
+
   // function to find a user using email
   async findByEmail(email) {
-    return await userModel.findOne({ email }).select("+password");
+    return await userModel.findOne({ email: email.toLowerCase() }).select("+password");
+  }
+
+  async findByGoogleId(googleId) {
+    return await userModel.findOne({ googleId });
   }
 
   // function to find a user using id
@@ -29,6 +37,10 @@ export default class UserRepo {
 
   async findOneAndUpdate(filter, update) {
     return await userModel.findOneAndUpdate(filter, update, { new: true });
+  }
+
+  async linkGoogleAccount(userId, payload) {
+    return await userModel.findByIdAndUpdate(userId, payload, { new: true });
   }
   
   async updateRole(email, role) {

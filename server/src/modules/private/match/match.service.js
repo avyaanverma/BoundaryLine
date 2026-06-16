@@ -99,7 +99,7 @@ class MatchService {
     // Status change events
     if (payload.status && payload.status !== currentMatch.status) {
       emitToMatch(matchId.toString(), SOCKET_EVENTS.MATCH_STATUS_UPDATED, socketPayload);
-      
+
       logger.info(
         {
           event: SOCKET_EVENTS.MATCH_STATUS_UPDATED,

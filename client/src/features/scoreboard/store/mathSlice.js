@@ -704,8 +704,8 @@ const matchSlice = createSlice({
       }
 
       // Generate precise visual string and out description
-      let notation = "";
-      let detailDesc = "";
+      let notation;
+      let detailDesc;
 
       switch (dismissalType) {
         case "BOWLED":
@@ -755,6 +755,9 @@ const matchSlice = createSlice({
           detailDesc = `OUT! Dismissed.`;
           break;
       }
+
+      notation = notation || `out b ${bowlerName}`;
+      detailDesc = detailDesc || `OUT! Dismissed.`;
 
       // Dismiss batter
       if (outBatter && outBatter.battingStats) {
@@ -1033,8 +1036,8 @@ const matchSlice = createSlice({
 
       // Append Smart Commentary with variations
       const commentaryOver = `${activeInnings.overs}.${activeInnings.balls}`;
-      let cTitle = `${commentaryOver} • ${runsIncurred} Run${runsIncurred === 1 ? "" : "s"}`;
-      let cDesc = "";
+      let cTitle;
+      let cDesc;
       let cCategory = "NORMAL";
 
       const bowlerName = activeBowler?.name || "Bowler";
@@ -1070,8 +1073,14 @@ const matchSlice = createSlice({
           ];
       } else {
         cTitle = `${runsIncurred} Run${runsIncurred === 1 ? "" : "s"} • ${bowlerName} to ${batterName}`;
-        cDesc = `${batterName} guides ${bowlerName}'s delivery through the gap to pick up ${runsIncurred} run${runsIncurred === 1 ? "" : "s"}.`;
+        cDesc =
+          commentaryPhrasesRuns[
+            Math.floor(Math.random() * commentaryPhrasesRuns.length)
+          ];
       }
+
+      cTitle = cTitle || `${commentaryOver} • ${runsIncurred} Run${runsIncurred === 1 ? "" : "s"}`;
+      cDesc = cDesc || "";
 
       const item = {
         id: `c-add-${Date.now()}`,

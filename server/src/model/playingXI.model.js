@@ -140,7 +140,7 @@ playingXISchema.index(
   }
 );
 
-export const PlayingXIModel = mongoose.model(
+export const PlayingXIModel = mongoose.models.PlayingXI || mongoose.model(
   "PlayingXI",
   playingXISchema
 );

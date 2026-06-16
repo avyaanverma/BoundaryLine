@@ -1,110 +1,107 @@
-import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
-import AppError from "../shared/error/AppError.js";
-import NotFound from "../shared/error/NotFound.js";
 import env from "../config/env.js";
-import { asyncHandler } from "../shared/utils/asyncHandler.js";
+import { ROLES } from "../constant/role.constant.js";
+import AppError from "../shared/error/AppError.js";
 
-class AuthMiddleware {
-  authenticate(req, _res, next) {
-    const authHeader = req.headers.authorization;
-    const directRole = req.headers["x-user-role"];
-    const directUserId = req.headers["x-user-id"];
-
-    let user = null;
-
-    // Allow header auth only in development
-    const allowHeaderAuth = process.env.NODE_ENV === "development";
-
-    // Allowed roles
-    const allowedRoles = ["SUPER_ADMIN", "ADMIN", "SCORER"];
-
-    // Header-based auth (development only)
-    if (allowHeaderAuth && (directRole || directUserId)) {
-      // Validate role
-      if (directRole && !allowedRoles.includes(directRole)) {
-        return next(new AppError("Invalid role", 400));
-      }
-
-      // Validate ObjectId
-      if (directUserId && !mongoose.Types.ObjectId.isValid(directUserId)) {
-        return next(new AppError("Invalid user ID", 400));
-      }
-
-      user = {
-        _id: directUserId
-          ? new mongoose.Types.ObjectId(directUserId)
-          : new mongoose.Types.ObjectId("60d5ec4934d4a89a80000001"),
-        role: directRole || "ADMIN",
-      };
-    }
-
-    // Bearer token auth
-    else if (authHeader?.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
-
-      if (!allowedRoles.includes(token)) {
-        return next(new AppError("Invalid authentication token", 401));
-      }
-
-      user = {
-        _id: new mongoose.Types.ObjectId("60d5ec4934d4a89a80000001"),
-        role: token,
-      };
-    }
-
-    // No auth
-    else {
-      return next(new AppError("Authentication required", 401));
-    }
-
-    req.user = user;
-    next();
+function getCookieValue(cookieHeader, cookieName) {
+  // What: read one cookie value from the raw Cookie header.
+  // Why: the app does not currently use cookie-parser, but auth accepts cookie tokens.
+  // How: split the header into key/value pairs and decode the matching cookie.
+  if (!cookieHeader) {
+    return null;
   }
 
-  authorize(...allowedRoles) {
-    return (req, _res, next) => {
-      if (!req.user) {
-        return next(new AppError("Authentication required", 401));
-      }
+  const cookie = cookieHeader
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${cookieName}=`));
 
-      if (!allowedRoles.includes(req.user.role)) {
-        return next(
-          new AppError("Access forbidden: Insufficient permissions", 403),
-        );
-      }
+  if (!cookie) {
+    return null;
+  }
 
-      next();
-    };
+  try {
+    return decodeURIComponent(cookie.slice(cookieName.length + 1));
+  } catch {
+    return null;
   }
 }
 
-const authGuard = new AuthMiddleware();
+function getAccessToken(req) {
+  // What: extract the access token from supported request locations.
+  // Why: browser flows use cookies while API clients often use Bearer headers.
+  // How: prefer Authorization Bearer, then fall back to the accessToken cookie.
+  const authorizationHeader = req.headers.authorization;
 
-export const authenticate = authGuard.authenticate.bind(authGuard);
+  if (authorizationHeader) {
+    const [scheme, token] = authorizationHeader.split(/\s+/);
 
-export const authorize = authGuard.authorize.bind(authGuard);
-
-export const authMiddleware = asyncHandler((req, res, next) => {
-  const token = req.cookies.accessToken;
-
-  if (!token) throw new NotFound("Token not found");
-  const payload = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
-  if (!payload)
-    throw new AppError("UnAuthorized user", StatusCodes.UNAUTHORIZED);
-  req.user = payload;
-
-  next();
-});
-
-// Role based access Middleware
-export const authorizationMiddleware = asyncHandler((role) => {
-  return (req, res, next) => {
-    if (role.includes(req.user.role)) {
-      next();
-    } else {
-      throw new AppError("UnAuthorized user", StatusCodes.FORBIDDEN);
+    if (scheme?.toLowerCase() === "bearer" && token) {
+      return token.trim();
     }
+  }
+
+  return getCookieValue(req.headers.cookie, "accessToken");
+}
+
+export function authenticateRequest(req, _res, next) {
+  // What: verify a JWT access token and attach its payload to the request.
+  // Why: write APIs need a trusted user identity before mutating data.
+  // How: verify with ACCESS_TOKEN_SECRET and forward auth failures as 401 errors.
+  const token = getAccessToken(req);
+
+  if (!token) {
+    next(new AppError("Access token is required", StatusCodes.UNAUTHORIZED));
+    return;
+  }
+
+  try {
+    req.user = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
+    next();
+  } catch (_error) {
+    next(new AppError("Invalid or expired access token", StatusCodes.UNAUTHORIZED));
+  }
+}
+
+export function authorizeRoles(allowedRoles = []) {
+  // What: build middleware that checks the authenticated user's role.
+  // Why: authenticated users should only access operations allowed for their role.
+  // How: compare req.user.role with the supplied allow-list.
+  return function authorizeRolesMiddleware(req, _res, next) {
+    if (!req.user?.role) {
+      next(new AppError("Authenticated user role is required", StatusCodes.UNAUTHORIZED));
+      return;
+    }
+
+    if (req.user.role === ROLES.SUPER_ADMIN) {
+      next();
+      return;
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      next(new AppError("User role is not allowed for this operation", StatusCodes.FORBIDDEN));
+      return;
+    }
+
+    next();
   };
-});
+}
+
+export const authenticate = authenticateRequest;
+
+export function authorize(...allowedRoles) {
+  // What: preserve the shorter upstream middleware API.
+  // Why: new route modules may import `authorize("ADMIN")` instead of `authorizeRoles([...])`.
+  // How: adapt the variadic arguments to the shared role-authorizer.
+  return authorizeRoles(allowedRoles);
+}
+
+export const authMiddleware = authenticateRequest;
+
+export function authorizationMiddleware(roles = []) {
+  // What: preserve the upstream auth middleware name.
+  // Why: some newer modules import `authorizationMiddleware` instead of `authorizeRoles`.
+  // How: normalize a single role or role array to the shared role authorizer.
+  return authorizeRoles(Array.isArray(roles) ? roles : [roles]);
+}

@@ -12,7 +12,8 @@ import DuplicateFixture from "../features/fixtures/pages/duplicateFixture.jsx";
 import UserRegisterForm from "../features/auth/user/component/UserRegisterForm.jsx";
 import UserLoginForm from "../features/auth/user/component/UserLoginForm.jsx";
 import AdminRegisterForm from "../features/auth/admin/components/AdminRegisterForm.jsx";
-import AdminLoginForm from "../features/auth/admin/components/AdminLoginForm.jsx";
+import { AdminLoginPage } from "../pages/admin/AdminLoginPage.jsx";
+import AdminDashboardPage from "../pages/admin/AdminDashboardPage.jsx";
 import NewsPage from "../features/news/pages/NewsPage.jsx";
 import TeamPage from "../feature/all-team/page/TeamPage.jsx";
 import RankingPage from "../features/ranking/pages/RankingPage.jsx";
@@ -84,14 +85,19 @@ const router = createBrowserRouter([
 
   {
     path: "/admin",
-    element: (
-      <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.SUPER_ADMIN]}>
-        <ComingSoonPage
-          title="Admin Panel"
-          description="Tournament setup, teams, players, venues, permissions, and match operations will live here."
-        />
-      </RoleGuard>
-    ),
+    element: <AdminDashboardPage />,
+  },
+  {
+    path: "/admin/dashboard",
+    element: <Navigate to="/admin" replace />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLoginPage />,
+  },
+  {
+    path: "/admin/register",
+    element: <AdminRegisterForm />,
   },
   {
     path: "/tournaments",
@@ -139,7 +145,7 @@ const router = createBrowserRouter([
     element: <Navigate to="/" replace />,
   },
 
-  // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke 
+  // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke
 
   {
     element: <MainLayout />,
@@ -158,11 +164,11 @@ const router = createBrowserRouter([
       },
       {
         path: "adminlogin",
-        element: <AdminLoginForm />
+        element: <Navigate to="/admin/login" replace />
       },
       {
         path: "register",
-        element: <AdminRegisterForm />
+        element: <Navigate to="/admin/register" replace />
       },
       {
         path: "userregiste",

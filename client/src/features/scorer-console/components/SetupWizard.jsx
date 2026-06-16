@@ -1,8 +1,4 @@
-import {
-  setActiveMatch,
-  createDynamicMatch,
-  startMatchSetup,
-} from "../../scoreboard/store/mathSlice.js";
+import { setActiveMatch } from "../../scoreboard/store/mathSlice.js";
 import PremiumSelect from "./PremiumSelect.jsx";
 import { ArrowRight, Award, FolderSync, Play, Users } from "lucide-react";
 /**
@@ -16,8 +12,6 @@ export const SetupWizard = ({
   currentRosterB,
   selectedXI_A,
   selectedXI_B,
-  setSelectedXI_A,
-  setSelectedXI_B,
   setActiveModal,
   setupStep,
   setSetupStep,
@@ -27,8 +21,6 @@ export const SetupWizard = ({
   setTossDecision,
   newMatchTitle,
   setNewMatchTitle,
-  newMatchSubtitle,
-  setNewMatchSubtitle,
   newTeamAName,
   setNewTeamAName,
   newTeamBName,

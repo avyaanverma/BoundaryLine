@@ -1,4 +1,4 @@
-import { SeriesModel } from "../model/series.model";
+import { SeriesModel } from "../model/series.model.js";
 
 class SeriesRepository {
     constructor(){
@@ -9,7 +9,7 @@ class SeriesRepository {
         // What: fetch all series.
         // Why: list APIs should hide soft-deleted records by default.
         // How: query by `isDeleted:false`, sort by name, and return plain objects.
-        await this.seriesModel.find({isDeleted: false}).sort({startDate: 1}).lean();
+        return this.seriesModel.find({isDeleted: false}).sort({startDate: 1}).lean();
     }
 
     async findById(seriesId){
@@ -71,3 +71,5 @@ class SeriesRepository {
         })
     }
 }
+
+export default SeriesRepository;

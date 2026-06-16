@@ -4,8 +4,16 @@ import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
     name: {type: String, required: true, trim: true},
-    email: {type: String, required: true, trim:true, lowercase:true},
-    password: {type: String, required: true, minlength: 6},
+    email: {type: String, required: true, trim:true, lowercase:true, unique: true},
+    googleId: {type: String, trim: true, unique: true, sparse: true},
+    password: {
+      type: String,
+      required() {
+        return !this.googleId;
+      },
+      minlength: 6,
+      select: false,
+    },
     role: {type: String, enum: Object.values(ROLES), default: ROLES.SCORER},
     isDeleted: {type: Boolean, default: false},
     picture: {  
@@ -21,13 +29,21 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function (next) {
   // basicall this is also a middleware of mongoose
-  if (!this.isModified("password")) return; // if password is changed then hash it
+  if (!this.isModified("password") || !this.password) {
+    next();
+    return;
+  }
 
-  this.password = await bcrypt.hash(this.password, 10);
+  try {
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-export default mongoose.model("User", userSchema);
+export default mongoose.models.User || mongoose.model("User", userSchema);

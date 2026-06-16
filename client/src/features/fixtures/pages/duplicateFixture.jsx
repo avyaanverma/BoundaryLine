@@ -1,18 +1,11 @@
-import React, { useState } from "react";
-
 import MatchCardCountdown from "../component/MatchCardCountdown";
 import MatchCardFull from "../component/MatchCardFull";
 import MatchCardResult from "../component/MatchCardResult";
 import MiniMatchCard from "../component/MiniMatchCard";
 import SectionDivider from "../component/SectionDivider";
-import GlassPanel from "../component/GlassPanel";
 
 
 function DuplicateFixture() {
-    const [view, setView] = useState("list");
-
-
-
     return (
         <>
             <div className="w-full pt-20 px-4 md:px-6 min-h-screen pb-10">

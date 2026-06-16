@@ -7,6 +7,7 @@ import AiInsights from "../components/AiInsights.jsx";
 import TopPerformers from "../components/TopPerformers.jsx";
 import MatchNews from "../components/MatchNews.jsx";
 import socketService from "../../../shared/services/socket/socket.js";
+import { SOCKET_EVENTS } from "../../../shared/services/socket/socket-events.js";
 import { useSocket } from "../../../shared/services/socket/useSocket.js";
 import LiveCommentary from "../components/LiveCommentary.jsx";
 import {
@@ -85,7 +86,7 @@ export const ScoreboardPage = () => {
         onCommentaryDeleted,
       );
     };
-  }, [match?.id, dispatch]);
+  }, [match?.id, dispatch, joinMatchRoom, leaveMatchRoom]);
 
   if (!match || !activeInnings) return <div>Loading...</div>;
 

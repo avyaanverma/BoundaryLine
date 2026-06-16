@@ -6,6 +6,6 @@ export default class UserService {
   }
 
   async CreateUser(user) {
-    this.userRepo.create(user);
+    return this.userRepo.createUser(user);
   }
 }

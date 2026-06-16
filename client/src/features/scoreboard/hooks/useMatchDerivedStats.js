@@ -21,12 +21,6 @@ export const useMatchDerivedStats = () => {
     return match.innings[match.currentInningsNum - 1] || null;
   }, [match]);
 
-  // Extract variables to safely include in the dependencies array without risking TypeError
-  const currentInningsNum = match?.currentInningsNum;
-  const runs = activeInnings?.runs;
-  const totalBallsBowledVal = activeInnings?.totalBallsBowled;
-  const totalOversField = match?.totalOvers;
-
   return useMemo(() => {
     if (!match || !activeInnings) {
       return {
@@ -70,7 +64,7 @@ export const useMatchDerivedStats = () => {
       target: targetVal,
       isSecondInnings,
     };
-  }, [match, activeInnings, currentInningsNum, runs, totalBallsBowledVal, totalOversField]);
+  }, [match, activeInnings]);
 };
 
 export default useMatchDerivedStats;

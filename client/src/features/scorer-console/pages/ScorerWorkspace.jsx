@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootProvider } from "../../../app/providers/RootProviders.jsx";
-import { setRole, logout } from "../../../app/store/index.js";
+import { setRole } from "../../../app/store/index.js";
 import { UserRole } from "./type.js";
 import ScoreboardPage from "../../scoreboard/pages/ScoreBoard.jsx";
 import ScorerConsolePage from "./ScorerConsolePage.jsx";
@@ -10,7 +9,7 @@ import { Users, Layout } from "lucide-react";
 
 const BoundaryLineApp = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, role, user } = useSelector((state) => state.auth);
+  const { role } = useSelector((state) => state.auth);
   // Active view router: "SCOREBOARD" or "SCORER_CONSOLE"
   const [activeLayout, setActiveLayout] = useState("SCORER_CONSOLE");
 
@@ -99,9 +98,5 @@ const BoundaryLineApp = () => {
 };
 
 export default function ScorerWorkspace() {
-  return (
-    <RootProvider>
-      <BoundaryLineApp />
-    </RootProvider>
-  );
+  return <BoundaryLineApp />;
 }

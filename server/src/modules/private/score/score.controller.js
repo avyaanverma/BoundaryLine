@@ -26,6 +26,14 @@ class ScoreController {
     return new ApiResponse(200, "Score updated successfully", score).send(res);
   });
 
+  getScoresByMatch = asyncHandler(async (req, res) => {
+    const scores = await this.scoreService.getScoresByMatch(
+      req.validated.params.matchId,
+    );
+
+    return new ApiResponse(200, "Scores fetched successfully", scores).send(res);
+  });
+
   deleteScore = asyncHandler(async (req, res) => {
     const score = await this.scoreService.deleteScore(req.validated.params.id);
 

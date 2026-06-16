@@ -32,12 +32,12 @@ const seriesSchema = mongoose.Schema({
         default: false
     },
     createdBy: {
-        type: mongoose.Types.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
     updatedBy: {
-        type: mongoose.Types.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }
 },{
@@ -51,4 +51,4 @@ seriesSchema.path("teams").validate(
     "Series must have atleast 2 teams"
 )
 
-export const SeriesModel = mongoose.model("Series", seriesSchema);
+export const SeriesModel = mongoose.models.Series || mongoose.model("Series", seriesSchema);

@@ -50,7 +50,7 @@ export const LiveCommentary = () => {
 
       <div className="relative border-l border-zinc-800 pl-6 ml-3 flex flex-col gap-6 font-sans">
         <AnimatePresence initial={false}>
-          {currentMatch.commentary.map((item, idx) => {
+          {currentMatch.commentary.map((item) => {
             const theme = getCategoryTheme(item.type);
             return (
               <motion.div
