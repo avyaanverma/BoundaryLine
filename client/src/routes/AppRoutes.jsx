@@ -19,6 +19,7 @@ import RankingPage from "../features/ranking/pages/RankingPage.jsx";
 import CreateTournament from "../pages/Tournament/pages/CreateTournament.jsx";
 import CreateMatch from "../pages/Tournament/pages/CreateMatch.jsx";
 import CreatePlayer from "../pages/Tournament/pages/CreatePlayer.jsx";
+import CreateSeries from "../pages/Tournament/series/pages/CreateSeries.jsx";
 
 const ComingSoonPage = ({ title, description }) => {
   return (
@@ -192,6 +193,10 @@ const router = createBrowserRouter([
   {
     path: "hh",
     element: <CreatePlayer />
+  },
+  {
+    path: "ld",
+    element: <CreateSeries />
   }
 
   //....
