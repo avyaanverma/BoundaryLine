@@ -7,25 +7,37 @@ export const SOCKET_EVENTS = {
   CONNECT: "connect",
   DISCONNECT: "disconnect",
   CONNECT_ERROR: "connect_error",
-  RECONNECT_ATTEMPT: "reconnect_attempt",
-  RECONNECT_FAILED: "reconnect_failed",
-
-  // Match State Syncing
-  MATCH_JOIN: "MATCH_JOIN",
-  MATCH_LEAVE: "MATCH_LEAVE",
-  MATCH_STARTED: "MATCH_STARTED",
-  MATCH_ENDED: "MATCH_ENDED",
-
-  // Scoreboard Update Streams
-  SCORE_UPDATED: "SCORE_UPDATED",
-  OVER_COMPLETED: "OVER_COMPLETED",
-  WICKET_FALL: "WICKET_FALL",
-  PLAYER_CHANGED: "PLAYER_CHANGED",
-  SCORER_ASSIGNED: "SCORER_ASSIGNED",
-  MATCH_PAUSED: "MATCH_PAUSED",
-  INNINGS_ENDED: "INNINGS_ENDED",
-
-  // Commentary realtime
+ 
+  // Match Events
+  MATCH_CREATED: "match.created",
+  MATCH_UPDATED: "match.updated",
+  MATCH_STARTED: "match.started",
+  MATCH_COMPLETED: "match.completed",
+  MATCH_STATUS_UPDATED: "match.status.updated",
+ 
+  // Toss Events
+  TOSS_COMPLETED: "toss.completed",
+ 
+  // Playing XI Events
+  PLAYING_XI_SUBMITTED: "playingXI.submitted",
+  PLAYING_XI_UPDATED: "playingXI.updated",
+ 
+  // Score Events (Critical for live scoring)
+  SCORE_CREATED: "score.created",
+  SCORE_UPDATED: "score.updated",
+  SCORE_DELETED: "score.deleted",
+ 
+  // Commentary Events
+  COMMENTARY_CREATED: "commentary.created",
   COMMENTARY_UPDATED: "commentary.updated",
   COMMENTARY_DELETED: "commentary.deleted",
+ 
+  // Innings Events
+  INNINGS_STARTED: "innings.started",
+  INNINGS_COMPLETED: "innings.completed",
+ 
+  // Over Events
+  OVER_COMPLETED: "over.completed",
 };
+ 
+export default SOCKET_EVENTS;
