@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Search,
   Globe,
@@ -19,9 +19,12 @@ import {
   AtSign,
   Rss,
   MessageSquare,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import Navbar from "../../../shared/components/NavBar";
+import { useMatchesQuery } from "../../../shared/hooks/useQueries.js";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -59,6 +62,8 @@ function StatusBadge({ status }) {
     LIVE: "bg-red-500/15 text-red-400 border border-red-500/20",
     UPCOMING:
       "bg-[#94d5a5]/10 text-[#94d5a5] border border-[#94d5a5]/20",
+    COMPLETED:
+      "bg-white/[0.03] text-gray-400 border border-white/5",
     RESULT:
       "bg-white/[0.03] text-gray-400 border border-white/5",
   };
@@ -169,116 +174,53 @@ function NotifyButton({ className = "" }) {
 }
 // ─── Match Cards ─────────────────────────────────────────────────────────────
 
-/** Live / Upcoming card with full scorecard layout */
-function MatchCardFull({ format, seriesName, subtitle, status, team1, team2, footer }) {
+/** Live / active match card with score display */
+function MatchCardFull({ match, onClick }) {
+  const format = "t20";
   return (
     <GlassPanel
-      className={`rounded-2xl overflow-hidden ${FORMAT_BORDER[format]} group hover:shadow-2xl hover:shadow-[#94d5a5]/10 transition-all duration-300`}
+      className={`rounded-2xl overflow-hidden ${FORMAT_BORDER[format]} group hover:shadow-2xl hover:shadow-[#94d5a5]/10 transition-all duration-300 cursor-pointer`}
+      onClick={onClick}
     >
       <div className="p-6">
-        {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col">
-            <span
-              className={`text-xs font-semibold uppercase ${format === "test"
-                ? "text-[#ff4d4d]"
-                : format === "odi"
-                  ? "text-[#97d940]"
-                  : "text-[#94d5a5]"
-                }`}
-            >
-              {seriesName}
+            <span className="text-xs font-semibold uppercase text-[#94d5a5]">
+              {match.series || "Match"}
             </span>
-            <span className="text-[#c0c9bf] text-sm">{subtitle}</span>
+            <span className="text-[#c0c9bf] text-sm">{match.subtitle || match.venue}</span>
           </div>
-          <StatusBadge status={status} />
+          <StatusBadge status={match.status} />
         </div>
 
-        {/* Teams */}
         <div className="space-y-4 mb-6">
-          {[team1, team2].map((team, i) => (
+          {[match.team1, match.team2].map((team, i) => (
             <div
               key={i}
-              className={`flex items-center justify-between ${i === 1 ? "opacity-80" : ""
-                }`}
+              className={`flex items-center justify-between ${i === 1 ? "opacity-80" : ""}`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#282a2d] flex items-center justify-center border border-white/10 overflow-hidden">
-                  {team.flagBg ? (
-                    <div
-                      className="w-6 h-4 rounded text-[8px] font-bold flex items-center justify-center"
-                      style={{ background: team.flagBg, color: team.flagText || "#fff" }}
-                    >
-                      {team.code}
-                    </div>
+                  {team.logo ? (
+                    <img src={team.logo} alt={team.shortName} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-xs font-bold text-[#94d5a5]">{team.code}</span>
+                    <span className="text-xs font-bold text-[#94d5a5]">{team.shortName}</span>
                   )}
                 </div>
-                <span className="text-2xl font-semibold">{team.name}</span>
+                <span className="text-2xl font-semibold">{team.shortName}</span>
               </div>
-              <span
-                className={`text-[40px] font-bold leading-none tracking-tight ${team.scoreStyle === "primary"
-                  ? "text-[#94d5a5]"
-                  : team.scoreStyle === "muted"
-                    ? "text-[#c0c9bf] italic"
-                    : "text-[#e2e2e6]"
-                  }`}
-              >
-                {team.score}
+              <span className="text-[40px] font-bold leading-none tracking-tight text-[#e2e2e6]">
+                {team.shortName}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-white/5">
-          {footer}
-        </div>
-      </div>
-    </GlassPanel>
-  );
-}
-
-/** Result card (simpler layout) */
-function MatchCardResult({ seriesName, subtitle, team1, team2, resultText }) {
-  return (
-    <GlassPanel
-      className={`rounded-2xl overflow-hidden ${FORMAT_BORDER.test} group opacity-90 hover:opacity-100 transition-all duration-300`}
-    >
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex flex-col">
-            <span className="text-xs font-semibold uppercase text-[#ff4d4d]">
-              {seriesName}
-            </span>
-            <span className="text-[#c0c9bf] text-sm">{subtitle}</span>
-          </div>
-          <StatusBadge status="RESULT" />
-        </div>
-
-        <div className="space-y-2 mb-6">
-          <div className="flex items-center justify-between">
-            <span className="text-base">{team1.name}</span>
-            <span className="text-2xl font-semibold text-[#c0c9bf]">{team1.score}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-base font-bold text-[#94d5a5]">{team2.name}</span>
-            <span className="text-2xl font-semibold text-[#94d5a5]">{team2.score}</span>
-          </div>
-        </div>
-
-        <div className="py-2 px-4 bg-[#004a26]/20 rounded-lg text-[#94d5a5] text-xs font-bold text-center mb-4">
-          {resultText}
-        </div>
-
-        <div className="flex items-center justify-between pt-4 border-t border-white/5">
-          <button className="text-[#c0c9bf] text-xs font-semibold hover:text-[#e2e2e6] transition-colors">
-            Highlights
-          </button>
-          <button className="text-[#c0c9bf] hover:text-[#94d5a5] transition-colors">
-            <Share2 className="w-5 h-5" />
-          </button>
+          <span className="text-xs text-[#8a938a]">
+            {new Date(match.startTime).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+          </span>
+          <span className="text-xs font-semibold text-[#94d5a5]">VIEW DETAILS →</span>
         </div>
       </div>
     </GlassPanel>
@@ -286,8 +228,17 @@ function MatchCardResult({ seriesName, subtitle, team1, team2, resultText }) {
 }
 
 /** Upcoming countdown card */
-function MatchCardCountdown({ seriesName, subtitle, team1, team2, countdown }) {
-  const [time, setTime] = useState(countdown);
+function MatchCardCountdown({ match }) {
+  const startTime = new Date(match.startTime);
+  const now = new Date();
+  const diffMs = Math.max(0, startTime - now);
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const [time, setTime] = useState(
+    [hours, minutes, seconds].map((v) => String(v).padStart(2, "0")).join(":")
+  );
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -311,26 +262,24 @@ function MatchCardCountdown({ seriesName, subtitle, team1, team2, countdown }) {
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase text-[#97d940]">
-              {seriesName}
+              {match.series || "Upcoming"}
             </span>
-            <span className="text-[#c0c9bf] text-sm">{subtitle}</span>
+            <span className="text-[#c0c9bf] text-sm">{match.venue}</span>
           </div>
           <StatusBadge status="UPCOMING" />
         </div>
 
-        {/* VS layout */}
         <div className="flex items-center justify-around py-4 mb-4">
-          {[team1, team2].map((team, i) => (
+          {[match.team1, match.team2].map((team, i) => (
             <div key={i} className="text-center">
               <div className="w-16 h-16 rounded-full bg-[#282a2d] flex items-center justify-center border border-white/10 mb-2 mx-auto shadow-inner">
-                <span className="text-sm font-bold text-[#94d5a5]">{team.code}</span>
+                <span className="text-sm font-bold text-[#94d5a5]">{team.shortName}</span>
               </div>
-              <span className="text-xs font-semibold">{team.name}</span>
+              <span className="text-xs font-semibold">{team.shortName}</span>
             </div>
           ))}
         </div>
 
-        {/* Countdown overlaid between teams — re-create the original centred VS block */}
         <div className="flex items-center justify-center -mt-16 mb-4 pointer-events-none">
           <div className="text-center px-6">
             <div className="text-[#97d940] text-[40px] font-bold leading-none mb-1">VS</div>
@@ -353,38 +302,87 @@ function MatchCardCountdown({ seriesName, subtitle, team1, team2, countdown }) {
   );
 }
 
-// ─── Tomorrow list row ────────────────────────────────────────────────────────
+/** Result/completed match card */
+function MatchCardResult({ match }) {
+  return (
+    <GlassPanel
+      className={`rounded-2xl overflow-hidden ${FORMAT_BORDER.test} group opacity-90 hover:opacity-100 transition-all duration-300`}
+    >
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold uppercase text-[#ff4d4d]">
+              {match.series || "Match"}
+            </span>
+            <span className="text-[#c0c9bf] text-sm">{match.venue}</span>
+          </div>
+          <StatusBadge status="COMPLETED" />
+        </div>
 
-function TomorrowRow({ time, team1Code, team2Code, seriesLabel, venue }) {
+        <div className="space-y-2 mb-6">
+          <div className="flex items-center justify-between">
+            <span className="text-base">{match.team1.shortName}</span>
+            <span className="text-2xl font-semibold text-[#c0c9bf]">{match.team1.shortName}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-base font-bold text-[#94d5a5]">{match.team2.shortName}</span>
+            <span className="text-2xl font-semibold text-[#94d5a5]">{match.team2.shortName}</span>
+          </div>
+        </div>
+
+        {match.result && (
+          <div className="py-2 px-4 bg-[#004a26]/20 rounded-lg text-[#94d5a5] text-xs font-bold text-center mb-4">
+            {match.result}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+          <button className="text-[#c0c9bf] text-xs font-semibold hover:text-[#e2e2e6] transition-colors">
+            Highlights
+          </button>
+          <button className="text-[#c0c9bf] hover:text-[#94d5a5] transition-colors">
+            <Share2 className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </GlassPanel>
+  );
+}
+
+/** Tomorrow list row */
+function TomorrowRow({ match }) {
+  const time = new Date(match.startTime).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   return (
     <div className="p-4 md:p-6 flex flex-col md:flex-row items-center gap-6 hover:bg-white/5 transition-colors group">
-      {/* Time */}
       <div className="flex flex-col items-center md:items-start min-w-[120px]">
         <span className="text-[#94d5a5] font-bold text-2xl">{time}</span>
         <span className="text-[#8a938a] text-xs font-semibold uppercase">IST</span>
       </div>
 
-      {/* Teams */}
       <div className="flex-grow flex items-center justify-center md:justify-start gap-10">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-full bg-[#282a2d] flex items-center justify-center border border-white/10">
-            <span className="text-xs font-bold text-[#94d5a5]">{team1Code}</span>
+            <span className="text-xs font-bold text-[#94d5a5]">{match.team1.shortName}</span>
           </div>
-          <span className="text-2xl font-semibold">{team1Code}</span>
+          <span className="text-2xl font-semibold">{match.team1.shortName}</span>
         </div>
         <span className="text-[#8a938a] font-bold">VS</span>
         <div className="flex items-center gap-4">
-          <span className="text-2xl font-semibold">{team2Code}</span>
+          <span className="text-2xl font-semibold">{match.team2.shortName}</span>
           <div className="w-10 h-10 rounded-full bg-[#282a2d] flex items-center justify-center border border-white/10">
-            <span className="text-xs font-bold text-[#94d5a5]">{team2Code}</span>
+            <span className="text-xs font-bold text-[#94d5a5]">{match.team2.shortName}</span>
           </div>
         </div>
       </div>
 
-      {/* Meta */}
       <div className="flex flex-col md:items-end flex-shrink-0">
-        <span className="text-[#c0c9bf] text-xs font-semibold">{seriesLabel}</span>
-        <span className="text-[#8a938a] text-sm">{venue}</span>
+        <span className="text-[#c0c9bf] text-xs font-semibold">{match.series || "Match"}</span>
+        <span className="text-[#8a938a] text-sm">{match.venue}</span>
       </div>
 
       <NotifyButton />
@@ -392,25 +390,24 @@ function TomorrowRow({ time, team1Code, team2Code, seriesLabel, venue }) {
   );
 }
 
-// ─── Mini card (Later this month) ────────────────────────────────────────────
-
-function MiniMatchCard({ date, format, team1, team2 }) {
+/** Mini card for later matches */
+function MiniMatchCard({ match, date }) {
   return (
     <GlassPanel className="p-4 rounded-xl hover:border-[#94d5a5]/50 transition-all cursor-pointer">
       <div className="flex justify-between items-center mb-2">
         <span className="text-[10px] font-bold text-[#8a938a] uppercase tracking-wider">
           {date}
         </span>
-        <FormatPill format={format} />
+        <FormatPill format="T20" />
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        {[team1, team2].map((team, i) => (
+        {[match.team1, match.team2].map((team, i) => (
           <div key={i} className="flex flex-col items-center">
             <div className="w-8 h-8 rounded bg-[#282a2d] border border-white/5 mb-1 overflow-hidden flex items-center justify-center">
-              <span className="text-[9px] font-bold text-[#94d5a5]">{team}</span>
+              <span className="text-[9px] font-bold text-[#94d5a5]">{team.shortName}</span>
             </div>
-            <span className="text-xs font-semibold">{team}</span>
+            <span className="text-xs font-semibold">{team.shortName}</span>
           </div>
         ))}
         <span className="text-[#8a938a] font-bold text-sm">V</span>
@@ -432,8 +429,6 @@ const NAV_ITEMS = [
   { icon: Settings, label: "Settings", path: "/settings" },
   { icon: HelpCircle, label: "Support", path: "/helpcircle" },
 ];
-
-
 
 function Sidebar() {
   return (
@@ -484,60 +479,16 @@ function Sidebar() {
   );
 }
 
-// ─── Topnav ───────────────────────────────────────────────────────────────────
-
-function TopNav() {
-  return (
-    <nav className="fixed top-0 w-full z-50 bg-[#111316]/80 backdrop-blur-xl border-b border-white/10 shadow-sm h-20">
-      <div className="flex justify-between items-center px-6 h-full max-w-[1440px] mx-auto">
-        <div className="flex items-center gap-10">
-          <span className="text-2xl font-bold text-[#94d5a5]">BoundaryLine</span>
-          <div className="hidden md:flex items-center gap-6">
-            {["Scores", "Schedule", "Teams", "Players", "Rankings", "News"].map(
-              (item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={`text-base transition-colors ${item === "Schedule"
-                    ? "text-[#94d5a5] font-bold border-b-2 border-[#94d5a5] pb-1"
-                    : "text-[#c0c9bf] hover:text-[#94d5a5]"
-                    }`}
-                >
-                  {item}
-                </a>
-              )
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="text-[#c0c9bf] hover:text-[#94d5a5] p-2 transition-all">
-            <Search className="w-5 h-5" />
-          </button>
-          <div className="hidden md:flex items-center gap-2">
-            <button className="px-4 py-1 text-xs font-semibold text-[#e2e2e6] hover:bg-white/5 rounded transition-all">
-              Login
-            </button>
-            <button className="bg-[#94d5a5] text-[#00391c] px-6 py-1 text-xs font-bold rounded-lg hover:brightness-110 transition-all">
-              Signup
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
 // ─── Filters bar ─────────────────────────────────────────────────────────────
 
 const FORMATS = ["All Formats", "T20", "ODI", "Test"];
 
-function FiltersBar() {
+function FiltersBar({ liveCount }) {
   const [activeFormat, setActiveFormat] = useState("All Formats");
 
   return (
     <GlassPanel className="rounded-2xl p-4 mb-10 sticky top-24 z-40">
       <div className="flex flex-wrap items-center gap-4">
-        {/* Category select */}
         <div className="flex items-center gap-1 bg-[#282a2d] rounded-full px-4 py-1 border border-white/10">
           <Globe className="w-4 h-4 text-[#8a938a]" />
           <select className="bg-transparent border-none focus:ring-0 text-xs font-semibold text-[#e2e2e6] outline-none">
@@ -547,7 +498,6 @@ function FiltersBar() {
           </select>
         </div>
 
-        {/* Format pills */}
         <div className="flex items-center gap-2">
           {FORMATS.map((fmt) => (
             <button
@@ -563,14 +513,15 @@ function FiltersBar() {
           ))}
         </div>
 
-        {/* Live counter */}
-        <div className="ml-auto flex items-center gap-2">
-          <span
-            className="w-2 h-2 rounded-full bg-[#94d5a5]"
-            style={{ animation: "pulse-dot 2s infinite" }}
-          />
-          <span className="text-xs font-semibold text-[#e2e2e6]">3 Live Now</span>
-        </div>
+        {liveCount > 0 && (
+          <div className="ml-auto flex items-center gap-2">
+            <span
+              className="w-2 h-2 rounded-full bg-[#94d5a5]"
+              style={{ animation: "pulse-dot 2s infinite" }}
+            />
+            <span className="text-xs font-semibold text-[#e2e2e6]">{liveCount} Live Now</span>
+          </div>
+        )}
       </div>
     </GlassPanel>
   );
@@ -680,10 +631,101 @@ function ViewToggle({ view, onChange }) {
   );
 }
 
+// ─── Loading / Error / Empty States ───────────────────────────────────────────
+
+function LoadingState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 gap-4">
+      <Loader2 className="w-8 h-8 text-[#94d5a5] animate-spin" />
+      <p className="text-[#c0c9bf] text-sm font-semibold">Loading matches...</p>
+    </div>
+  );
+}
+
+function ErrorState({ message }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 gap-4">
+      <AlertCircle className="w-10 h-10 text-red-400" />
+      <p className="text-red-400 text-sm font-semibold">Failed to load matches</p>
+      <p className="text-[#8a938a] text-xs">{message}</p>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 gap-4">
+      <Trophy className="w-10 h-10 text-[#94d5a5] opacity-40" />
+      <p className="text-[#c0c9bf] text-sm font-semibold">No matches found</p>
+      <p className="text-[#8a938a] text-xs">Matches will appear here once they are created.</p>
+    </div>
+  );
+}
+
+// ─── Format Date Helper ──────────────────────────────────────────────────────
+
+function formatDateLabel(dateStr) {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const matchDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  const diffDays = Math.floor((matchDate - today) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return { label: "Today", showDate: false };
+  if (diffDays === 1) return { label: "Tomorrow", showDate: false };
+
+  const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+
+  if (diffDays <= 7) {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return { label: days[date.getDay()], showDate: true, date: `${month} ${day}` };
+  }
+
+  return { label: "Later This Month", showDate: true, date: `${month} ${day}` };
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function FixturesPage() {
   const [view, setView] = useState("list");
+  const { data: matches = [], isLoading, isError, error } = useMatchesQuery();
+  const navigate = useNavigate();
+
+  const grouped = useMemo(() => {
+    const groups = { today: [], tomorrow: [], upcoming: [], completed: [], later: [] };
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    matches.forEach((match) => {
+      const matchDate = new Date(match.startTime);
+      const matchDayStart = new Date(matchDate.getFullYear(), matchDate.getMonth(), matchDate.getDate());
+
+      if (match.status === "COMPLETED" || match.status === "PLAYING_XI_SELECTED" || match.result) {
+        groups.completed.push(match);
+      } else if (match.status === "LIVE" || match.status === "INNINGS_BREAK" || match.status === "TOSS_COMPLETED") {
+        groups.today.push(match);
+      } else if (matchDayStart.getTime() === todayStart.getTime()) {
+        groups.today.push(match);
+      } else if (matchDayStart.getTime() === tomorrowStart.getTime()) {
+        groups.tomorrow.push(match);
+      } else {
+        groups.later.push(match);
+      }
+    });
+
+    return groups;
+  }, [matches]);
+
+  const liveCount = matches.filter(
+    (m) => m.status === "LIVE" || m.status === "INNINGS_BREAK" || m.status === "TOSS_COMPLETED"
+  ).length;
 
   return (
     <>
@@ -741,7 +783,6 @@ export default function FixturesPage() {
         }
       `}</style>
 
-      {/* <TopNav /> */}
       <Navbar/>
       <Sidebar />
 
@@ -756,7 +797,6 @@ export default function FixturesPage() {
           pb-10
         "
       >
-        {/* Background Glow */}
         <div
           className="
             absolute
@@ -773,186 +813,98 @@ export default function FixturesPage() {
 
         <div className="max-w-[1500px] mx-auto">
 
-          {/* Header */}
           <header className="py-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-
             <div>
               <nav className="flex items-center gap-2 text-gray-500 mb-2">
-                <span className="text-xs font-semibold">
-                  HOME
-                </span>
-
+                <span className="text-xs font-semibold">HOME</span>
                 <ChevronRight className="w-3 h-3" />
-
-                <span className="text-xs font-semibold text-[#94d5a5]">
-                  FIXTURES
-                </span>
+                <span className="text-xs font-semibold text-[#94d5a5]">FIXTURES</span>
               </nav>
-
-              <h1
-                className="
-                  text-4xl
-                  md:text-5xl
-                  font-bold
-                  tracking-tight
-                  text-white
-                "
-              >
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
                 Match Schedule
               </h1>
-
               <p className="mt-2 max-w-2xl text-gray-400">
                 Track upcoming internationals, domestic leagues,
                 ICC tournaments and world championships in one place.
               </p>
             </div>
-
-            <ViewToggle
-              view={view}
-              onChange={setView}
-            />
+            <ViewToggle view={view} onChange={setView} />
           </header>
 
-          <FiltersBar />
+          <FiltersBar liveCount={liveCount} />
 
-          {/* TODAY */}
-          <section className="mb-14">
-            <SectionDivider
-              label="Today"
-              date="OCT 24"
-            />
+          {isLoading ? (
+            <LoadingState />
+          ) : isError ? (
+            <ErrorState message={error?.message} />
+          ) : matches.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <>
+              {/* LIVE / TODAY */}
+              {grouped.today.length > 0 && (
+                <section className="mb-14">
+                  <SectionDivider label="Today / Live" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+                    {grouped.today.map((match) => (
+                      <MatchCardFull
+                        key={match._id}
+                        match={match}
+                        onClick={() => navigate(`/matches/${match._id}`)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+              {/* TOMORROW */}
+              {grouped.tomorrow.length > 0 && (
+                <section className="mb-14">
+                  <SectionDivider label="Tomorrow" />
+                  <GlassPanel className="rounded-2xl overflow-hidden divide-y divide-white/5">
+                    {grouped.tomorrow.map((match) => (
+                      <TomorrowRow key={match._id} match={match} />
+                    ))}
+                  </GlassPanel>
+                </section>
+              )}
 
-              <MatchCardFull
-                format="t20"
-                seriesName="ICC Men's T20 World Cup"
-                subtitle="Final • Barbados"
-                status="LIVE"
-                team1={{
-                  code: "IND",
-                  name: "India",
-                  score: "176/7",
-                  scoreStyle: "primary",
-                }}
-                team2={{
-                  code: "SA",
-                  name: "South Africa",
-                  score: "Yet to bat",
-                  scoreStyle: "muted",
-                }}
-              />
+              {/* UPCOMING / LATER */}
+              {grouped.later.length > 0 && (
+                <section className="mb-14">
+                  <SectionDivider label="Upcoming" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {grouped.later.slice(0, 8).map((match) => {
+                      const fd = formatDateLabel(match.startTime);
+                      return (
+                        <MiniMatchCard
+                          key={match._id}
+                          match={match}
+                          date={fd.showDate ? fd.date : match.team1.shortName + " vs " + match.team2.shortName}
+                        />
+                      );
+                    })}
+                    <GlassPanel className="p-4 rounded-xl bg-[#94d5a5]/5 border border-[#94d5a5]/20 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#94d5a5]/10 transition-all">
+                      <CalendarCheck className="w-6 h-6 text-[#94d5a5] mb-2" />
+                      <span className="text-sm font-semibold text-[#94d5a5]">View Full Month</span>
+                    </GlassPanel>
+                  </div>
+                </section>
+              )}
 
-              <MatchCardCountdown
-                seriesName="Bilateral Series"
-                subtitle="1st ODI • London"
-                team1={{
-                  code: "ENG",
-                  name: "England",
-                }}
-                team2={{
-                  code: "AUS",
-                  name: "Australia",
-                }}
-                countdown="04:32:15"
-              />
-
-              <MatchCardResult
-                seriesName="ICC WTC Final"
-                subtitle="Day 5 • The Oval"
-                team1={{
-                  name: "New Zealand",
-                  score: "245 & 140/2",
-                }}
-                team2={{
-                  name: "Pakistan",
-                  score: "217 & 167",
-                }}
-                resultText="Pakistan won by 8 wickets"
-              />
-            </div>
-          </section>
-
-          {/* TOMORROW */}
-          <section className="mb-14">
-            <SectionDivider
-              label="Tomorrow"
-              date="OCT 25"
-            />
-
-            <GlassPanel className="rounded-2xl overflow-hidden divide-y divide-white/5">
-              <TomorrowRow
-                time="14:00"
-                team1Code="SL"
-                team2Code="BAN"
-                seriesLabel="Asia Cup • Match 12"
-                venue="Pallekele Int. Stadium"
-              />
-
-              <TomorrowRow
-                time="19:30"
-                team1Code="WI"
-                team2Code="AFG"
-                seriesLabel="T20 Series • Match 3"
-                venue="Kensington Oval, Barbados"
-              />
-            </GlassPanel>
-          </section>
-
-          {/* LATER THIS MONTH */}
-          <section className="mb-14">
-            <SectionDivider
-              label="Later This Month"
-            />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-              <MiniMatchCard
-                date="OCT 28"
-                format="T20I"
-                team1="AUS"
-                team2="SA"
-              />
-
-              <MiniMatchCard
-                date="OCT 30"
-                format="TEST"
-                team1="PAK"
-                team2="NZ"
-              />
-
-              <MiniMatchCard
-                date="NOV 02"
-                format="ODI"
-                team1="IND"
-                team2="ENG"
-              />
-
-              <GlassPanel
-                className="
-                  p-4
-                  rounded-xl
-                  bg-[#94d5a5]/5
-                  border border-[#94d5a5]/20
-                  flex
-                  flex-col
-                  items-center
-                  justify-center
-                  text-center
-                  cursor-pointer
-                  hover:bg-[#94d5a5]/10
-                  transition-all
-                "
-              >
-                <CalendarCheck className="w-6 h-6 text-[#94d5a5] mb-2" />
-
-                <span className="text-sm font-semibold text-[#94d5a5]">
-                  View Full Month
-                </span>
-              </GlassPanel>
-
-            </div>
-          </section>
+              {/* COMPLETED / RESULTS */}
+              {grouped.completed.length > 0 && (
+                <section className="mb-14">
+                  <SectionDivider label="Completed Matches" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+                    {grouped.completed.slice(0, 3).map((match) => (
+                      <MatchCardResult key={match._id} match={match} />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </>
+          )}
 
         </div>
       </main>
