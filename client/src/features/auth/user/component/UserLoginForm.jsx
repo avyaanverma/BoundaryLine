@@ -10,7 +10,7 @@ function UserLoginForm() {
 
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-gradient-to-r from-[#010B08] via-[#02110C] to-[#041A12] flex items-center justify-center px-4 py-10">
+        <div className="relative min-h-screen overflow-hidden bg-[#020817] flex items-center justify-center px-4 py-10">
 
             {/* Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">

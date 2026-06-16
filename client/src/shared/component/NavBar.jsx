@@ -87,7 +87,7 @@ function Navbar() {
 
                         <button
                             onClick={() =>
-                                navigate("/auth/userlogin")
+                                navigate("/userlogin")
                             }
                             className="
                                 hidden
@@ -104,7 +104,7 @@ function Navbar() {
 
                         <button
                             onClick={() =>
-                                navigate("/auth/userregister")
+                                navigate("/userregister")
                             }
                             className="
                                 hidden

@@ -16,6 +16,9 @@ import AdminLoginForm from "../features/auth/admin/components/AdminLoginForm.jsx
 import NewsPage from "../features/news/pages/NewsPage.jsx";
 import TeamPage from "../feature/all-team/page/TeamPage.jsx";
 import RankingPage from "../features/ranking/pages/RankingPage.jsx";
+import CreateTournament from "../pages/Tournament/pages/CreateTournament.jsx";
+import CreateMatch from "../pages/Tournament/pages/CreateMatch.jsx";
+import CreatePlayer from "../pages/Tournament/pages/CreatePlayer.jsx";
 
 const ComingSoonPage = ({ title, description }) => {
   return (
@@ -165,7 +168,7 @@ const router = createBrowserRouter([
         element: <AdminRegisterForm />
       },
       {
-        path: "userregiste",
+        path: "userregister",
         element: <UserRegisterForm />
       },
 
@@ -174,8 +177,21 @@ const router = createBrowserRouter([
 
   },
   {
+    path: "lll",
+    element: <CreateTournament />
+  },
+
+  {
     path: "userlogin",
     element: <UserLoginForm />
+  },
+  {
+    path: "llf",
+    element: <CreateMatch />
+  },
+  {
+    path: "hh",
+    element: <CreatePlayer />
   }
 
   //....

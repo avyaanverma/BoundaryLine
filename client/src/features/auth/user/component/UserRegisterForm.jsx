@@ -1,14 +1,15 @@
 
 import { Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { UserRegisterHook } from "../hook/userDetailsHook";
 
 function UserRegisterForm() {
     const navigate = useNavigate();
 
-    const { register, handleSubmit, onSubmit, errors, password } = UserRegisterForm()
+    const { register, handleSubmit, onSubmit, errors, password } = UserRegisterHook()
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-[#020806] via-[#04120C] to-[#072013] flex items-center justify-center px-4 py-10">
+        <div className="min-h-screen bg-[#020817] flex items-center justify-center px-4 py-10">
             <div className="w-full max-w-xl">
                 {/* Logo */}
                 <div className="mb-10 flex justify-center">
@@ -169,7 +170,7 @@ function UserRegisterForm() {
                                     })}
                                     type="password"
                                     placeholder="••••••••"
-                                    className={`w - full rounded-lg bg-[#0D1318] px-4 py-3 text-white outline-none transition-all duration-300 ${errors.password
+                                    className={`w-full rounded-lg bg-[#0D1318] px-4 py-3 text-white outline-none transition-all duration-300 ${errors.password
                                         ? "border border-[#FF7B7B]"
                                         : "border border-[#38423D] focus:border-[#9ADCA7]"
                                         }`}
