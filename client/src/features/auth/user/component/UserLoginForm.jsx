@@ -1,6 +1,6 @@
 import { Mail, Lock, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { UserLoginHook } from "../hook/userDetailsHook";
+import { UserLoginHook } from "../hook/UserDetailsHook";
 
 function UserLoginForm() {
     const navigate = useNavigate();
@@ -136,16 +136,17 @@ function UserLoginForm() {
 
                         {/* Remember Me + Forgot Password */}
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
+                            <label className="flex items-center gap-3">
                                 <input
                                     type="checkbox"
+                                    {...register("remember")}
                                     className="h-4 w-4 accent-[#067132]"
                                 />
 
                                 <span className="text-[#B7C0BC]">
                                     Remember Me
                                 </span>
-                            </div>
+                            </label>
 
                             <button
                                 type="button"
@@ -154,6 +155,13 @@ function UserLoginForm() {
                                 Forgot Password?
                             </button>
                         </div>
+
+                        {/* Root error message */}
+                        {errors.root && (
+                            <p className="rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-400">
+                                {errors.root.message}
+                            </p>
+                        )}
 
                         {/* Submit */}
                         <button
@@ -169,7 +177,7 @@ function UserLoginForm() {
                 <p className="mt-10 text-center text-lg text-[#D5D9D7]">
                     Don't have an account?{" "}
                     <span
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/userregister")}
                         className="cursor-pointer font-semibold text-[#63E39B] hover:underline"
                     >
                         Sign Up

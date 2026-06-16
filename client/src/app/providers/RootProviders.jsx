@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { store } from "../store/index.js";
 import { AuthSessionGate } from "../../features/auth/session/AuthSessionGate.jsx";
 import { SocketProvider } from "../../shared/services/socket/socket-provider.jsx";
+import { ToastProvider } from "../../shared/components/ToastProvider.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +23,7 @@ export const RootProvider = ({ children }) => {
             {children}
           </SocketProvider>
         </AuthSessionGate>
+        <ToastProvider />
       </QueryClientProvider>
     </ReduxProvider>
   );

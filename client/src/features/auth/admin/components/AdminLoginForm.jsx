@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { login } from '../../../../app/store/index.js'
 import {
   getGoogleAuthUrl,
   loginAdmin,
   persistAdminSession,
 } from '../api/adminAuthApi.js'
+import { getErrorMessage } from '../../../../shared/utils/errorMessages.js'
 
 const initialFormState = {
   email: '',
@@ -34,12 +36,16 @@ const AdminLoginForm = () => {
     event.preventDefault()
 
     if (!formState.email.includes('@')) {
-      setMessage('Enter a valid admin email address.')
+      const msg = 'Enter a valid admin email address.'
+      setMessage(msg)
+      toast.error(msg)
       return
     }
 
     if (formState.password.length < 6) {
-      setMessage('Password must be at least 6 characters.')
+      const msg = 'Password must be at least 6 characters.'
+      setMessage(msg)
+      toast.error(msg)
       return
     }
 
@@ -53,13 +59,18 @@ const AdminLoginForm = () => {
 
       persistAdminSession({ user, remember: formState.remember })
       dispatch(login({ user }))
+      toast.success(`Welcome back, ${user.name || 'Admin'}!`, {
+        position: 'top-right',
+        autoClose: 3000,
+      })
       navigate('/admin', { replace: true })
     } catch (error) {
-      setMessage(
-        error.response?.data?.message ||
-        error.message ||
-        'Admin login failed. Please check your credentials.',
-      )
+      const message = getErrorMessage(error)
+      setMessage(message)
+      toast.error(message, {
+        position: 'top-right',
+        autoClose: 5000,
+      })
     } finally {
       setIsSubmitting(false)
     }

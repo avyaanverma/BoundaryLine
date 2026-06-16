@@ -171,6 +171,13 @@ function AdminRegisterForm() {
                         </div>
                     </div>
 
+                    {/* Root error message */}
+                    {errors.root && (
+                        <p className="rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-400">
+                            {errors.root.message}
+                        </p>
+                    )}
+
                     <button
                         type="submit"
                         className="w-full rounded-lg bg-[#046C35] py-3 font-semibold text-white transition hover:bg-[#05823F]"
@@ -181,7 +188,7 @@ function AdminRegisterForm() {
                     <p className="text-center text-sm text-[#A5B0A8]">
                         Already have an account?{" "}
                         <span
-                            onClick={() => navigate("/login")}
+                            onClick={() => navigate("/adminlogin")}
                             className="cursor-pointer text-[#8ED89A]"
                         >
                             Sign In

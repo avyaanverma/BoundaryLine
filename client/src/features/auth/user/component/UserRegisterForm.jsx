@@ -1,7 +1,7 @@
 
 import { Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {UserRegisterHook,UserLoginHook} from "../hook/UserDetailsHook"
+import { UserRegisterHook } from "../hook/UserDetailsHook"
 
 function UserRegisterForm() {
     const navigate = useNavigate();
@@ -11,13 +11,6 @@ function UserRegisterForm() {
     return (
         <div className="min-h-screen bg-gradient-to-r from-[#020806] via-[#04120C] to-[#072013] flex items-center justify-center px-4 py-10">
             <div className="w-full max-w-xl">
-                {/* Logo */}
-                {/* <div className="mb-10 flex justify-center">
-                    <h1 className="text-4xl font-bold text-[#8FE39C]">
-                        BoundaryLine
-                    </h1>
-                </div> */}
-
                 {/* Card */}
                 <div className="rounded-2xl border border-[#2D3B35] bg-[#0E1720] p-8 shadow-xl">
                     <h2 className="text-center text-4xl font-bold text-white">
@@ -170,7 +163,7 @@ function UserRegisterForm() {
                                     })}
                                     type="password"
                                     placeholder="••••••••"
-                                    className={`w - full rounded-lg bg-[#0D1318] px-4 py-3 text-white outline-none transition-all duration-300 ${errors.password
+                                    className={`w-full rounded-lg bg-[#0D1318] px-4 py-3 text-white outline-none transition-all duration-300 ${errors.password
                                         ? "border border-[#FF7B7B]"
                                         : "border border-[#38423D] focus:border-[#9ADCA7]"
                                         }`}
@@ -210,6 +203,13 @@ function UserRegisterForm() {
                             </div>
                         </div>
 
+                        {/* Root error message */}
+                        {errors.root && (
+                            <p className="rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-400">
+                                {errors.root.message}
+                            </p>
+                        )}
+
                         {/* Terms */}
                         <label className="flex items-center gap-2 text-sm text-[#C7D0C9]">
                             <input
@@ -227,16 +227,10 @@ function UserRegisterForm() {
                             Create Account →
                         </button>
 
-                        <div className="flex items-center gap-4">
-                            <div className="h-px flex-1 bg-[#38423D]" />
-                            <span className="text-sm text-[#AEB8B0]">OR</span>
-                            <div className="h-px flex-1 bg-[#38423D]" />
-                        </div>
-
                         <p className="text-center text-sm text-[#AEB8B0]">
                             Already have an account?{" "}
                             <span
-                                onClick={() => navigate("/login")}
+                                onClick={() => navigate("/userlogin")}
                                 className="cursor-pointer font-semibold text-[#9ADCA7] hover:underline"
                             >
                                 Sign In

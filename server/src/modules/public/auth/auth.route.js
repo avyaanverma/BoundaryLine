@@ -3,13 +3,17 @@ import passport from "passport";
 import AuthController from "./auth.controller.js";
 import { asyncHandler } from "../../../shared/utils/asyncHandler.js";
 import { validateRequest } from "../../../middleware/validateRequest.js";
-import { makeAdminSchema, registerSchema } from "./auth.validator.js";
 import {
   authMiddleware,
   authenticateRequest,
   authorizeRoles,
 } from "../../../middleware/auth.middleware.js";
 import { ROLES } from "../../../constant/role.constant.js";
+import {
+  loginSchema,
+  makeAdminSchema,
+  registerSchema,
+} from "./auth.validator.js";
 
 const router = express.Router();
 const authController = new AuthController();
@@ -52,6 +56,7 @@ router.post(
 
 router.post(
   "/login",
+  validateRequest(loginSchema),
   asyncHandler(authController.loginController.bind(authController)),
 );
 
@@ -60,4 +65,5 @@ router.get(
   authMiddleware,
   asyncHandler(authController.getMe.bind(authController)),
 );
+
 export default router;
