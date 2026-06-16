@@ -49,7 +49,7 @@ class ScoreService {
 
     const score = await this.scoreRepository.create(payload);
 
-    emitToMatch(score.matchId.toString(), "score.updated", score);
+    emitToMatch(score.matchId.toString(), "score.created", score);
 
     return score;
   }
@@ -88,13 +88,28 @@ class ScoreService {
   }
 
   async deleteScore(scoreId) {
-    const score = await this.scoreRepository.findById(scoreId);
+
+    const score =
+      await this.scoreRepository.findById(scoreId);
 
     if (!score) {
       throw new NotFound("Score not found");
     }
 
-    return this.scoreRepository.softDelete(scoreId);
+    const deletedScore =
+      await this.scoreRepository.softDelete(
+        scoreId
+      );
+
+    emitToMatch(
+      score.matchId.toString(),
+      "score.deleted",
+      {
+        scoreId: score._id
+      }
+    );
+
+    return deletedScore;
   }
 }
 
