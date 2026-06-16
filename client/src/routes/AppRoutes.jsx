@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
-import CricPulse from "../features/landing page/pages/LandingPage.jsx";
+import LandingPage from "../features/landing page/pages/LandingPage.jsx";
 import FixturesPage from "../features/fixtures/pages/FixturesPage.jsx";
 import ScoreboardPage from "../features/scoreboard/pages/ScoreBoard.jsx";
 import ScorerConsolePage from "../features/scorer-console/pages/ScorerConsolePage.jsx";
@@ -42,7 +42,7 @@ const ProtectedScorerRoute = ({ children }) => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <CricPulse />,
+    element: <LandingPage />,
   },
   {
     path: "/matches",
