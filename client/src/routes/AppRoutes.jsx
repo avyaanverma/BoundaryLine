@@ -143,61 +143,6 @@ const router = createBrowserRouter([
     element: <Navigate to="/" replace />,
   },
 
-  // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke 
-
-  {
-    element: <MainLayout />,
-    children: [
-      {
-        path: "/analytics",
-        element: <AnalyticsPage />
-      },
-      {
-        path: "/matches",
-        element: <FixturesPage />
-      },
-      {
-        path: "testfx",
-        element: <DuplicateFixture />
-      },
-      {
-        path: "adminlogin",
-        element: <AdminLoginForm />
-      },
-      {
-        path: "register",
-        element: <AdminRegisterForm />
-      },
-      {
-        path: "userregister",
-        element: <UserRegisterForm />
-      },
-
-
-    ]
-
-  },
-  {
-    path: "lll",
-    element: <CreateTournament />
-  },
-
-  {
-    path: "userlogin",
-    element: <UserLoginForm />
-  },
-  {
-    path: "llf",
-    element: <CreateMatch />
-  },
-  {
-    path: "hh",
-    element: <CreatePlayer />
-  },
-  {
-    path: "ld",
-    element: <CreateSeries />
-  }
 
   //....
 
