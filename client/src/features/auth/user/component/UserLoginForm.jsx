@@ -169,7 +169,7 @@ function UserLoginForm() {
                 <p className="mt-10 text-center text-lg text-[#D5D9D7]">
                     Don't have an account?{" "}
                     <span
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/userregister")}
                         className="cursor-pointer font-semibold text-[#63E39B] hover:underline"
                     >
                         Sign Up

@@ -1,6 +1,8 @@
 
 import { Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { UserRegisterHook } from "../hook/UserDetailsHook";
+
 
 function UserRegisterForm() {
     const navigate = useNavigate();
@@ -235,7 +237,7 @@ function UserRegisterForm() {
                         <p className="text-center text-sm text-[#AEB8B0]">
                             Already have an account?{" "}
                             <span
-                                onClick={() => navigate("/login")}
+                                onClick={() => navigate("/userlogin")}
                                 className="cursor-pointer font-semibold text-[#9ADCA7] hover:underline"
                             >
                                 Sign In

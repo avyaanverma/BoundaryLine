@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const navItems = [
     { label: "Scores", path: "/" },
@@ -12,6 +12,7 @@ const navItems = [
 function Navbar() {
 
     const location = useLocation();
+    const navigate = useNavigate()
 
     return (
         <header
@@ -87,7 +88,7 @@ function Navbar() {
 
                         <button
                             onClick={() =>
-                                navigate("/auth/userlogin")
+                                navigate("/userlogin")
                             }
                             className="
                                 hidden
@@ -104,7 +105,7 @@ function Navbar() {
 
                         <button
                             onClick={() =>
-                                navigate("/auth/userregister")
+                                navigate("/userregister")
                             }
                             className="
                                 hidden
