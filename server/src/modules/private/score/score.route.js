@@ -6,6 +6,11 @@ import {
   updateScoreSchema,
   scoreParamSchema,
 } from "../../../validators/score.validator.js";
+import {
+  authMiddleware,
+  authorizationMiddleware,
+} from "../../../middleware/auth.middleware.js";
+import { ROLES } from "../../../constant/role.constant.js";
 
 class ScoreRoute {
   constructor(scoreController = new ScoreController()) {
@@ -16,9 +21,13 @@ class ScoreRoute {
   }
 
   registerRoutes() {
+    const WRITE_ROLES = [ROLES.SCORER, ROLES.ADMIN, ROLES.SUPER_ADMIN];
+
     // Create score
     this.router.post(
       "/",
+      authMiddleware,
+      authorizationMiddleware(WRITE_ROLES),
       validateRequest(createScoreSchema),
       this.scoreController.createScore,
     );
@@ -26,6 +35,8 @@ class ScoreRoute {
     // Update score
     this.router.patch(
       "/:id",
+      authMiddleware,
+      authorizationMiddleware(WRITE_ROLES),
       validateRequest(updateScoreSchema),
       this.scoreController.updateScore,
     );
@@ -33,6 +44,8 @@ class ScoreRoute {
     // Delete score
     this.router.delete(
       "/:id",
+      authMiddleware,
+      authorizationMiddleware([ROLES.ADMIN, ROLES.SUPER_ADMIN]),
       validateRequest(scoreParamSchema),
       this.scoreController.deleteScore,
     );

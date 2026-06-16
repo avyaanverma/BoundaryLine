@@ -5,6 +5,11 @@ import {
   createCommentarySchema,
   commentaryIdParamSchema,
 } from "../../../validators/commentary.validator.js";
+import {
+  authMiddleware,
+  authorizationMiddleware,
+} from "../../../middleware/auth.middleware.js";
+import { ROLES } from "../../../constant/role.constant.js";
 
 class CommentaryRoute {
   constructor(commentaryController = new CommentaryController()) {
@@ -14,12 +19,16 @@ class CommentaryRoute {
   }
 
   registerRoutes() {
+    const WRITE_ROLES = [ROLES.SCORER, ROLES.ADMIN, ROLES.SUPER_ADMIN];
+
     /**
      * POST /api/commentary
      * New commentary create karega
      */
     this.router.post(
       "/",
+      authMiddleware,
+      authorizationMiddleware(WRITE_ROLES),
       validateRequest(createCommentarySchema),
       this.commentaryController.addCommentary,
     );
@@ -30,6 +39,8 @@ class CommentaryRoute {
      */
     this.router.delete(
       "/:id",
+      authMiddleware,
+      authorizationMiddleware([ROLES.ADMIN, ROLES.SUPER_ADMIN]),
       validateRequest(commentaryIdParamSchema),
       this.commentaryController.deleteCommentary,
     );
