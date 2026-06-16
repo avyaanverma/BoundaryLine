@@ -34,8 +34,11 @@ class AdminController {
   getMatchStats = asyncHandler(async (req, res) => {
     // validated query use karega
     const query = req.validated ? req.validated.query : req.query;
-    const seriesId = query?.seriesId || null;
-    const matchStats = await this.adminService.getMatchStats(seriesId);
+    const matchStats = await this.adminService.getMatchStats({
+      days: query?.days,
+      limit: query?.limit,
+      seriesId: query?.seriesId || null,
+    });
 
     return res.status(200).json({
       success: true,

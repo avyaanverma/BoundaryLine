@@ -5,6 +5,29 @@ import User from "../../model/user.model.js";
 import { AdminDashboard } from "./admin.model.js";
 
 class AdminRepository {
+  buildMatchFilter({ days, seriesId } = {}) {
+    // What: normalize optional admin match filters into one Mongo query.
+    // Why: totals and recent lists should describe the same filtered dataset.
+    // How: combine soft-delete, optional series, and rolling createdAt window.
+    const filter = {
+      isDeleted: false,
+    };
+
+    if (seriesId) {
+      filter.seriesId = seriesId;
+    }
+
+    if (days) {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      filter.createdAt = {
+        $gte: cutoffDate,
+      };
+    }
+
+    return filter;
+  }
+
   async getAdminStats() {
     // What: fetch the newest dashboard snapshot.
     // Why: the admin UI needs a fast overview without recalculating on every render.
@@ -50,44 +73,40 @@ class AdminRepository {
     });
   }
 
-  async getMatchCount() {
+  async getMatchCount(filters = {}) {
     // What: count active matches.
     // Why: match volume is a primary admin dashboard metric.
-    // How: count all non-deleted match documents.
-    return Match.countDocuments({
-      isDeleted: false,
-    });
+    // How: count all non-deleted match documents after optional admin filters.
+    return Match.countDocuments(this.buildMatchFilter(filters));
   }
 
-  async getCompletedMatchCount() {
+  async getCompletedMatchCount(filters = {}) {
     // What: count completed matches.
     // Why: admins need a quick view of finished fixtures.
-    // How: filter by status plus soft-delete flag.
+    // How: filter by status plus shared admin match filters.
     return Match.countDocuments({
+      ...this.buildMatchFilter(filters),
       status: "COMPLETED",
-      isDeleted: false,
     });
   }
 
-  async getLiveMatchCount() {
+  async getLiveMatchCount(filters = {}) {
     // What: count matches currently in live states.
     // Why: the dashboard should surface active operations immediately.
-    // How: count LIVE and INNINGS_BREAK statuses only.
+    // How: count LIVE and INNINGS_BREAK statuses after optional admin filters.
     return Match.countDocuments({
+      ...this.buildMatchFilter(filters),
       status: {
         $in: ["LIVE", "INNINGS_BREAK"],
       },
-      isDeleted: false,
     });
   }
 
-  async getRecentMatches(limit = 10) {
+  async getRecentMatches(limit = 10, filters = {}) {
     // What: fetch the latest match documents.
     // Why: the admin page displays recent operational activity.
-    // How: sort newest first, cap the list, and populate team names for display.
-    return Match.find({
-      isDeleted: false,
-    })
+    // How: apply shared filters, sort newest first, cap the list, and populate teams.
+    return Match.find(this.buildMatchFilter(filters))
       .populate("team1", "name shortName")
       .populate("team2", "name shortName")
       .sort({

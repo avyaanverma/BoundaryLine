@@ -24,6 +24,23 @@ export default class CommentaryController {
   });
 
   /**
+   * Match ke commentary records fetch karega
+   * Endpoint: GET /commentary/match/:matchId
+   */
+  getCommentaryByMatch = asyncHandler(async (req, res) => {
+    const { matchId } = req.validated ? req.validated.params : req.params;
+    const { limit = 50, page = 1 } = req.validated?.query || req.query;
+
+    const commentaries = await this.commentaryService.getCommentaryByMatch(
+      matchId,
+      limit,
+      page,
+    );
+
+    return new ApiResponse(200, "Commentary fetched successfully", commentaries).send(res);
+  });
+
+  /**
    * Commentary delete bhi to karna hai
    * ENdpoint: DELTE /commentary/:id
    */

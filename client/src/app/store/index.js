@@ -3,6 +3,17 @@ import matchReducer from "../../features/scoreboard/store/mathSlice.js";
 
 const AUTH_STORAGE_KEY = "boundaryline_auth_user";
 
+export const clearStoredAuth = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+  window.localStorage.removeItem("boundaryline_token");
+  window.localStorage.removeItem("boundaryline_refresh_token");
+};
+
 const readStoredAuth = () => {
   if (typeof window === "undefined") {
     return null;
@@ -19,8 +30,7 @@ const readStoredAuth = () => {
   try {
     return JSON.parse(storedValue);
   } catch {
-    window.localStorage.removeItem(AUTH_STORAGE_KEY);
-    window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    clearStoredAuth();
     return null;
   }
 };
@@ -51,6 +61,7 @@ const authSlice = createSlice({
       state.role = null;
       state.token = null;
       state.isAuthenticated = false;
+      clearStoredAuth();
     },
   },
 });

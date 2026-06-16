@@ -162,7 +162,7 @@ export const AdminDashboardPage = () => {
               value={formatNumber(matchStats.totalMatches ?? dashboard.totalMatches)}
             />
             <AdminStatCard
-              helper={`${formatNumber(dashboard.completedMatches)} matches completed.`}
+              helper={`${formatNumber(playerStats.totalPlayers ?? dashboard.totalPlayers)} registered players.`}
               icon={Trophy}
               label="Players"
               tone="red"

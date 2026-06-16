@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearStoredAuth, logout, store } from "../../app/store/index.js";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
@@ -30,10 +31,8 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("boundaryline_token");
-      localStorage.removeItem("boundaryline_refresh_token");
-      localStorage.removeItem("boundaryline_auth_user");
-      sessionStorage.removeItem("boundaryline_auth_user");
+      clearStoredAuth();
+      store.dispatch(logout());
     }
 
     return Promise.reject(error);

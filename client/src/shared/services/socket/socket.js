@@ -18,6 +18,7 @@ class SocketService {
     this.socket = null;
     this.listeners = new Map();
     this.localChannel = null;
+    this.hasWarnedMissingSocketUrl = false;
 
     if (typeof window !== "undefined" && "BroadcastChannel" in window) {
       try {
@@ -48,6 +49,13 @@ class SocketService {
    */
   connect(token) {
     if (!SOCKET_URL) {
+      if (!this.hasWarnedMissingSocketUrl) {
+        console.warn(
+          "[BoundaryLine Socket] VITE_SOCKET_URL is not set; realtime socket is running in no-op mode."
+        );
+        this.hasWarnedMissingSocketUrl = true;
+      }
+
       if (!this.socket) {
         this.socket = createNoopSocket();
       }

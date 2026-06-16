@@ -5,6 +5,7 @@ import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
 import CommentaryDTO from "./dto/commentary.dto.js";
 import NotFound from "../../../shared/error/NotFound.js";
 import BadRequest from "../../../shared/error/BadRequest.js";
+import { SOCKET_EVENTS } from "../../../constant/socket-events.constant.js";
 
 class CommentaryService {
   constructor(repository = commentaryRepository) {
@@ -54,10 +55,28 @@ class CommentaryService {
       "Commentary entry created sucessfully",
     );
 
+    const socketPayload = {
+      matchId: commentary.matchId,
+      commentaryId: commentary._id,
+      over: commentary.over,
+      ball: commentary.ball,
+      text: commentary.text,
+      ...commentary.toObject()
+    };
+
     emitToMatch(
       commentary.matchId.toString(),
-      "commentary.updated",
-      commentary,
+      SOCKET_EVENTS.COMMENTARY_CREATED,
+      socketPayload,
+    );
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.COMMENTARY_CREATED,
+        matchId: commentary.matchId,
+        commentaryId: commentary._id,
+      },
+      "Socket event emitted"
     );
 
     return new CommentaryDTO(commentary);
@@ -102,7 +121,16 @@ class CommentaryService {
       "Commentary deleted Sucessfully",
     );
 
-    emitToMatch(commentary.matchId.toString(), "commentary.deleted", { id });
+    emitToMatch(commentary.matchId.toString(), SOCKET_EVENTS.COMMENTARY_DELETED, { id, matchId: commentary.matchId });
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.COMMENTARY_DELETED,
+        matchId: commentary.matchId,
+        commentaryId: id,
+      },
+      "Socket event emitted"
+    );
 
     return new CommentaryDTO(commentary);
   }

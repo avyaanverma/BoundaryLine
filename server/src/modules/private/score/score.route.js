@@ -1,16 +1,19 @@
 import { Router } from "express";
 import ScoreController from "./score.controller.js";
+
 import { validateRequest } from "../../../middleware/validateRequest.js";
+
+import {
+  authenticate,
+  authorize,
+} from "../../../middleware/auth.middleware.js";
+
 import {
   createScoreSchema,
   updateScoreSchema,
   scoreParamSchema,
+  matchParamSchema,
 } from "../../../validators/score.validator.js";
-import {
-  authMiddleware,
-  authorizationMiddleware,
-} from "../../../middleware/auth.middleware.js";
-import { ROLES } from "../../../constant/role.constant.js";
 
 class ScoreRoute {
   constructor(scoreController = new ScoreController()) {
@@ -21,33 +24,39 @@ class ScoreRoute {
   }
 
   registerRoutes() {
-    const WRITE_ROLES = [ROLES.SCORER, ROLES.ADMIN, ROLES.SUPER_ADMIN];
-
     // Create score
     this.router.post(
       "/",
-      authMiddleware,
-      authorizationMiddleware(WRITE_ROLES),
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
       validateRequest(createScoreSchema),
-      this.scoreController.createScore,
+      this.scoreController.createScore
     );
 
     // Update score
     this.router.patch(
       "/:id",
-      authMiddleware,
-      authorizationMiddleware(WRITE_ROLES),
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
       validateRequest(updateScoreSchema),
-      this.scoreController.updateScore,
+      this.scoreController.updateScore
+    );
+
+    // Get scores by match
+    this.router.get(
+      "/match/:matchId",
+      authenticate,
+      validateRequest(matchParamSchema),
+      this.scoreController.getScoresByMatch
     );
 
     // Delete score
     this.router.delete(
       "/:id",
-      authMiddleware,
-      authorizationMiddleware([ROLES.ADMIN, ROLES.SUPER_ADMIN]),
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN"),
       validateRequest(scoreParamSchema),
-      this.scoreController.deleteScore,
+      this.scoreController.deleteScore
     );
   }
 

@@ -1,6 +1,9 @@
 import BadRequest from "../../../shared/error/BadRequest.js";
 import NotFound from "../../../shared/error/NotFound.js";
 import MatchRepository from "../../../repository/match.repository.js";
+import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
+import { logger } from "../../../shared/utils/logger.js";
+import { SOCKET_EVENTS } from "../../../constant/socket-events.constant.js";
 
 class MatchService {
   constructor(matchRepository = new MatchRepository()) {
@@ -39,7 +42,22 @@ class MatchService {
     // How: validate basic match consistency, then insert through the repository.
     this.ensureDifferentTeams(payload.team1, payload.team2);
 
-    return this.matchRepository.create(payload);
+    const match = await this.matchRepository.create(payload);
+
+    emitToMatch(match._id.toString(), SOCKET_EVENTS.MATCH_CREATED, {
+      matchId: match._id,
+      status: match.status
+    });
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.MATCH_CREATED,
+        matchId: match._id,
+      },
+      "Socket event emitted"
+    );
+
+    return match;
   }
 
   async updateMatch(matchId, payload) {
@@ -59,6 +77,73 @@ class MatchService {
       // Why: returning null would make the API response inconsistent.
       // How: throw the same not-found error used by normal lookups.
       throw new NotFound("Match not found");
+    }
+
+    // Handle Socket Events
+    const socketPayload = {
+      matchId: updatedMatch._id,
+      status: updatedMatch.status,
+      winner: updatedMatch.winner || null
+    };
+
+    emitToMatch(matchId.toString(), SOCKET_EVENTS.MATCH_UPDATED, updatedMatch);
+
+    logger.info(
+      {
+        event: SOCKET_EVENTS.MATCH_UPDATED,
+        matchId: updatedMatch._id,
+      },
+      "Socket event emitted"
+    );
+
+    // Status change events
+    if (payload.status && payload.status !== currentMatch.status) {
+      emitToMatch(matchId.toString(), SOCKET_EVENTS.MATCH_STATUS_UPDATED, socketPayload);
+
+      logger.info(
+        {
+          event: SOCKET_EVENTS.MATCH_STATUS_UPDATED,
+          matchId: updatedMatch._id,
+          status: updatedMatch.status
+        },
+        "Socket event emitted"
+      );
+
+      if (payload.status === "LIVE" && currentMatch.status !== "LIVE") {
+        emitToMatch(matchId.toString(), SOCKET_EVENTS.MATCH_STARTED, socketPayload);
+        logger.info({ event: SOCKET_EVENTS.MATCH_STARTED, matchId }, "Socket event emitted");
+
+        // Innings Started
+        const inningsNumber = (currentMatch.status === "INNINGS_BREAK") ? 2 : 1;
+        emitToMatch(matchId.toString(), SOCKET_EVENTS.INNINGS_STARTED, {
+            matchId,
+            inningsNumber
+        });
+        logger.info({ event: SOCKET_EVENTS.INNINGS_STARTED, matchId, inningsNumber }, "Socket event emitted");
+      }
+
+      if (payload.status === "INNINGS_BREAK" && currentMatch.status !== "INNINGS_BREAK") {
+          emitToMatch(matchId.toString(), SOCKET_EVENTS.INNINGS_COMPLETED, {
+              matchId,
+              inningsNumber: 1
+          });
+          logger.info({ event: SOCKET_EVENTS.INNINGS_COMPLETED, matchId, inningsNumber: 1 }, "Socket event emitted");
+      }
+
+      if (payload.status === "COMPLETED" && currentMatch.status !== "COMPLETED") {
+        emitToMatch(matchId.toString(), SOCKET_EVENTS.MATCH_COMPLETED, socketPayload);
+        logger.info({ event: SOCKET_EVENTS.MATCH_COMPLETED, matchId }, "Socket event emitted");
+      }
+    }
+
+    // Toss completed event
+    if (payload.tossWinner && !currentMatch.tossWinner) {
+        emitToMatch(matchId.toString(), SOCKET_EVENTS.TOSS_COMPLETED, {
+            matchId,
+            tossWinner: updatedMatch.tossWinner,
+            decision: updatedMatch.tossDecision
+        });
+        logger.info({ event: SOCKET_EVENTS.TOSS_COMPLETED, matchId }, "Socket event emitted");
     }
 
     return updatedMatch;

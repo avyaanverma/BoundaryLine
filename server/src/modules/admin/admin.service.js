@@ -58,23 +58,29 @@ class AdminService {
     return new AdminDashboardDTO(stats);
   }
 
-  async getMatchStats(seriesId = null) {
+  async getMatchStats({ days, limit = 10, seriesId = null } = {}) {
     // What: collect match-specific admin statistics.
     // Why: admins need live/completed totals and a recent match queue.
-    // How: run count and list queries in parallel, preserving the optional series filter for future expansion.
-    logger.info({ seriesId }, "Fetching match statistics");
+    // How: run count and list queries in parallel with the same validated filters.
+    const matchFilters = {
+      days,
+      seriesId,
+    };
+    logger.info({ days, limit, seriesId }, "Fetching match statistics");
     const [totalMatches, liveMatches, completedMatches, recentMatches] =
       await Promise.all([
-        this.adminRepository.getMatchCount(),
-        this.adminRepository.getLiveMatchCount(),
-        this.adminRepository.getCompletedMatchCount(),
-        this.adminRepository.getRecentMatches(10),
+        this.adminRepository.getMatchCount(matchFilters),
+        this.adminRepository.getLiveMatchCount(matchFilters),
+        this.adminRepository.getCompletedMatchCount(matchFilters),
+        this.adminRepository.getRecentMatches(limit, matchFilters),
       ]);
     return {
       totalMatches,
       liveMatches,
       completedMatches,
       recentMatches,
+      days,
+      limit,
       seriesId,
     };
   }

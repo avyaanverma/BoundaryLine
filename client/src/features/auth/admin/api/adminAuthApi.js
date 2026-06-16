@@ -1,8 +1,9 @@
 import apiClient from "../../../../shared/lib/axios.js";
+import { UserRole } from "../../../scorer-console/pages/type.js";
 
 export const ADMIN_AUTH_STORAGE_KEY = "boundaryline_auth_user";
 export const ADMIN_SESSION_RESTORE_KEY = "boundaryline_restore_session";
-export const ADMIN_ROLES = ["ADMIN", "SUPER_ADMIN"];
+export const ADMIN_ROLES = [UserRole.ADMIN, UserRole.SUPER_ADMIN];
 
 export const clearAdminSession = () => {
   window.localStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
