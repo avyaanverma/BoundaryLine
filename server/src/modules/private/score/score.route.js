@@ -1,19 +1,19 @@
 import { Router } from "express";
 import ScoreController from "./score.controller.js";
 
-import { validateRequest } from "../../../shared/middleware/validateRequest.js";
+import { validateRequest } from "../../../middleware/validateRequest.js";
 
 import {
   authenticate,
   authorize,
-} from "../../shared/middleware/auth.middleware.js";
+} from "../../../middleware/auth.middleware.js";
 
 import {
   createScoreSchema,
   updateScoreSchema,
   scoreParamSchema,
   matchParamSchema,
-} from "./dto/score.dto.js";
+} from "../../../validators/score.validator.js";
 
 class ScoreRoute {
   constructor(scoreController = new ScoreController()) {
@@ -42,13 +42,6 @@ class ScoreRoute {
       this.scoreController.updateScore
     );
 
-    // Get scores by match
-    this.router.get(
-      "/match/:matchId",
-      authenticate,
-      validateRequest(matchParamSchema),
-      this.scoreController.getScoresByMatch
-    );
 
     // Delete score
     this.router.delete(

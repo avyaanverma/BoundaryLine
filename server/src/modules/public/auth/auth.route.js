@@ -44,7 +44,16 @@ router.post(
 
 router.post(
   "/login",
-  asyncHandler(authController.loginController.bind(authController.getMe.bind(authController))),
+  asyncHandler(
+    authController.loginController.bind(authController)
+  )
 );
 
+router.get(
+  "/me",
+  authMiddleware,
+  asyncHandler(
+    authController.getMe.bind(authController)
+  )
+);
 export default router;
