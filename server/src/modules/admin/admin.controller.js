@@ -12,8 +12,14 @@ class AdminController {
    * Dashboard overview stats fetch karega
    * Endpoint: GET /admin/dashboard
    */
-  getDashboard = asyncHandler(async (_req, res) => {
-    const stats = await this.adminService.getAdminOverview();
+  getDashboard = asyncHandler(async (req, res) => {
+    // What: return dashboard totals to the admin UI.
+    // Why: the UI needs one trusted summary endpoint for core platform counts.
+    // How: use includeStats=true to force a fresh count before responding.
+    const query = req.validated ? req.validated.query : req.query;
+    const stats = await this.adminService.getAdminOverview({
+      refresh: query?.includeStats === true,
+    });
 
     return res.status(200).json({
       success: true,

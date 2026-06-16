@@ -1,69 +1,109 @@
-import {Player, User, Team, Match} from "../shared/models/reference.model.js";
-import AdminDashboardDTO from "./dto/admin.dto.js";
+import Match from "../../model/match.model.js";
+import Player from "../../model/player.model.js";
+import Team from "../../model/team.model.js";
+import User from "../../model/user.model.js";
+import { AdminDashboard } from "./admin.model.js";
 
 class AdminRepository {
-  // latest admin dashboard stats fetch karenge
   async getAdminStats() {
-    return await AdminDashboardDTO.findOne().sort({
-      createAt: -1,
-    });
+    // What: fetch the newest dashboard snapshot.
+    // Why: the admin UI needs a fast overview without recalculating on every render.
+    // How: query the persisted AdminDashboard model and return a plain object.
+    return AdminDashboard.findOne({ isDeleted: false }).sort({ createdAt: -1 }).lean();
   }
+
   async updateAdminStats(data) {
-    return await AdminDashboard.findOneAndUpdate(
-      {},
+    // What: upsert one dashboard statistics document.
+    // Why: keeping one latest snapshot avoids duplicate admin summary rows.
+    // How: update the active dashboard row or create it if none exists yet.
+    return AdminDashboard.findOneAndUpdate(
+      { isDeleted: false },
       { ...data, lastUpdated: new Date() },
-      { upsert: true, new: true, setDefaultOnInsert: true },
-    );
+      { upsert: true, returnDocument: "after", setDefaultOnInsert: true },
+    ).lean();
   }
+
   async getUserCount() {
-    return await User.countDocuments({
+    // What: count active users.
+    // Why: dashboard metrics should exclude soft-deleted records.
+    // How: use the shared isDeleted flag used across models.
+    return User.countDocuments({
       isDeleted: false,
     });
   }
 
   async getPlayerCount() {
-    return await Player.countDocuments({
+    // What: count active players.
+    // Why: player totals power the admin overview.
+    // How: count only non-deleted player documents.
+    return Player.countDocuments({
       isDeleted: false,
     });
   }
+
   async getTeamCount() {
-    return await Team.countDocuments({
+    // What: count active teams.
+    // Why: admins need current team inventory on the dashboard.
+    // How: count team documents that are not soft deleted.
+    return Team.countDocuments({
       isDeleted: false,
     });
   }
+
   async getMatchCount() {
-    return await Match.countDocuments({
+    // What: count active matches.
+    // Why: match volume is a primary admin dashboard metric.
+    // How: count all non-deleted match documents.
+    return Match.countDocuments({
       isDeleted: false,
     });
   }
+
   async getCompletedMatchCount() {
-    return await Match.countDocuments({
+    // What: count completed matches.
+    // Why: admins need a quick view of finished fixtures.
+    // How: filter by status plus soft-delete flag.
+    return Match.countDocuments({
       status: "COMPLETED",
       isDeleted: false,
     });
   }
+
   async getLiveMatchCount() {
-    return await Match.countDocuments({
+    // What: count matches currently in live states.
+    // Why: the dashboard should surface active operations immediately.
+    // How: count LIVE and INNINGS_BREAK statuses only.
+    return Match.countDocuments({
       status: {
         $in: ["LIVE", "INNINGS_BREAK"],
       },
-
       isDeleted: false,
     });
   }
+
   async getRecentMatches(limit = 10) {
-    return await Match.find({
+    // What: fetch the latest match documents.
+    // Why: the admin page displays recent operational activity.
+    // How: sort newest first, cap the list, and populate team names for display.
+    return Match.find({
       isDeleted: false,
     })
+      .populate("team1", "name shortName")
+      .populate("team2", "name shortName")
       .sort({
         createdAt: -1,
       })
-      .limit(limit);
+      .limit(limit)
+      .lean();
   }
+
   async getActiveUsers(days = 7) {
+    // What: count recently updated active users.
+    // Why: this gives admins a lightweight engagement signal.
+    // How: compare updatedAt with a rolling day window.
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
-    return await User.countDocuments({
+    return User.countDocuments({
       updatedAt: {
         $gte: cutoffDate,
       },

@@ -29,8 +29,12 @@ function getAccessToken(req) {
   // How: prefer Authorization Bearer, then fall back to the accessToken cookie.
   const authorizationHeader = req.headers.authorization;
 
-  if (authorizationHeader?.startsWith("Bearer ")) {
-    return authorizationHeader.slice("Bearer ".length).trim();
+  if (authorizationHeader) {
+    const [scheme, token] = authorizationHeader.split(/\s+/);
+
+    if (scheme?.toLowerCase() === "bearer" && token) {
+      return token.trim();
+    }
   }
 
   return getCookieValue(req.headers.cookie, "accessToken");

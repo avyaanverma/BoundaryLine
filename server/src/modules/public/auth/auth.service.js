@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import env from "../../../config/env.js";
 import { app_config } from "../../../constant/app.constant.js";
+import { ROLES } from "../../../constant/role.constant.js";
 import UserRepo from "../../../repository/user.repository.js";
 import AppError from "../../../shared/error/AppError.js";
 import NotFound from "../../../shared/error/NotFound.js";
@@ -16,7 +17,7 @@ export default class AuthService {
     // Why: tokens are client-visible data, so they should only contain identity claims.
     // How: map the user document to the fields needed by downstream middleware/UI.
     return {
-      _id: user._id,
+      _id: String(user._id),
       email: user.email,
       name: user.name,
       picture: user.picture,
@@ -36,7 +37,19 @@ export default class AuthService {
   }
 
   async makeAdmin(email) {
-    return this.userRepo.findOneAndUpdate({ email }, { role: "ADMIN" });
+    // What: promote one existing user to ADMIN.
+    // Why: role changes must be explicit and auditable through a protected endpoint.
+    // How: update by email and return a safe profile payload.
+    const promotedUser = await this.userRepo.findOneAndUpdate(
+      { email },
+      { role: ROLES.ADMIN },
+    );
+
+    if (!promotedUser) {
+      throw new NotFound("User not found.");
+    }
+
+    return this.buildTokenPayload(promotedUser);
   }
 
   async createOrFindUser(payload) {
@@ -61,8 +74,9 @@ export default class AuthService {
 
     const newUser = await this.userRepo.create(payload);
     const tokenPayload = this.buildTokenPayload(newUser);
+    const tokens = this.signTokens(tokenPayload);
 
-    return this.signTokens(tokenPayload);
+    return { ...tokens, user: tokenPayload };
   }
 
   async loginService(payload) {

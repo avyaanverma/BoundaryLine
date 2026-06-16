@@ -13,6 +13,7 @@ import publicCommentaryRoute from "./modules/public/commentary/commentary.route.
 import publicSquadRoute from "./modules/public/squad/squad.route.js";
 import publicScoreRoute from "./modules/public/score/score.route.js";
 import publicPlayingXIRoute from "./modules/public/playingXI/playingXI.route.js";
+import adminRoute from "./modules/admin/admin.routes.js";
 import userRouter from "./modules/private/user/user.route.js";
 import healthRouter from "./modules/public/health/health.route.js";
 import matchRoute from "./modules/private/match/match.route.js";
@@ -35,6 +36,7 @@ function registerFeatureRoutes(app, prefix) {
   // How: reuse the same route modules for both prefixes so controllers stay single-source.
   app.use(`${prefix}/users`, userRouter);
   app.use(`${prefix}/auth`, authRouter);
+  app.use(`${prefix}/admin`, adminRoute);
   app.use(`${prefix}/players`, publicPlayerRoute);
   app.use(`${prefix}/private/players`, privatePlayerRoute);
   app.use(`${prefix}/teams`, publicTeamRoute);
