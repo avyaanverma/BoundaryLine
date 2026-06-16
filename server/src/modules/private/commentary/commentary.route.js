@@ -1,9 +1,17 @@
 import { Router } from "express";
-import { validateRequest } from "../../../middleware/validateRequest.js";
 import CommentaryController from "./commentary.controller.js";
+
+import { validateRequest } from "../../../middleware/validateRequest.js";
+
+import {
+  authenticate,
+  authorize,
+} from "../../../middleware/auth.middleware.js";
+
 import {
   createCommentarySchema,
   commentaryIdParamSchema,
+  getCommentaryByMatchSchema,
 } from "../../../validators/commentary.validator.js";
 
 class CommentaryRoute {
@@ -16,22 +24,37 @@ class CommentaryRoute {
   registerRoutes() {
     /**
      * POST /api/commentary
-     * New commentary create karega
+     * Create commentary
      */
     this.router.post(
       "/",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
       validateRequest(createCommentarySchema),
-      this.commentaryController.addCommentary,
+      this.commentaryController.addCommentary
+    );
+
+    /**
+     * GET /api/commentary/match/:matchId
+     * Get commentary by match
+     */
+    this.router.get(
+      "/match/:matchId",
+      authenticate,
+      validateRequest(getCommentaryByMatchSchema),
+      this.commentaryController.getCommentaryByMatch
     );
 
     /**
      * DELETE /api/commentary/:id
-     * Commentary delete karega
+     * Delete commentary
      */
     this.router.delete(
       "/:id",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN"),
       validateRequest(commentaryIdParamSchema),
-      this.commentaryController.deleteCommentary,
+      this.commentaryController.deleteCommentary
     );
   }
 

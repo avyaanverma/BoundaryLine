@@ -1,11 +1,19 @@
 import { Router } from "express";
 import ScoreController from "./score.controller.js";
-import { validateRequest } from "../../../middleware/validateRequest.js";
+
+import { validateRequest } from "../../../shared/middleware/validateRequest.js";
+
+import {
+  authenticate,
+  authorize,
+} from "../../shared/middleware/auth.middleware.js";
+
 import {
   createScoreSchema,
   updateScoreSchema,
   scoreParamSchema,
-} from "../../../validators/score.validator.js";
+  matchParamSchema,
+} from "./dto/score.dto.js";
 
 class ScoreRoute {
   constructor(scoreController = new ScoreController()) {
@@ -19,22 +27,36 @@ class ScoreRoute {
     // Create score
     this.router.post(
       "/",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
       validateRequest(createScoreSchema),
-      this.scoreController.createScore,
+      this.scoreController.createScore
     );
 
     // Update score
     this.router.patch(
       "/:id",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
       validateRequest(updateScoreSchema),
-      this.scoreController.updateScore,
+      this.scoreController.updateScore
+    );
+
+    // Get scores by match
+    this.router.get(
+      "/match/:matchId",
+      authenticate,
+      validateRequest(matchParamSchema),
+      this.scoreController.getScoresByMatch
     );
 
     // Delete score
     this.router.delete(
       "/:id",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN"),
       validateRequest(scoreParamSchema),
-      this.scoreController.deleteScore,
+      this.scoreController.deleteScore
     );
   }
 

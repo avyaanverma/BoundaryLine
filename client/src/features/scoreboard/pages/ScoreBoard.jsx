@@ -1,35 +1,93 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import LiveMatchHeader from "../components/LiveMatchHeader.jsx";
 import OverTimeline from "../components/OverTimeline.jsx";
 import WinProbability from "../components/WinProbabbility.jsx";
 import AiInsights from "../components/AiInsights.jsx";
 import TopPerformers from "../components/TopPerformers.jsx";
 import MatchNews from "../components/MatchNews.jsx";
+import socketService from "../../../shared/services/socket/socket.js";
+import { useSocket } from "../../../shared/services/socket/useSocket.js";
 import LiveCommentary from "../components/LiveCommentary.jsx";
+import {
+  addCommentaryRealtime,
+  removeCommentaryRealtime,
+} from "../store/mathSlice.js";
 import ScorecardTab from "../components/ScorecardTab.jsx";
 import PlayingXITab from "../components/PlayingXITab.jsx";
+
 import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";
 
+
 export const ScoreboardPage = () => {
+  const dispatch = useDispatch();
+  const { joinMatchRoom, leaveMatchRoom } = useSocket();
   const match = useSelector((state) => state.match.currentMatch);
-  const activeInnings = match.innings[match.currentInningsNum - 1];
+  const activeInnings = match?.innings?.[match?.currentInningsNum - 1];
 
   // Tab State
   const [activeTab, setActiveTab] = useState("LIVE");
 
   // Calculate dynamic outputs
-  const crr = activeInnings.overs > 0 || activeInnings.balls > 0
-    ? (activeInnings.runs / (activeInnings.overs + activeInnings.balls / 6)).toFixed(2)
-    : "0.00";
+  const totalOversPlayed = activeInnings.overs + activeInnings.balls / 6;
+  const crr =
+    totalOversPlayed > 0
+      ? (activeInnings.runs / totalOversPlayed).toFixed(2)
+      : "0.00";
 
   // Standard target checks
   const target = match.target || 208;
   const runsNeeded = Math.max(0, target - activeInnings.runs);
-  const totalInningsBalls = 120; // assumed T20
+  const totalInningsBalls = 120; // T20 format
   const ballsBowled = activeInnings.overs * 6 + activeInnings.balls;
   const ballsRemaining = Math.max(0, totalInningsBalls - ballsBowled);
-  const rrr = ballsRemaining > 0 ? ((runsNeeded / ballsRemaining) * 6).toFixed(2) : "0.00";
+  const rrr =
+    ballsRemaining > 0
+      ? ((runsNeeded / ballsRemaining) * 6).toFixed(2)
+      : "0.00";
+
+  useEffect(() => {
+    if (!match?.id) return;
+
+    // Join match room
+    joinMatchRoom(match.id);
+
+    // COMMENTARY ADD
+    const onCommentaryUpdated = (data) => {
+      dispatch(
+        addCommentaryRealtime({
+          id: data._id,
+          over: `${data.over}.${data.ball || 0}`,
+          type: data.type,
+          title: data.title || data.text,
+          description: data.description || data.text,
+          timestamp: data.createdAt,
+        }),
+      );
+    };
+
+    // COMMENTARY DELETE
+    const onCommentaryDeleted = (data) => {
+      dispatch(removeCommentaryRealtime(data.id || data._id));
+    };
+
+    socketService.listen(SOCKET_EVENTS.COMMENTARY_UPDATED, onCommentaryUpdated);
+    socketService.listen(SOCKET_EVENTS.COMMENTARY_DELETED, onCommentaryDeleted);
+
+    return () => {
+      leaveMatchRoom(match.id);
+      socketService.removeListener(
+        SOCKET_EVENTS.COMMENTARY_UPDATED,
+        onCommentaryUpdated,
+      );
+      socketService.removeListener(
+        SOCKET_EVENTS.COMMENTARY_DELETED,
+        onCommentaryDeleted,
+      );
+    };
+  }, [match?.id, dispatch]);
+
+  if (!match || !activeInnings) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col min-h-screen text-white bg-zinc-950 font-sans selection:bg-emerald-500/30">
@@ -44,7 +102,10 @@ export const ScoreboardPage = () => {
               {match.teamA.shortName} vs {match.teamB.shortName}
             </h1>
             <p className="text-[11px] text-zinc-500 font-medium">
-              <span className="text-red-500 font-semibold uppercase animate-pulse">● Live</span> • T20 • Finals
+              <span className="text-red-500 font-semibold uppercase animate-pulse">
+                ● Live
+              </span>{" "}
+              • T20 • Finals
             </p>
           </div>
         </div>
@@ -70,10 +131,8 @@ export const ScoreboardPage = () => {
 
         {/* Premium Grid Body Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           {/* LEFT COLUMN: LIVE STATS & INTERACTIVE TAB LOGIC */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            
             {/* MATCH SUMMARY HERO MODULE */}
             <div className="p-6 rounded-2xl bg-gradient-to-br from-zinc-900/90 to-zinc-950/40 border border-white/5 flex flex-col gap-5 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -85,7 +144,8 @@ export const ScoreboardPage = () => {
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-4xl font-extrabold text-white tracking-tight">
-                      {match.teamA.shortName} {activeInnings.runs}/{activeInnings.wickets}
+                      {match.teamA.shortName} {activeInnings.runs}/
+                      {activeInnings.wickets}
                     </span>
                     <span className="text-sm font-semibold text-zinc-500 font-mono">
                       ({activeInnings.overs}.{activeInnings.balls} Overs)
@@ -98,20 +158,32 @@ export const ScoreboardPage = () => {
 
                 <div className="flex items-start gap-6 font-mono text-right shrink-0">
                   <div>
-                    <span className="text-[10px] font-bold text-zinc-500 block uppercase">CRR</span>
-                    <span className="text-lg font-bold text-white mt-1 block">{crr}</span>
+                    <span className="text-[10px] font-bold text-zinc-500 block uppercase">
+                      CRR
+                    </span>
+                    <span className="text-lg font-bold text-white mt-1 block">
+                      {crr}
+                    </span>
                   </div>
                   <div className="h-8 w-[1px] bg-white/10 self-center"></div>
                   <div>
-                    <span className="text-[10px] font-bold text-zinc-500 block uppercase">RRR</span>
-                    <span className="text-lg font-bold text-emerald-400 mt-1 block">{rrr}</span>
+                    <span className="text-[10px] font-bold text-zinc-500 block uppercase">
+                      RRR
+                    </span>
+                    <span className="text-lg font-bold text-emerald-400 mt-1 block">
+                      {rrr}
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Over Ball Timeline Row */}
               <div className="p-4 rounded-xl bg-zinc-950/60 border border-white/5 mt-2 shadow-inner">
-                <OverTimeline balls={match.thisOver} maxDisplay={7} label="THIS OVER" />
+                <OverTimeline
+                  balls={match.thisOver}
+                  maxDisplay={7}
+                  label="THIS OVER"
+                />
               </div>
             </div>
 
@@ -130,39 +202,45 @@ export const ScoreboardPage = () => {
             {/* TAB SELECTOR HEADER */}
             <div className="flex flex-col gap-4 mt-2">
               <div className="flex items-center gap-1 overflow-x-auto pb-2 border-b border-white/5 scrollbar-none">
-                {["LIVE", "SCORECARD", "COMMENTARY", "STATS", "PLAYING_XI"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase shrink-0 transition-all duration-200 ${
-                      activeTab === tab
-                        ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    {tab.replace("_", " ")}
-                  </button>
-                ))}
+                {["LIVE", "SCORECARD", "COMMENTARY", "STATS", "PLAYING_XI"].map(
+                  (tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase shrink-0 transition-all duration-200 ${
+                        activeTab === tab
+                          ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20"
+                          : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      {tab.replace("_", " ")}
+                    </button>
+                  ),
+                )}
               </div>
 
               {/* TAB CONTAINER */}
               <div className="mt-2 min-h-[300px]">
-                {activeTab === "LIVE" && <LiveCommentary />}
-                {activeTab === "COMMENTARY" && <LiveCommentary />}
+                {(activeTab === "LIVE" || activeTab === "COMMENTARY") && (
+                  <LiveCommentary />
+                )}
                 {activeTab === "SCORECARD" && <ScorecardTab />}
                 {activeTab === "PLAYING_XI" && <PlayingXITab />}
                 {activeTab === "STATS" && (
                   <div className="p-8 rounded-xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-center text-center gap-3">
                     <TrendingUp className="w-8 h-8 text-emerald-400" />
-                    <h4 className="text-base font-semibold text-white">Full-Innings Statistics</h4>
+                    <h4 className="text-base font-semibold text-white">
+                      Full-Innings Statistics
+                    </h4>
                     <p className="text-xs text-zinc-500 max-w-sm">
-                      Deep match analytics, partnership flows, wagon wheels and spray chart projections are updated after the first innings settles.
+                      Deep match analytics, partnership flows, wagon wheels and
+                      spray chart projections are updated after the first
+                      innings settles.
                     </p>
                   </div>
                 )}
               </div>
             </div>
-
           </div>
 
           {/* RIGHT COLUMN: PERFORMANCES & AUXILIARY METRICS */}
@@ -170,7 +248,6 @@ export const ScoreboardPage = () => {
             <TopPerformers />
             <MatchNews />
           </div>
-
         </div>
       </div>
     </div>
