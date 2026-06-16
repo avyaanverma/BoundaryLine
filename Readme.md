@@ -149,6 +149,10 @@ BoundaryLine/
 │   ├── server.js               # Entry point
 │   └── package.json
 │
+<<<<<<< HEAD
 ├── ./docs/                       # Documentation
+=======
+├── .docs/                       # Documentation
+>>>>>>> aa80cb16faf4802e9756e59161f85da48460ea84
 └── Readme.md                   # Project readme
 ```
