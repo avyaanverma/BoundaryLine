@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import RankingsHero from "../component/RankingsHero";
-import RankingsStats from "../component/RankingStats";
-import RankingTabs from "../component/RankingTabs";
-import RankingsTable from "../component/RankingTable";
-import CategoryLeaders from "../component/CategoryLeaders";
+import RankingsHero from "../components/RankingsHero";
+import RankingsStats from "../components/RankingStats";
+import RankingTabs from "../components/RankingTabs";
+import RankingsTable from "../components/RankingTable";
+import CategoryLeaders from "../components/CategoryLeaders";
 
-import Navbar from "../../../shared/component/NavBar";
-import PageFooter from "../../../shared/component/PagesFooter";
+import Navbar from "../../../shared/components/NavBar";
+import PageFooter from "../../../shared/components/PagesFooter";
 
 function RankingPage() {
     const [activeTab, setActiveTab] =

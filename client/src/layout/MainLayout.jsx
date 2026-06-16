@@ -1,8 +1,8 @@
 
-import TopNav from '../features/fixtures/component/NavBar/TopBar';
-import Sidebar from '../features/fixtures/component/NavBar/SideBar'
+import TopNav from '../features/fixtures/components/NavBar/TopBar';
+import Sidebar from '../features/fixtures/components/NavBar/SideBar'
 import { Outlet } from 'react-router';
-import { Footer } from '../features/fixtures/component/Footer';
+import { Footer } from '../features/fixtures/components/Footer';
 
 
 const MainLayout = () => {

@@ -1,12 +1,12 @@
-import Navbar from "../../../shared/component/NavBar";
-import PageFooter from "../../../shared/component/PagesFooter";
-import FeaturedArticles from "../component/FeaturedArticles";
-import NewsCards from "../component/NewsCards";
-import NewsCardSkeleton from "../component/NewsCardSkeleton";
-import NewsHero from "../component/NewsHero";
-import NewsletterCard from "../component/NewsletterCard";
-import NewsTabs from "../component/NewsTab";
-import TrendingNow from "../component/TrendingNow";
+import Navbar from "../../../shared/components/NavBar";
+import PageFooter from "../../../shared/components/PagesFooter";
+import FeaturedArticles from "../components/FeaturedArticles";
+import NewsCards from "../components/NewsCards";
+import NewsCardSkeleton from "../components/NewsCardSkeleton";
+import NewsHero from "../components/NewsHero";
+import NewsletterCard from "../components/NewsletterCard";
+import NewsTabs from "../components/NewsTab";
+import TrendingNow from "../components/TrendingNow";
 
 function NewsPage() {
     return (
