@@ -1,6 +1,6 @@
-import { SeriesModel } from "../model/series.model";
+import { SeriesModel } from "../model/series.model.js";
 
-class SeriesRepository {
+export default class SeriesRepository {
     constructor(){
         this.seriesModel = SeriesModel;
     }

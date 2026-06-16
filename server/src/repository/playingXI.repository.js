@@ -1,4 +1,4 @@
-import { PlayingXIModel } from "./playing-xi.model.js";
+import { PlayingXIModel } from "../model/playingXI.model.js";
 
 class PlayingXIRepository {
   async findAll() {
@@ -67,4 +67,4 @@ class PlayingXIRepository {
   }
 }
 
-export default new PlayingXIRepository();
+export default PlayingXIRepository;
