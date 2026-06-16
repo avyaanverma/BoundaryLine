@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {ROLES} from "../../../constant/role.constant.js"
 
 export const loginSchema = z.object({
   body: z.object({
@@ -19,5 +20,7 @@ export const registerSchema = z.object({
 export const makeAdminSchema = z.object({
   body: z.object({
     email: z.string().trim().email("A valid email is required"),
+
+    role: z.enum([ROLES.ADMIN, ROLES.SUPER_ADMIN, ROLES.SCORER]),
   }),
 });

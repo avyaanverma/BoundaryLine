@@ -21,6 +21,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { NavLink } from "react-router";
+import Navbar from "../../../shared/components/NavBar";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -606,7 +607,7 @@ function Footer() {
     <footer className="lg:ml-[280px] bg-[#0c0e11] border-t border-[#404941] w-full py-10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-6 max-w-[1440px] mx-auto">
         <div>
-          <span className="text-2xl font-bold text-[#94d5a5] block mb-4">CricPulse</span>
+          <span className="text-2xl font-bold text-[#94d5a5] block mb-4">BoundaryLine</span>
           <p className="text-[#c0c9bf] text-sm">
             The ultimate destination for real-time cricket data, analytics, and fan
             engagement. Experience the game like never before.
@@ -646,7 +647,7 @@ function Footer() {
             ))}
           </div>
           <p className="text-[10px] text-[#8a938a]">
-            © 2024 CricPulse Analytics. All rights reserved.
+            © 2024 BoundaryLine Analytics. All rights reserved.
           </p>
         </div>
       </div>
@@ -740,7 +741,8 @@ export default function FixturesPage() {
         }
       `}</style>
 
-      <TopNav />
+      {/* <TopNav /> */}
+      <Navbar/>
       <Sidebar />
 
       <main

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import { FORMAT } from "../constant/format.constant.js";
-import { TOURNAMENT_STATUS } from "../constant/tournament.constant.js";
+import { TOURNAMENT_STATUS } from "../constant/series.constant.js";
 
 const tournamentSchema = mongoose.Schema({
     name: {type: String, required: true, trim: true},

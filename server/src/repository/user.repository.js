@@ -13,7 +13,9 @@ export default class UserRepo {
 
   // function to find a user using email
   async findByEmail(email) {
-    return await userModel.findOne({ email: email.toLowerCase() }).select("+password");
+    return await userModel
+      .findOne({ email: email.toLowerCase() })
+      .select("+password");
   }
 
   async findByGoogleId(googleId) {
@@ -34,7 +36,6 @@ export default class UserRepo {
   //     return await userModel.findAll();
   // }
 
-
   async findOneAndUpdate(filter, update) {
     return await userModel.findOneAndUpdate(filter, update, { new: true });
   }
@@ -42,8 +43,46 @@ export default class UserRepo {
   async linkGoogleAccount(userId, payload) {
     return await userModel.findByIdAndUpdate(userId, payload, { new: true });
   }
-  
+
   async updateRole(email, role) {
     return await userModel.updateOne({ email }, { $set: { role } });
+  }
+  async findAll(skip = 0, limit = 10) {
+    return await userModel
+      .find({ isDeleted: false })
+      .select("-password")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+  }
+
+  async countUsers() {
+    return await userModel.countDocuments({
+      isDeleted: false,
+    });
+  }
+
+  async updateById(id, payload) {
+    return await userModel.findByIdAndUpdate(id, payload, {
+      new: true,
+    });
+  }
+
+  async softDeleteById(id) {
+    return await userModel.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: true,
+      },
+      {
+        new: true,
+      },
+    );
+  }
+
+  async findByEmailWithoutPassword(email) {
+    return await userModel.findOne({
+      email: email.toLowerCase(),
+    });
   }
 }

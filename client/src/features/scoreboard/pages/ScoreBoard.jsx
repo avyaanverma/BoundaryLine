@@ -9,15 +9,16 @@ import MatchNews from "../components/MatchNews.jsx";
 import socketService from "../../../shared/services/socket/socket.js";
 import { SOCKET_EVENTS } from "../../../shared/services/socket/socket-events.js";
 import { useSocket } from "../../../shared/services/socket/useSocket.js";
+import useScoreSocket from "../hooks/useScoreSocket.js";
 import LiveCommentary from "../components/LiveCommentary.jsx";
 import {
   addCommentaryRealtime,
   removeCommentaryRealtime,
-} from "../store/mathSlice.js";
+} from "../../scoreboard/store/mathSlice.js";
 import ScorecardTab from "../components/ScorecardTab.jsx";
 import PlayingXITab from "../components/PlayingXITab.jsx";
 
-import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";
+import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";  
 
 
 export const ScoreboardPage = () => {
@@ -30,27 +31,30 @@ export const ScoreboardPage = () => {
   const [activeTab, setActiveTab] = useState("LIVE");
 
   // Calculate dynamic outputs
-  const totalOversPlayed = activeInnings.overs + activeInnings.balls / 6;
+  const totalOversPlayed = activeInnings?.overs + activeInnings?.balls / 6;
   const crr =
     totalOversPlayed > 0
-      ? (activeInnings.runs / totalOversPlayed).toFixed(2)
+      ? (activeInnings?.runs / totalOversPlayed).toFixed(2)
       : "0.00";
 
   // Standard target checks
-  const target = match.target || 208;
-  const runsNeeded = Math.max(0, target - activeInnings.runs);
+  const target = match?.target || 208;
+  const runsNeeded = Math.max(0, target - (activeInnings?.runs || 0));
   const totalInningsBalls = 120; // T20 format
-  const ballsBowled = activeInnings.overs * 6 + activeInnings.balls;
+  const ballsBowled = (activeInnings?.overs || 0) * 6 + (activeInnings?.balls || 0);
   const ballsRemaining = Math.max(0, totalInningsBalls - ballsBowled);
   const rrr =
     ballsRemaining > 0
       ? ((runsNeeded / ballsRemaining) * 6).toFixed(2)
       : "0.00";
 
+  // Register score socket listeners for this match
+  useScoreSocket(match?.id);
+
   useEffect(() => {
     if (!match?.id) return;
 
-    // Join match room
+    // Join match room for real-time updates
     joinMatchRoom(match.id);
 
     // COMMENTARY ADD
@@ -145,11 +149,11 @@ export const ScoreboardPage = () => {
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-4xl font-extrabold text-white tracking-tight">
-                      {match.teamA.shortName} {activeInnings.runs}/
-                      {activeInnings.wickets}
+                      {match.teamA.shortName} {activeInnings?.runs || 0}/
+                      {activeInnings?.wickets || 0}
                     </span>
                     <span className="text-sm font-semibold text-zinc-500 font-mono">
-                      ({activeInnings.overs}.{activeInnings.balls} Overs)
+                      ({activeInnings?.overs || 0}.{activeInnings?.balls || 0} Overs)
                     </span>
                   </div>
                   <p className="text-sm font-semibold text-amber-400 mt-1 font-sans">
@@ -181,7 +185,7 @@ export const ScoreboardPage = () => {
               {/* Over Ball Timeline Row */}
               <div className="p-4 rounded-xl bg-zinc-950/60 border border-white/5 mt-2 shadow-inner">
                 <OverTimeline
-                  balls={match.thisOver}
+                  balls={match?.thisOver}
                   maxDisplay={7}
                   label="THIS OVER"
                 />

@@ -1,11 +1,17 @@
-import MatchCardCountdown from "../component/MatchCardCountdown";
-import MatchCardFull from "../component/MatchCardFull";
-import MatchCardResult from "../component/MatchCardResult";
-import MiniMatchCard from "../component/MiniMatchCard";
-import SectionDivider from "../component/SectionDivider";
+import React, { useState } from "react";
+
+import MatchCardCountdown from "../components/MatchCardCountdown";
+import MatchCardFull from "../components/MatchCardFull";
+import MatchCardResult from "../components/MatchCardResult";
+import MiniMatchCard from "../components/MiniMatchCard";
+import SectionDivider from "../components/SectionDivider";
+import GlassPanel from "../components/GlassPanel";
 
 
 function DuplicateFixture() {
+    const [view, setView] = useState("list");
+
+
     return (
         <>
             <div className="w-full pt-20 px-4 md:px-6 min-h-screen pb-10">

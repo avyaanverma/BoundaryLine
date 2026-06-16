@@ -42,13 +42,6 @@ class ScoreRoute {
       this.scoreController.updateScore
     );
 
-    // Get scores by match
-    this.router.get(
-      "/match/:matchId",
-      authenticate,
-      validateRequest(matchParamSchema),
-      this.scoreController.getScoresByMatch
-    );
 
     // Delete score
     this.router.delete(

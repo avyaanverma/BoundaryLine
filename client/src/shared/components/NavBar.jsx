@@ -1,9 +1,9 @@
 import { Menu } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
     { label: "Scores", path: "/" },
-    { label: "Schedule", path: "/schedule" },
+    // { label: "Schedule", path: "/matches" },
     { label: "Teams", path: "/teams" },
     { label: "Rankings", path: "/ranking" },
     { label: "News", path: "/news" },
@@ -38,7 +38,7 @@ function Navbar() {
                         className="flex items-center gap-3 shrink-0"
                     >
                         <div className="w-10 h-10 rounded-full bg-[#94d5a5] flex items-center justify-center font-black text-[#00391c]">
-                            CP
+                            BL
                         </div>
 
                         <span className="text-xl lg:text-2xl font-bold text-[#94d5a5]">
@@ -86,7 +86,9 @@ function Navbar() {
                     <div className="flex items-center gap-3">
 
                         <button
-
+                            onClick={() =>
+                                navigate("/auth/userlogin")
+                            }
                             className="
                                 hidden
                                 sm:block
@@ -101,7 +103,9 @@ function Navbar() {
                         </button>
 
                         <button
-
+                            onClick={() =>
+                                navigate("/auth/userregister")
+                            }
                             className="
                                 hidden
                                 sm:flex

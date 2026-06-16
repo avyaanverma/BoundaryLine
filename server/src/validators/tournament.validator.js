@@ -2,7 +2,7 @@ import { z } from "zod";
 import mongoose from "mongoose";
 
 import { FORMAT } from "../constant/format.constant.js";
-import { TOURNAMENT_STATUS } from "../constant/tournament.constant.js";
+import { TOURNAMENT_STATUS } from "../constant/series.constant.js";
 
 const objectIdSchema = z.string().refine(
     (value) => mongoose.Types.ObjectId.isValid(value),
