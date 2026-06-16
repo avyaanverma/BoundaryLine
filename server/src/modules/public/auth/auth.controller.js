@@ -4,6 +4,9 @@ import AppError from "../../../shared/error/AppError.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
 import env from "../../../config/env.js";
+import AppError from "../../../shared/error/AppError.js";
+import { StatusCodes } from "http-status-codes";
+import bcrypt from "bcrypt";
 
 export default class AuthController {
   constructor() {

@@ -10,24 +10,6 @@ class TeamController {
     this.teamService = teamService;
   }
 
-  listTeams = asyncHandler(async (_req, res) => {
-    // What: handle GET /api/teams.
-    // Why: frontend pages need an active team directory.
-    // How: call the service and wrap the result in a consistent success response.
-    const teams = await this.teamService.listTeams();
-
-    return new ApiResponse(200, "Teams fetched successfully", teams).send(res);
-  });
-
-  getTeam = asyncHandler(async (req, res) => {
-    // What: handle GET /api/teams/:id.
-    // Why: detail views and dependent workflows need one specific team.
-    // How: read the validated route id and ask the service for the team.
-    const team = await this.teamService.getTeamById(req.validated.params.id);
-
-    return new ApiResponse(200, "Team fetched successfully", team).send(res);
-  });
-
   createTeam = asyncHandler(async (req, res) => {
     // What: handle POST /api/teams.
     // Why: admins need to register new cricket teams.

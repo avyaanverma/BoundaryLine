@@ -1,58 +1,68 @@
+import { Router } from "express";
 import CommentaryController from "./commentary.controller.js";
-import express from "express";
 
-import validateRequest from "../middleware/validateRequest.js";
+import { validateRequest } from "../../../middleware/validateRequest.js";
 
 import {
   authenticate,
   authorize,
-} from "../middleware/auth.middleware.js";
+} from "../../../middleware/auth.middleware.js";
 
 import {
   createCommentarySchema,
-  commentaryParamSchema,
+  commentaryIdParamSchema,
   getCommentaryByMatchSchema,
-} from "../validators/commentary.validator.js";
+} from "../../../validators/commentary.validator.js";
 
-const router = express.Router();
+class CommentaryRoute {
+  constructor(commentaryController = new CommentaryController()) {
+    this.router = Router();
+    this.commentaryController = commentaryController;
+    this.registerRoutes();
+  }
 
-const commentaryController = new CommentaryController();
+  registerRoutes() {
+    /**
+     * POST /api/commentary
+     * Create commentary
+     */
+    this.router.post(
+      "/",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
+      validateRequest(createCommentarySchema),
+      this.commentaryController.addCommentary
+    );
 
-/**
- * POST /api/commentary
- * New commentary create karega
- * Only ADMIN, SUPER_ADMIN, SCORER
- */
-router.post(
-  "/",
-  authenticate,
-  authorize("SUPER_ADMIN", "ADMIN", "SCORER"),
-  validateRequest(createCommentarySchema),
-  commentaryController.addCommentary,
-);
+    /**
+     * GET /api/commentary/match/:matchId
+     * Get commentary by match
+     */
+    this.router.get(
+      "/match/:matchId",
+      authenticate,
+      validateRequest(getCommentaryByMatchSchema),
+      this.commentaryController.getCommentaryByMatch
+    );
 
-/**
- * DELETE /api/commentary/:id
- * Commentary delete karega
- * Only ADMIN & SUPER_ADMIN
- */
-router.delete(
-  "/:id",
-  authenticate,
-  authorize("SUPER_ADMIN", "ADMIN"),
-  validateRequest(commentaryParamSchema),
-  commentaryController.deleteCommentary,
-);
+    /**
+     * DELETE /api/commentary/:id
+     * Delete commentary
+     */
+    this.router.delete(
+      "/:id",
+      authenticate,
+      authorize("SUPER_ADMIN", "ADMIN"),
+      validateRequest(commentaryIdParamSchema),
+      this.commentaryController.deleteCommentary
+    );
+  }
 
-/**
- * GET /api/commentary/match/:matchId
- * Match ki commentary fetch karega Logged-in users only
- */
-router.get(
-  "/match/:matchId",
-  authenticate,
-  validateRequest(getCommentaryByMatchSchema),
-  commentaryController.getCommentaryByMatch,
-);
+  getRouter() {
+    return this.router;
+  }
+}
 
-export default router;
+const commentaryRoute = new CommentaryRoute();
+
+export default commentaryRoute.getRouter();

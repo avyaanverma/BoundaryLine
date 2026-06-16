@@ -1,9 +1,9 @@
-import ScoreRepository from "../../repository/score.repository.js";
+import ScoreRepository from "../../../repository/score.repository.js";
 import { Match } from "../../shared/models/reference.model.js";
-import BadRequest from "../../shared/errors/BadRequest.js";
-import NotFound from "../../shared/errors/NotFound.js";
-import { emitToMatch } from "../../shared/socket/emitToMatch.js";
-import { logger } from "../../config/logger.js";
+import BadRequest from "../../../shared/error/BadRequest.js";
+import NotFound from "../../../shared/error/NotFound.js";
+import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
+import { logger } from "../../../shared/utils/logger.js";
 
 class ScoreService {
   constructor(scoreRepository = new ScoreRepository()) {

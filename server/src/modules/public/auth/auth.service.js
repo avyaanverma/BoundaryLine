@@ -4,7 +4,7 @@ import env from "../../../config/env.js";
 import jwt from "jsonwebtoken";
 import AppError from "../../../shared/error/AppError.js";
 import { StatusCodes } from "http-status-codes";
-import NotFound from "../../../shared/error/notFound.error.js";
+import NotFound from "../../../shared/error/NotFound.js";
 
 export default class AuthService {
   constructor() {

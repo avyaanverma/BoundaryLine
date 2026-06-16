@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import AppError from "../shared/errors/AppError.js";
+import jwt from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
+import AppError from "../shared/error/AppError.js";
+import NotFound from "../shared/error/NotFound.js";
+import env from "../config/env.js";
+import { asyncHandler } from "../shared/utils/asyncHandler.js";
 
 class AuthMiddleware {
   authenticate(req, _res, next) {
@@ -75,8 +80,31 @@ class AuthMiddleware {
   }
 }
 
-const authMiddleware = new AuthMiddleware();
+const authGuard = new AuthMiddleware();
 
-export const authenticate = authMiddleware.authenticate.bind(authMiddleware);
+export const authenticate = authGuard.authenticate.bind(authGuard);
 
-export const authorize = authMiddleware.authorize.bind(authMiddleware);
+export const authorize = authGuard.authorize.bind(authGuard);
+
+export const authMiddleware = asyncHandler((req, res, next) => {
+  const token = req.cookies.accessToken;
+
+  if (!token) throw new NotFound("Token not found");
+  const payload = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
+  if (!payload)
+    throw new AppError("UnAuthorized user", StatusCodes.UNAUTHORIZED);
+  req.user = payload;
+
+  next();
+});
+
+// Role based access Middleware
+export const authorizationMiddleware = asyncHandler((role) => {
+  return (req, res, next) => {
+    if (role.includes(req.user.role)) {
+      next();
+    } else {
+      throw new AppError("UnAuthorized user", StatusCodes.FORBIDDEN);
+    }
+  };
+});
