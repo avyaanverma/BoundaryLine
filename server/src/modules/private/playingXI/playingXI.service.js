@@ -9,18 +9,14 @@ import AppError from "../../../shared/error/AppError.js";
 import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
 import { logger } from "../../../shared/utils/logger.js";
 import { SOCKET_EVENTS } from "../../../constant/socket-events.constant.js";
+import playingXIRepository from "../../../repository/playingXI.repository.js";
 
 class PlayingXIService {
-  constructor(
-    playingXIRepository = new PlayingXIRepository(),
-    matchRepository = new MatchRepository(),
-    teamRepository = new TeamRepository(),
-    squadRepository = new SquadRepository(),
-  ) {
+  constructor() {
     this.playingXIRepository = playingXIRepository;
-    this.matchRepository = matchRepository;
-    this.teamRepository = teamRepository;
-    this.squadRepository = squadRepository;
+    this.matchRepository = MatchRepository;
+    this.teamRepository = TeamRepository;
+    this.squadRepository = SquadRepository;
   }
 
   async getPlayingXIs() {
