@@ -1,12 +1,15 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { undoScore, syncScores, changeBowler, dismissBanner, updateBallEvent } from "../../scoreboard/store/mathSlice.js";
 import { useSocket } from "../../../shared/services/socket/useSocket.js";
-import { Undo, Save, Settings, X } from "lucide-react";
+import { useMatchesQuery } from "../../../shared/hooks/useQueries.js";
+import { Undo, Save, Settings, X, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useWicketFlow } from "../hooks/useWicketFlow.js";
 import { useMatchSetup } from "../hooks/useMatchSetup.js";
 import { useRosterImporter } from "../hooks/useRosterImporter.js";
+import { useSyncScores } from "../hooks/useSyncScores.js";
+import { useCommentarySync } from "../hooks/useCommentarySync.js";
 import SetupWizard from "../components/SetupWizard.jsx";
 import LiveScoringPanel from "../components/LiveScoringPanel.jsx";
 import ScorerModals from "../components/ScoreModal.jsx";
@@ -69,11 +72,24 @@ export const ScorerConsolePage = ({ onViewScoreboard }) => {
   const { newPlayerName, setNewPlayerName, newPlayerRole, setNewPlayerRole, handleAddManualPlayer, handleXLSXImportSimulation } = useRosterImporter({ match, dispatch });
   const [searchQueryA, setSearchQueryA] = useState(""), [searchQueryB, setSearchQueryB] = useState("");
 
+  // Fetch backend matches for the SetupWizard to display
+  const { data: backendMatches = [], isLoading: backendMatchesLoading } = useMatchesQuery();
+
+  const { handleSync: handlePubLiveSync, isSaving, error: syncError, success: syncSuccess, clearError } = useSyncScores();
+  useCommentarySync();
+
   const handleScoreBall = (type, runs, extraRuns, wicketType, customLabel) => {
     dispatch(updateBallEvent({ type, runs, extraRuns, wicketType, customLabel }));
     emitScoreUpdate(match.id, { ballType: type, runs, extraRuns, wicketType });
   };
-  const handlePubLive = () => { dispatch(syncScores()); alert("⚡ Match Synchronized Live to BoundaryLine API!"); };
+  const handlePubLive = async () => {
+    clearError();
+    try {
+      await handlePubLiveSync();
+    } catch {
+      // Error is handled in the hook and displayed in the UI
+    }
+  };
   const handleBowlerSelect = (bId) => {
     if (bId === match.activeBowlerId) { alert("This bowler is already bowling!"); return; }
     dispatch(changeBowler({ bowlerId: bId })); setActiveModal("NONE");
@@ -109,7 +125,26 @@ export const ScorerConsolePage = ({ onViewScoreboard }) => {
             <span className={`h-2 w-2 rounded-full ${isSynced ? "bg-emerald-500" : "bg-yellow-500 animate-pulse"}`}></span>{isSynced ? "Synced" : "Sync Required"}
           </span>
           <button onClick={() => dispatch(undoScore())} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-white/20 text-xs font-bold text-zinc-300 hover:text-white transition-all active:scale-95 cursor-pointer"><Undo className="w-3.5 h-3.5" />Undo</button>
-          <button onClick={handlePubLive} className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-black text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-md shadow-emerald-600/10"><Save className="w-3.5 h-3.5" />Save</button>
+          <button
+            onClick={handlePubLive}
+            disabled={isSaving}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+              syncSuccess
+                ? 'bg-emerald-500 text-black shadow-emerald-500/30'
+                : syncError
+                  ? 'bg-red-600 text-white shadow-red-600/20 hover:bg-red-500'
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-black shadow-emerald-600/10'
+            }`}
+          >
+            {isSaving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : syncSuccess ? (
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            ) : (
+              <Save className="w-3.5 h-3.5" />
+            )}
+            {isSaving ? 'Saving...' : syncSuccess ? 'Saved!' : 'Save'}
+          </button>
           <button type="button" onClick={() => setActiveModal("MANUAL_EVENTS")} className="p-2 rounded-xl bg-zinc-900 border border-white/5 hover:border-white/10 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"><Settings className="w-4.5 h-4.5" /></button>
         </div>
       </div>
@@ -126,6 +161,7 @@ export const ScorerConsolePage = ({ onViewScoreboard }) => {
           wizardNonStrikerId={wizardNonStrikerId} setWizardNonStrikerId={setWizardNonStrikerId} wizardBowlerId={wizardBowlerId} setWizardBowlerId={setWizardBowlerId}
           handleCreateDynamicMatch={handleCreateDynamicMatch} handleAddManualPlayer={handleAddManualPlayer} handleXLSXImportSimulation={handleXLSXImportSimulation}
           initWizardOpeningRoles={initWizardOpeningRoles} handleStartMatch={handleStartMatch}
+          backendMatches={backendMatches} backendMatchesLoading={backendMatchesLoading}
         />
       ) : (
         <LiveScoringPanel

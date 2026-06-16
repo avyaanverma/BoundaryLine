@@ -1,12 +1,14 @@
-import { setActiveMatch } from "../../scoreboard/store/mathSlice.js";
+import { setActiveMatch, loadExternalMatch } from "../../scoreboard/store/mathSlice.js";
 import PremiumSelect from "./PremiumSelect.jsx";
-import { ArrowRight, Award, FolderSync, Play, Users } from "lucide-react";
+import { ArrowRight, Award, FolderSync, Play, Users, Loader2, Database } from "lucide-react";
 /**
  * SetupWizard component extract from ScorerConsolePage
  */
 export const SetupWizard = ({
   match,
   matchesList,
+  backendMatches = [],
+  backendMatchesLoading = false,
   dispatch,
   currentRosterA,
   currentRosterB,
@@ -73,36 +75,90 @@ export const SetupWizard = ({
                 </p>
 
                 <div className="flex flex-col gap-2 mt-2">
-                  <label className="text-[10px] text-zinc-550 uppercase font-black tracking-wider block">Active Fixture List</label>
+                  <label className="text-[10px] text-zinc-550 uppercase font-black tracking-wider block">Backend Matches (from API)</label>
                   <div className="flex flex-col gap-2 max-h-52 overflow-y-auto pr-1">
-                    {matchesList.map((m) => {
-                      const isSelected = m.id === match.id;
-                      return (
-                        <button
-                          key={m.id}
-                          type="button"
-                          onClick={() => {
-                            dispatch(setActiveMatch(m.id));
-                          }}
-                          className={`p-3 rounded-xl border flex items-center justify-between text-left transition-all ${
-                            isSelected
-                              ? "bg-emerald-950/30 border-emerald-500/40 text-white"
-                              : "bg-zinc-900/60 border-white/5 text-zinc-400 hover:border-zinc-800 hover:text-white"
-                          }`}
-                        >
-                          <div>
-                            <span className="font-extrabold block text-xs leading-none">{m.teamA.name} <span className="text-emerald-400/80">vs</span> {m.teamB.name}</span>
-                            <span className="text-[9px] text-zinc-500 font-mono italic mt-1 block">{m.title} &bull; {m.subtitle || "LIVE"}</span>
-                          </div>
-                          {isSelected && (
-                            <span className="px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest bg-emerald-500/10 text-emerald-400 uppercase">
-                              Current
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
+                    {backendMatchesLoading ? (
+                      <div className="flex items-center justify-center py-6 gap-2 text-zinc-500">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-xs">Loading matches...</span>
+                      </div>
+                    ) : backendMatches.length === 0 ? (
+                      <div className="py-6 text-center text-zinc-600 text-xs italic">
+                        No matches found in backend. Create one in the Admin Panel first.
+                      </div>
+                    ) : (
+                      backendMatches.map((m) => {
+                        const matchId = m._id || m.id;
+                        const isSelected = matchId === match.id;
+                        return (
+                          <button
+                            key={matchId}
+                            type="button"
+                            onClick={() => {
+                              dispatch(loadExternalMatch({ match: m }));
+                            }}
+                            className={`p-3 rounded-xl border flex items-center justify-between text-left transition-all ${
+                              isSelected
+                                ? "bg-emerald-950/30 border-emerald-500/40 text-white"
+                                : "bg-zinc-900/60 border-white/5 text-zinc-400 hover:border-zinc-800 hover:text-white"
+                            }`}
+                          >
+                            <div>
+                              <span className="font-extrabold block text-xs leading-none">
+                                {(m.teamA?.shortName || m.team1?.shortName || "T1")}{" "}
+                                <span className="text-emerald-400/80">vs</span>{" "}
+                                {(m.teamB?.shortName || m.team2?.shortName || "T2")}
+                              </span>
+                              <span className="text-[9px] text-zinc-500 font-mono italic mt-1 block">
+                                {m.venue || ""} &bull; {m.status || "UPCOMING"}
+                              </span>
+                            </div>
+                            {isSelected && (
+                              <span className="px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest bg-emerald-500/10 text-emerald-400 uppercase">
+                                Current
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })
+                    )}
                   </div>
+
+                  {/* Divider */}
+                  {matchesList.length > 0 && (
+                    <>
+                      <div className="flex items-center gap-2 my-1">
+                        <div className="h-px flex-1 bg-zinc-800"></div>
+                        <span className="text-[9px] text-zinc-600 font-mono uppercase">or local</span>
+                        <div className="h-px flex-1 bg-zinc-800"></div>
+                      </div>
+                      <label className="text-[10px] text-zinc-550 uppercase font-black tracking-wider block">Local Scorer Matches</label>
+                      <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1">
+                        {matchesList.map((m) => {
+                          const isSelected = m.id === match.id;
+                          return (
+                            <button
+                              key={m.id}
+                              type="button"
+                              onClick={() => {
+                                dispatch(setActiveMatch(m.id));
+                              }}
+                              className={`p-2.5 rounded-xl border flex items-center justify-between text-left transition-all ${
+                                isSelected
+                                  ? "bg-cyan-950/30 border-cyan-500/40 text-white"
+                                  : "bg-zinc-900/60 border-white/5 text-zinc-400 hover:border-zinc-800 hover:text-white"
+                              }`}
+                            >
+                              <span className="font-bold text-[10px]">{m.teamA?.name || "A"} <span className="text-zinc-600">vs</span> {m.teamB?.name || "B"}</span>
+                              {isSelected && (
+                                <span className="px-1.5 py-0.5 rounded text-[7px] font-mono font-bold bg-cyan-500/10 text-cyan-400 uppercase">Curr</span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
