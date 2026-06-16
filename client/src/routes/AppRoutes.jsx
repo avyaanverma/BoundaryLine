@@ -8,7 +8,6 @@ import { RoleGuard } from "../app/guards/RoleGuard.jsx";
 import { UserRole } from "../features/scorer-console/pages/type.js";
 import AnalyticsPage from "../features/analytics/pages/AnalyticsPage.jsx";
 import MainLayout from "../layout/MainLayout.jsx";
-import DuplicateFixture from "../features/fixtures/pages/duplicateFixture.jsx";
 import UserRegisterForm from "../features/auth/user/component/UserRegisterForm.jsx";
 import UserLoginForm from "../features/auth/user/component/UserLoginForm.jsx";
 import AdminRegisterForm from "../features/auth/admin/components/AdminRegisterForm.jsx";
@@ -16,19 +15,21 @@ import AdminLoginForm from "../features/auth/admin/components/AdminLoginForm.jsx
 import NewsPage from "../features/news/pages/NewsPage.jsx";
 import TeamPage from "../features/all-team/page/TeamPage.jsx";
 import RankingPage from "../features/ranking/pages/RankingPage.jsx";
+import AdminDashboardPage from "../pages/admin/AdminDashboardPage.jsx";
 
+// Admin Panel Pages
+import AdminLayout from "../features/admin-dashboard/pages/AdminLayout.jsx";
+import AdminMatchesPage from "../features/admin-dashboard/pages/AdminMatchesPage.jsx";
+import AdminTeamsPage from "../features/admin-dashboard/pages/AdminTeamsPage.jsx";
+import AdminPlayersPage from "../features/admin-dashboard/pages/AdminPlayersPage.jsx";
+import AdminSeriesPage from "../features/admin-dashboard/pages/AdminSeriesPage.jsx";
+import { ComingSoonPage } from "./TestRouter.jsx";
 
-const ComingSoonPage = ({ title, description }) => {
+const ProtectedAdminRoute = ({ children }) => {
   return (
-    <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6">
-      <section className="max-w-xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
-          BoundaryLine
-        </p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight">{title}</h1>
-        <p className="mt-4 text-sm leading-6 text-zinc-400">{description}</p>
-      </section>
-    </main>
+    <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.SUPER_ADMIN]}>
+      {children}
+    </RoleGuard>
   );
 };
 
@@ -84,16 +85,21 @@ const router = createBrowserRouter([
     element: <ScorerWorkspace />,
   },
 
+  // Admin Panel Routes
   {
     path: "/admin",
     element: (
-      <RoleGuard allowedRoles={[UserRole.ADMIN, UserRole.SUPER_ADMIN]}>
-        <ComingSoonPage
-          title="Admin Panel"
-          description="Tournament setup, teams, players, venues, permissions, and match operations will live here."
-        />
-      </RoleGuard>
+      <ProtectedAdminRoute>
+        <AdminLayout />
+      </ProtectedAdminRoute>
     ),
+    children: [
+      { index: true, element: <AdminDashboardPage /> },
+      { path: "matches", element: <AdminMatchesPage /> },
+      { path: "teams", element: <AdminTeamsPage /> },
+      { path: "players", element: <AdminPlayersPage /> },
+      { path: "series", element: <AdminSeriesPage /> },
+    ],
   },
   {
     path: "/tournaments",
@@ -135,53 +141,43 @@ const router = createBrowserRouter([
     element: <RankingPage />,
   },
   {
-    path: "*",
-    element: <Navigate to="/" replace />,
-  },
-
-  // ye test route hai agr sahi chla tho use kr lenge om bhai se bt ke
-
-  {
     element: <MainLayout />,
     children: [
       {
         path: "/analytics",
         element: <AnalyticsPage />,
       },
-      {
-        path: "/matches",
-        element: <FixturesPage />,
-      },
-      {
-        path: "testfx",
-        element: <DuplicateFixture />,
-      },
     ],
   },
 
+  // Redirect: singular 'fixture' → plural '/matches'
   {
-    path:"fixture",
-    element: <FixturesPage />,
+    path: "/fixture",
+    element: <Navigate to="/matches" replace />,
   },
 
   {
-    path: "register",
+    path: "/register",
     element: <AdminRegisterForm />,
   },
   {
-    path: "userregister",
+    path: "/userregister",
     element: <UserRegisterForm />,
   },
   {
-    path: "adminlogin",
+    path: "/adminlogin",
     element: <AdminLoginForm />,
   },
   {
-    path: "userlogin",
+    path: "/userlogin",
     element: <UserLoginForm />,
   },
 
-  //....
+  // Catch-all: unknown routes redirect to home
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
+  },
 ]);
 
 const AppRoutes = () => {

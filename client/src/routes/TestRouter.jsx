@@ -33,6 +33,10 @@ const NotFoundPage = () => {
   )
 }
 
+export const ComingSoonPage = ()=>{
+  return <h1>Coming Soon</h1>
+}
+
 export const TestRouter = () => {
   const CurrentPage = testRoutes[getCurrentPath()] ?? NotFoundPage
 
