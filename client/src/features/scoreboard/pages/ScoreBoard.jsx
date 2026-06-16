@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import LiveMatchHeader from "../components/LiveMatchHeader.jsx";
+import LiveMatchHeader from "../components/LiveMatchheader.jsx";
 import OverTimeline from "../components/OverTimeline.jsx";
 import WinProbability from "../components/WinProbabbility.jsx";
 import AiInsights from "../components/AiInsights.jsx";
@@ -18,8 +18,7 @@ import {
 import ScorecardTab from "../components/ScorecardTab.jsx";
 import PlayingXITab from "../components/PlayingXITab.jsx";
 
-import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";  
-
+import { ChevronLeft, Share2, Bell, Heart, TrendingUp } from "lucide-react";
 
 export const ScoreboardPage = () => {
   const dispatch = useDispatch();
@@ -41,7 +40,8 @@ export const ScoreboardPage = () => {
   const target = match?.target || 208;
   const runsNeeded = Math.max(0, target - (activeInnings?.runs || 0));
   const totalInningsBalls = 120; // T20 format
-  const ballsBowled = (activeInnings?.overs || 0) * 6 + (activeInnings?.balls || 0);
+  const ballsBowled =
+    (activeInnings?.overs || 0) * 6 + (activeInnings?.balls || 0);
   const ballsRemaining = Math.max(0, totalInningsBalls - ballsBowled);
   const rrr =
     ballsRemaining > 0
@@ -53,6 +53,8 @@ export const ScoreboardPage = () => {
 
   useEffect(() => {
     if (!match?.id) return;
+
+    socketService.connect();
 
     // Join match room for real-time updates
     joinMatchRoom(match.id);
@@ -76,13 +78,13 @@ export const ScoreboardPage = () => {
       dispatch(removeCommentaryRealtime(data.id || data._id));
     };
 
-    socketService.listen(SOCKET_EVENTS.COMMENTARY_UPDATED, onCommentaryUpdated);
+    socketService.listen(SOCKET_EVENTS.COMMENTARY_CREATED, onCommentaryUpdated);
     socketService.listen(SOCKET_EVENTS.COMMENTARY_DELETED, onCommentaryDeleted);
 
     return () => {
       leaveMatchRoom(match.id);
       socketService.removeListener(
-        SOCKET_EVENTS.COMMENTARY_UPDATED,
+        SOCKET_EVENTS.COMMENTARY_CREATED,
         onCommentaryUpdated,
       );
       socketService.removeListener(
@@ -153,7 +155,8 @@ export const ScoreboardPage = () => {
                       {activeInnings?.wickets || 0}
                     </span>
                     <span className="text-sm font-semibold text-zinc-500 font-mono">
-                      ({activeInnings?.overs || 0}.{activeInnings?.balls || 0} Overs)
+                      ({activeInnings?.overs || 0}.{activeInnings?.balls || 0}{" "}
+                      Overs)
                     </span>
                   </div>
                   <p className="text-sm font-semibold text-amber-400 mt-1 font-sans">

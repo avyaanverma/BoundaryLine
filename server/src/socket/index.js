@@ -12,23 +12,26 @@ export const initializeSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log(
-      `Socket Connected: ${socket.id}`
-    );
+    console.log(`Socket Connected: ${socket.id}`);
 
-    socket.on("join-match", (matchId) => {
-      const room = `match:${matchId}`;
+    socket.on("join-match", (data) => {
+      const room = `match:${data.matchId}`;
+
       socket.join(room);
 
-      console.log(
-        `${socket.id} joined room: ${room}`
-      );
+      console.log(`${socket.id} joined room: ${room}`);
+    });
+
+    socket.on("leave-match", (data) => {
+      const room = `match:${data.matchId}`;
+
+      socket.leave(room);
+
+      console.log(`${socket.id} left room: ${room}`);
     });
 
     socket.on("disconnect", () => {
-      console.log(
-        `Socket Disconnected: ${socket.id}`
-      );
+      console.log(`Socket Disconnected: ${socket.id}`);
     });
   });
 
@@ -37,9 +40,7 @@ export const initializeSocket = (server) => {
 
 export const getIO = () => {
   if (!io) {
-    throw new Error(
-      "Socket.IO has not been initialized"
-    );
+    throw new Error("Socket.IO has not been initialized");
   }
 
   return io;

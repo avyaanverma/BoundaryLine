@@ -2,10 +2,18 @@ import express from "express";
 import passport from "passport";
 import AuthController from "./auth.controller.js";
 import { asyncHandler } from "../../../shared/utils/asyncHandler.js";
-import { authMiddleware, authorizeRoles } from "../../../middleware/auth.middleware.js";
-import { ROLES } from "../../../constant/role.constant.js";
 import { validateRequest } from "../../../middleware/validateRequest.js";
-import { loginSchema, makeAdminSchema, registerSchema } from "./auth.validator.js";
+import {
+  authMiddleware,
+  authenticateRequest,
+  authorizeRoles,
+} from "../../../middleware/auth.middleware.js";
+import { ROLES } from "../../../constant/role.constant.js";
+import {
+  loginSchema,
+  makeAdminSchema,
+  registerSchema,
+} from "./auth.validator.js";
 
 const router = express.Router();
 const authController = new AuthController();
@@ -20,7 +28,7 @@ router.get(
 
 router.patch(
   "/make-admin",
-  // authenticateRequest,
+  authenticateRequest,
   authorizeRoles([ROLES.SUPER_ADMIN]),
   validateRequest(makeAdminSchema),
   asyncHandler(authController.makeAdmin.bind(authController)),
@@ -40,8 +48,6 @@ router.get(
   asyncHandler(authController.refreshAccessToken.bind(authController)),
 );
 
-router.get("/me", authMiddleware, asyncHandler(authController))
-
 router.post(
   "/register",
   validateRequest(registerSchema),
@@ -51,16 +57,13 @@ router.post(
 router.post(
   "/login",
   validateRequest(loginSchema),
-  asyncHandler(
-    authController.loginController.bind(authController)
-  )
+  asyncHandler(authController.loginController.bind(authController)),
 );
 
 router.get(
   "/me",
   authMiddleware,
-  asyncHandler(
-    authController.getMe.bind(authController)
-  )
+  asyncHandler(authController.getMe.bind(authController)),
 );
+
 export default router;
