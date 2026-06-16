@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
     { label: "Scores", path: "/" },
@@ -10,7 +10,7 @@ const navItems = [
 ];
 
 function Navbar() {
-    const navigate = useNavigate();
+
     const location = useLocation();
 
     return (
