@@ -3,8 +3,6 @@ import {
   Search,
   Globe,
   Bell,
-  BellRing,
-  ArrowRight,
   Share2,
   List,
   CalendarDays,
@@ -22,7 +20,6 @@ import {
   Rss,
   MessageSquare,
 } from "lucide-react";
-import { path } from "motion/react-client";
 import { NavLink } from "react-router";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────

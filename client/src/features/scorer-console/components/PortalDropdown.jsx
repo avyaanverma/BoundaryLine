@@ -71,7 +71,7 @@ export const PortalDropdown = React.memo(({
     let align = placement.endsWith("end") ? "end" : "start";
 
     // Auto-detect horizontal fallback
-    let left = rect.left;
+    let left;
     if (align === "start") {
       // Align left boundary with anchor left boundary
       left = rect.left;

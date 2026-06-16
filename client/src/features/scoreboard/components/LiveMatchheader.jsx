@@ -5,7 +5,6 @@ import { Wifi, WifiOff } from "lucide-react";
 import PremiumSelect from "../../scorer-console/components/PremiumSelect.jsx";
 export const LiveMatchHeader = () => {
   const dispatch = useDispatch();
-  const match = useSelector((state) => state.match.currentMatch);
   const activeMatchId = useSelector((state) => state.match.activeMatchId);
   const matchesList = useSelector((state) => state.match.matchesList || []);
   const isSynced = useSelector((state) => state.match.isSynced);
