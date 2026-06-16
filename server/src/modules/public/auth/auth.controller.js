@@ -2,42 +2,7 @@ import { app_config } from "../../../constant/app.constant.js";
 import AuthService from "./auth.service.js";
 import { StatusCodes } from "http-status-codes";
 import env from "../../../config/env.js";
-
-function getClearCookieOptions(cookieOptions) {
-  // What: derive clear-cookie options from the original cookie settings.
-  // Why: Express should clear the same cookie path/security attributes it set.
-  // How: keep only attributes relevant to identifying and clearing the cookie.
-  return {
-    httpOnly: cookieOptions.httpOnly,
-    secure: cookieOptions.secure,
-    sameSite: cookieOptions.sameSite,
-    ...(cookieOptions.path ? { path: cookieOptions.path } : {}),
-  };
-}
-
-function setAuthCookies(res, accessToken, refreshToken) {
-  // What: attach auth cookies to a successful auth response.
-  // Why: browser clients use HTTP-only cookies for protected API calls.
-  // How: reuse the environment-aware app cookie config.
-  const config = app_config(env.NODE_ENV);
-  res.cookie("accessToken", accessToken, config.cookie.accessToken);
-  res.cookie("refreshToken", refreshToken, config.cookie.refreshToken);
-}
-
-function clearAuthCookies(res) {
-  // What: remove auth cookies from the browser.
-  // Why: logout must clear HTTP-only cookies that frontend JavaScript cannot delete.
-  // How: use matching security options without maxAge.
-  const config = app_config(env.NODE_ENV);
-  res.clearCookie(
-    "accessToken",
-    getClearCookieOptions(config.cookie.accessToken),
-  );
-  res.clearCookie(
-    "refreshToken",
-    getClearCookieOptions(config.cookie.refreshToken),
-  );
-}
+import buildSuccessResponse from "../../../shared/successResponse/buildSuccessResponse.js";
 
 export default class AuthController {
   constructor() {
@@ -53,6 +18,18 @@ export default class AuthController {
       success: true,
       message: `User role updated to ${role}`,
       data: user,
+    });
+  }
+
+  async getMe(req, res) {
+    res.status(200).json(new buildSuccessResponse("User verified", req.user));
+  }
+
+  async refreshAccessToken(req, res) {
+    const { accessToken } = this.userService.refreshAccessToken(req.cookies);
+    res.cookie("accessToken", accessToken, app_config().cookie.accessToken);
+    return res.status(StatusCodes.OK).json({
+      messgae: "Token generated successfully",
     });
   }
 

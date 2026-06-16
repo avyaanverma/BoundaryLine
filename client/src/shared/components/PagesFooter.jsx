@@ -16,7 +16,7 @@ export default function PageFooter() {
                     {/* Brand */}
                     <div>
                         <h2 className="text-3xl font-bold text-[#94d5a5]">
-                            CricPulse
+                            BoundaryLine
                         </h2>
 
                         <p className="mt-4 text-gray-400 text-sm leading-relaxed max-w-xs">
@@ -168,7 +168,7 @@ export default function PageFooter() {
                         text-gray-500
                     "
                 >
-                    © 2024 CricPulse Analytics. All rights reserved.
+                    © 2024 BoundaryLine Analytics. All rights reserved.
                 </div>
 
             </div>

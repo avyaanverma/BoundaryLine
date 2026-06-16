@@ -1,10 +1,10 @@
 import { useState } from "react";
-import HeroSection from "../component/HeroSection";
-import SearchFilters from "../component/SearchFilter";
-import TeamGrid from "../component/TeamGrid";
+import HeroSection from "../components/HeroSection";
+import SearchFilters from "../components/SearchFilter";
+import TeamGrid from "../components/TeamGrid";
 import { teams } from "../hook/Teamdata";
-import Navbar from "../../../shared/component/NavBar";
-import PageFooter from "../../../shared/component/PagesFooter";
+import Navbar from "../../../shared/components/NavBar";
+import PageFooter from "../../../shared/components/PagesFooter";
 
 function TeamPage() {
     const [search, setSearch] = useState("");

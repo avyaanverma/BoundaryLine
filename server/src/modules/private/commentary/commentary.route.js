@@ -10,7 +10,7 @@ import {
 
 import {
   createCommentarySchema,
-  commentaryIdParamSchema,
+  commentaryParamSchema,
   getCommentaryByMatchSchema,
 } from "../../../validators/commentary.validator.js";
 
@@ -18,14 +18,11 @@ class CommentaryRoute {
   constructor(commentaryController = new CommentaryController()) {
     this.router = Router();
     this.commentaryController = commentaryController;
+
     this.registerRoutes();
   }
 
   registerRoutes() {
-    /**
-     * POST /api/commentary
-     * Create commentary
-     */
     this.router.post(
       "/",
       authenticate,
@@ -33,27 +30,12 @@ class CommentaryRoute {
       validateRequest(createCommentarySchema),
       this.commentaryController.addCommentary
     );
-
-    /**
-     * GET /api/commentary/match/:matchId
-     * Get commentary by match
-     */
-    this.router.get(
-      "/match/:matchId",
-      authenticate,
-      validateRequest(getCommentaryByMatchSchema),
-      this.commentaryController.getCommentaryByMatch
-    );
-
-    /**
-     * DELETE /api/commentary/:id
-     * Delete commentary
-     */
+    
     this.router.delete(
       "/:id",
       authenticate,
       authorize("SUPER_ADMIN", "ADMIN"),
-      validateRequest(commentaryIdParamSchema),
+      validateRequest(commentaryParamSchema),
       this.commentaryController.deleteCommentary
     );
   }
@@ -63,6 +45,4 @@ class CommentaryRoute {
   }
 }
 
-const commentaryRoute = new CommentaryRoute();
-
-export default commentaryRoute.getRouter();
+export default new CommentaryRoute().getRouter();

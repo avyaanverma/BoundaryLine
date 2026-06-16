@@ -1,8 +1,8 @@
 import { Bell, Info } from "lucide-react";
 import { useEffect, useState } from "react";
-import GlassPanel from '../component/GlassPanel'
-import FORMAT_BORDER from '../component/FormateBorder'
-import StatusBadge from '../component/StatusBadge'
+import GlassPanel from './GlassPanel'
+import FORMAT_BORDER from './FormateBorder'
+import StatusBadge from './StatusBadge'
 
 function MatchCardCountdown({ seriesName, subtitle, team1, team2, countdown }) {
     const [time, setTime] = useState(countdown);

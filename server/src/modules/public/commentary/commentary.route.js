@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateRequest } from "../../../middleware/validateRequest.js";
 import PublicCommentaryController from "./commentary.controller.js";
-import { commentaryMatchIdParamSchema } from "../../../validators/commentary.validator.js";
+import { commentaryParamSchema } from "../../../validators/commentary.validator.js";
 
 class PublicCommentaryRoute {
   constructor(commentaryController = new PublicCommentaryController()) {
@@ -13,7 +13,7 @@ class PublicCommentaryRoute {
   registerRoutes() {
     this.router.get(
       "/match/:matchId",
-      validateRequest(commentaryMatchIdParamSchema),
+      validateRequest(commentaryParamSchema),
       this.commentaryController.getCommentaryByMatch,
     );
   }

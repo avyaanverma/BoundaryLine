@@ -57,6 +57,16 @@ export default class AuthService {
     return this.buildTokenPayload(promotedUser);
   }
 
+  async refreshAccessToken(refreshToken) {
+    if (!refreshToken) throw new NotFound("Token expired");
+
+    const payload = jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET);
+
+    const accessToken = jwt.sign(payload, env.ACCESS_TOKEN_SECRET);
+    return { accessToken };
+  }
+  
+
   async createOrFindUser(payload) {
     // What: reuse an existing OAuth account, link by email, or create it.
     // Why: Google ID is the stable identity, while email can change over time.
