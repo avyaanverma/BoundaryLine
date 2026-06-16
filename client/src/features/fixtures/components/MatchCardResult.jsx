@@ -1,5 +1,5 @@
 import { Share2 } from "lucide-react";
-import GlassPanel from '../component/GlassPanel'
+import GlassPanel from './GlassPanel'
 import FORMAT_BORDER from "./FormateBorder";
 import StatusBadge from "./StatusBadge";
 

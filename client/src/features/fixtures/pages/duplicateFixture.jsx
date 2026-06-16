@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 
-import MatchCardCountdown from "../component/MatchCardCountdown";
-import MatchCardFull from "../component/MatchCardFull";
-import MatchCardResult from "../component/MatchCardResult";
-import MiniMatchCard from "../component/MiniMatchCard";
-import SectionDivider from "../component/SectionDivider";
-import GlassPanel from "../component/GlassPanel";
+import MatchCardCountdown from "../components/MatchCardCountdown";
+import MatchCardFull from "../components/MatchCardFull";
+import MatchCardResult from "../components/MatchCardResult";
+import MiniMatchCard from "../components/MiniMatchCard";
+import SectionDivider from "../components/SectionDivider";
+import GlassPanel from "../components/GlassPanel";
 
 
 function DuplicateFixture() {
     const [view, setView] = useState("list");
-
 
 
     return (
