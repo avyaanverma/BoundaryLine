@@ -25,6 +25,8 @@ import {
 import { NavLink, useNavigate } from "react-router";
 import Navbar from "../../../shared/components/NavBar";
 import { useMatchesQuery } from "../../../shared/hooks/useQueries.js";
+import { UserRole } from "../../scorer-console/pages/type.js";
+import {useSelector} from "react-redux";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -174,15 +176,31 @@ function NotifyButton({ className = "" }) {
 }
 // ─── Match Cards ─────────────────────────────────────────────────────────────
 
+
 /** Live / active match card with score display */
 function MatchCardFull({ match, onClick }) {
   const format = "t20";
+  const userRole = useSelector((state)=> state.auth.role);
+  const navigate = useNavigate();
+  
+  const handleClick = (id)=>{
+    const hasAdminAccess = userRole === UserRole.SUPER_ADMIN || userRole === UserRole.ADMIN;
+    console.log(hasAdminAccess);
+    if(hasAdminAccess){
+      navigate(`/admin/matches`)
+    }else{
+      navigate(`/matches/${id}`);
+    }
+  }
+
   return (
     <GlassPanel
       className={`rounded-2xl overflow-hidden ${FORMAT_BORDER[format]} group hover:shadow-2xl hover:shadow-[#94d5a5]/10 transition-all duration-300 cursor-pointer`}
-      onClick={onClick}
-    >
-      <div className="p-6">
+      >
+      <div
+      onClick={()=> handleClick(match._id)}
+      className="p-6">
+        
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase text-[#94d5a5]">

@@ -5,7 +5,7 @@ const actions = [
   {
     label: "Manage Matches",
     helper: "Open schedule and match operations.",
-    path: "/matches",
+    path: "/admin/matches",
     icon: CalendarPlus,
   },
   {

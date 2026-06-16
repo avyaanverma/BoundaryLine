@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 import { useCreateMatchMutation, useDeleteMatchMutation } from "../api/adminMutations.js";
 import apiClient from "../../../shared/lib/axios.js";
 import {
@@ -9,9 +10,11 @@ import {
   AlertCircle,
   Trash2,
   Check,
+  Eye,
 } from "lucide-react";
 
 export default function AdminMatchesPage() {
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     seriesId: "",
@@ -312,7 +315,14 @@ export default function AdminMatchesPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => navigate(`/matches/${match._id}`)}
+                    className="p-2 rounded-lg hover:bg-[#94d5a5]/10 text-[#94d5a5] transition-colors"
+                    title="View Scoreboard"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
                   <span className={`px-2.5 py-1 rounded text-[10px] font-bold border ${
                     statusColors[match.status] || statusColors.UPCOMING
                   }`}>

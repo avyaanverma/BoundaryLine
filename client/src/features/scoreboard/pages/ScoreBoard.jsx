@@ -280,8 +280,9 @@ const latestScore = useMemo(() => {
       {/* Top Bar Navigation */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <button className="p-2 rounded-xl hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
-            <ChevronLeft className="w-5 h-5" />
+          <button onClick={() => navigate("/matches")} className="p-2 rounded-xl hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
+            <ChevronLeft 
+              className="w-5 h-5" />
           </button>
           <div>
             <h1 className="text-base font-bold text-white tracking-tight flex items-center gap-2">

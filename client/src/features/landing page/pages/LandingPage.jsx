@@ -425,7 +425,7 @@ export default function BoundaryLine() {
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 <Button
                   variant="primary"
-                  onClick={() => navigate("/scoreboard")}
+                  onClick={() => navigate("/matches")}
                 > View Live Scores </Button>
                 <Button variant="secondary">Get Started</Button>
               </div>

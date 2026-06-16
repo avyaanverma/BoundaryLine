@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router";
+import { Eye } from "lucide-react";
+
 const getTeamName = (team) => {
   if (!team) return "TBD";
   if (typeof team === "string") return team;
@@ -25,6 +28,8 @@ const statusClasses = {
 };
 
 export const AdminRecentMatches = ({ matches = [] }) => {
+  const navigate = useNavigate();
+
   return (
     <section className="rounded-lg border border-white/10 bg-[#11171b] p-5">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -40,10 +45,11 @@ export const AdminRecentMatches = ({ matches = [] }) => {
       </div>
 
       <div className="overflow-hidden rounded-lg border border-white/10">
-        <div className="hidden grid-cols-[1.4fr_0.8fr_0.8fr] bg-[#0b1013] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#9aa7a0] md:grid">
+        <div className="hidden grid-cols-[1.4fr_0.6fr_0.8fr_0.6fr] bg-[#0b1013] px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[#9aa7a0] md:grid">
           <span>Fixture</span>
           <span>Status</span>
           <span>Start</span>
+          <span className="text-right">Scoreboard</span>
         </div>
 
         {matches.length === 0 ? (
@@ -53,7 +59,7 @@ export const AdminRecentMatches = ({ matches = [] }) => {
         ) : (
           matches.map((match) => (
             <div
-              className="grid gap-3 border-t border-white/10 px-4 py-4 md:grid-cols-[1.4fr_0.8fr_0.8fr] md:items-center"
+              className="grid gap-3 border-t border-white/10 px-4 py-4 md:grid-cols-[1.4fr_0.6fr_0.8fr_0.6fr] md:items-center"
               key={match._id}
             >
               <div>
@@ -72,6 +78,15 @@ export const AdminRecentMatches = ({ matches = [] }) => {
               <span className="text-sm text-[#cbd4cd]">
                 {formatDate(match.startTime)}
               </span>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => navigate(`/matches/${match._id}`)}
+                  className="p-2 rounded-lg hover:bg-[#94d5a5]/10 text-[#94d5a5] transition-colors"
+                  title="View Scoreboard"
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           ))
         )}
