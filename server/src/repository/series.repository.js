@@ -70,6 +70,4 @@ export default class SeriesRepository {
             new : true
         })
     }
-}
-
-export default SeriesRepository;
+};
