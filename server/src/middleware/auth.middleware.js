@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
 import env from "../config/env.js";
-import Unauthorized from "../shared/error/Unauthorized.js";
-import Forbidden from "../shared/error/Forbidden.js";
+import AppError from "../shared/error/AppError.js";
 
 function getCookieValue(cookieHeader, cookieName) {
   // What: read one cookie value from the raw Cookie header.
@@ -43,7 +43,7 @@ export function authenticateRequest(req, _res, next) {
   const token = getAccessToken(req);
 
   if (!token) {
-    next(new Unauthorized("Access token is required"));
+    next(new AppError("Access token is required", StatusCodes.UNAUTHORIZED));
     return;
   }
 
@@ -51,7 +51,7 @@ export function authenticateRequest(req, _res, next) {
     req.user = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
     next();
   } catch (_error) {
-    next(new Unauthorized("Invalid or expired access token"));
+    next(new AppError("Invalid or expired access token", StatusCodes.UNAUTHORIZED));
   }
 }
 
@@ -61,12 +61,12 @@ export function authorizeRoles(allowedRoles = []) {
   // How: compare req.user.role with the supplied allow-list.
   return function authorizeRolesMiddleware(req, _res, next) {
     if (!req.user?.role) {
-      next(new Unauthorized("Authenticated user role is required"));
+      next(new AppError("Authenticated user role is required", StatusCodes.UNAUTHORIZED));
       return;
     }
 
     if (!allowedRoles.includes(req.user.role)) {
-      next(new Forbidden("User role is not allowed for this operation"));
+      next(new AppError("User role is not allowed for this operation", StatusCodes.FORBIDDEN));
       return;
     }
 
@@ -81,4 +81,13 @@ export function authorize(...allowedRoles) {
   // Why: new route modules may import `authorize("ADMIN")` instead of `authorizeRoles([...])`.
   // How: adapt the variadic arguments to the shared role-authorizer.
   return authorizeRoles(allowedRoles);
+}
+
+export const authMiddleware = authenticateRequest;
+
+export function authorizationMiddleware(roles = []) {
+  // What: preserve the upstream auth middleware name.
+  // Why: some newer modules import `authorizationMiddleware` instead of `authorizeRoles`.
+  // How: normalize a single role or role array to the shared role authorizer.
+  return authorizeRoles(Array.isArray(roles) ? roles : [roles]);
 }

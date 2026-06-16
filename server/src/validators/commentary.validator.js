@@ -27,3 +27,6 @@ export const getCommentaryByMatchSchema = z.object({
     page: z.coerce.number().min(1).default(1).optional(),
   }).optional(),
 });
+
+export const commentaryMatchIdParamSchema = getCommentaryByMatchSchema;
+export const commentaryIdParamSchema = commentaryParamSchema;

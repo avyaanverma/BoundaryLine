@@ -1,28 +1,45 @@
+import { Router } from "express";
+import { validateRequest } from "../../../middleware/validateRequest.js";
 import CommentaryController from "./commentary.controller.js";
-import express from "express";
+import {
+  createCommentarySchema,
+  commentaryIdParamSchema,
+} from "../../../validators/commentary.validator.js";
 
-const router = express.Router();
+class CommentaryRoute {
+  constructor(commentaryController = new CommentaryController()) {
+    this.router = Router();
+    this.commentaryController = commentaryController;
+    this.registerRoutes();
+  }
 
-const commentaryController = new CommentaryController();
+  registerRoutes() {
+    /**
+     * POST /api/commentary
+     * New commentary create karega
+     */
+    this.router.post(
+      "/",
+      validateRequest(createCommentarySchema),
+      this.commentaryController.addCommentary,
+    );
 
-// Controller object
+    /**
+     * DELETE /api/commentary/:id
+     * Commentary delete karega
+     */
+    this.router.delete(
+      "/:id",
+      validateRequest(commentaryIdParamSchema),
+      this.commentaryController.deleteCommentary,
+    );
+  }
 
-/**
- * POST /api/commentary
- * New commentary create karega
- */
-router.post("/", commentaryController.addCommentary);
+  getRouter() {
+    return this.router;
+  }
+}
 
-/**
- * DELETE /api/commentary/:id
- * Commentary delete karega
- */
-router.delete("/:id", commentaryController.deleteCommentary);
+const commentaryRoute = new CommentaryRoute();
 
-/**
- * GET /api/commentary/match/:matchId
- * Match ki commentary fetch karega
- */
-router.get("/match/:matchId", commentaryController.getCommentaryByMatch);
-
-export default router;
+export default commentaryRoute.getRouter();

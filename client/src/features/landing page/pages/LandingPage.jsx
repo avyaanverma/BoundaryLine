@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   Zap,
   ChevronLeft,
@@ -12,6 +12,8 @@ import {
   Smartphone,
   BookOpen,
 } from "lucide-react";
+import Navbar from "../../../shared/component/NavBar";
+
 
 // ─── Tailwind config (injected via CDN in real app; kept as reference) ───────
 // Colors, spacing, font-sizes are from the original tailwind.config.
@@ -54,8 +56,8 @@ function GlassCard({ children, className = "", accentVariant }) {
     accentVariant === "test"
       ? "border-l-4 border-l-[#BE1E2D]"
       : accentVariant === "t20"
-      ? "border-l-4 border-l-[#94d5a5]"
-      : "";
+        ? "border-l-4 border-l-[#94d5a5]"
+        : "";
   return (
     <div
       className={`bg-[rgba(30,32,35,0.6)] backdrop-blur-xl border border-white/5 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-[rgba(51,53,56,0.8)] hover:border-[#94d5a5]/30 hover:-translate-y-1 ${accent} ${className}`}
@@ -138,9 +140,8 @@ function LiveMatchCard({ accentVariant, label, team1, team2, status }) {
 
       <div className="mt-6 pt-4 border-t border-white/5">
         <p
-          className={`text-sm ${
-            status.highlight ? "text-[#94d5a5]" : "text-[#c0c9bf]"
-          }`}
+          className={`text-sm ${status.highlight ? "text-[#94d5a5]" : "text-[#c0c9bf]"
+            }`}
         >
           {status.text}
         </p>
@@ -188,9 +189,8 @@ function RecentResultRow({ label, result, team1Score, team2Score }) {
 function FeatureCard({ icon: Icon, iconColor, bgColor, title, description, highlighted }) {
   return (
     <GlassCard
-      className={`p-10 rounded-2xl flex flex-col items-center text-center ${
-        highlighted ? "border-[#94d5a5]/20 bg-[#94d5a5]/5" : ""
-      }`}
+      className={`p-10 rounded-2xl flex flex-col items-center text-center ${highlighted ? "border-[#94d5a5]/20 bg-[#94d5a5]/5" : ""
+        }`}
     >
       <div
         className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 ${bgColor}`}
@@ -351,17 +351,11 @@ const newsArticles = [
 // ─── Main App ─────────────────────────────────────────────────────────────────
 
 export default function CricPulse() {
-  const [scrolled, setScrolled] = useState(false);
   const carouselRef = useRef(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Carousel drag-to-scroll
   const onMouseDown = (e) => {
@@ -398,50 +392,10 @@ export default function CricPulse() {
       `}</style>
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <header
-        className={`fixed top-0 w-full z-50 bg-[#111316]/80 backdrop-blur-xl border-b border-white/10 shadow-sm transition-all duration-300 ${
-          scrolled ? "py-2 bg-[#111316]/95" : "h-20"
-        }`}
-      >
-        <nav className="flex justify-between items-center px-6 h-full max-w-[1440px] mx-auto">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-[#94d5a5] flex items-center justify-center font-black text-[#00391c] text-lg">
-              CP
-            </div>
-            <span className="text-2xl font-bold text-[#94d5a5]">BoundaryLine</span>
-          </div>
 
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-6">
-            {["Scores", "Schedule", "Teams", "Players", "Rankings", "News"].map(
-              (item, i) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={`text-base transition-colors ${
-                    i === 0
-                      ? "text-[#94d5a5] font-bold border-b-2 border-[#94d5a5] pb-1"
-                      : "text-[#c0c9bf] hover:text-[#94d5a5]"
-                  }`}
-                >
-                  {item}
-                </a>
-              )
-            )}
-          </div>
 
-          {/* Auth */}
-          <div className="flex items-center gap-4">
-            <button className="text-[#e2e2e6] hover:text-[#94d5a5] transition-colors px-4 py-2 text-base">
-              Login
-            </button>
-            <Button variant="primary" className="text-base px-6 py-2">
-              Signup
-            </Button>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
+
 
       <main className="pt-20">
         {/* ── Hero ───────────────────────────────────────────────────────── */}

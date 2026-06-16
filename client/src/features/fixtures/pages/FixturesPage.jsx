@@ -3,8 +3,6 @@ import {
   Search,
   Globe,
   Bell,
-  BellRing,
-  ArrowRight,
   Share2,
   List,
   CalendarDays,
@@ -30,11 +28,17 @@ import { NavLink } from "react-router";
 
 // ─── Reusable Primitives ─────────────────────────────────────────────────────
 
-/** Glass panel — mirrors .glass-panel */
+/** Glass panel */
 function GlassPanel({ children, className = "" }) {
   return (
     <div
-      className={`bg-[rgba(30,32,35,0.7)] backdrop-blur-xl border border-white/[0.08] ${className}`}
+      className={`
+        bg-[#151b20]/80
+        backdrop-blur-xl
+        border border-[#94d5a5]/10
+        shadow-[0_8px_25px_rgba(0,0,0,0.25)]
+        ${className}
+      `}
     >
       {children}
     </div>
@@ -44,74 +48,124 @@ function GlassPanel({ children, className = "" }) {
 /** Format accent border on match cards */
 const FORMAT_BORDER = {
   t20: "border-l-4 border-l-[#94d5a5]",
-  odi: "border-l-4 border-l-[#97d940]",
-  test: "border-l-4 border-l-[#ff4d4d]",
+  odi: "border-l-4 border-l-[#c7f36b]",
+  test: "border-l-4 border-l-[#ff6b6b]",
 };
 
 /** Status badge */
 function StatusBadge({ status }) {
   const map = {
-    LIVE: "bg-[#ffb4ab]/20 text-[#ffb4ab]",
-    UPCOMING: "bg-[#333538] text-[#e2e2e6]",
-    RESULT: "bg-[#333538] text-[#8a938a]",
+    LIVE: "bg-red-500/15 text-red-400 border border-red-500/20",
+    UPCOMING:
+      "bg-[#94d5a5]/10 text-[#94d5a5] border border-[#94d5a5]/20",
+    RESULT:
+      "bg-white/[0.03] text-gray-400 border border-white/5",
   };
+
   return (
     <span
-      className={`px-2 py-1 rounded font-bold text-xs flex items-center gap-1 ${map[status] ?? map.UPCOMING
-        }`}
+      className={`
+        px-2.5
+        py-1
+        rounded-full
+        font-semibold
+        text-xs
+        flex
+        items-center
+        gap-1
+        ${map[status] ?? map.UPCOMING}
+      `}
     >
       {status === "LIVE" && (
-        <span className="w-1.5 h-1.5 rounded-full bg-[#ffb4ab] animate-pulse" />
+        <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
       )}
       {status}
     </span>
   );
 }
 
-/** Format pill (T20I / ODI / TEST) */
+/** Format pill */
 function FormatPill({ format }) {
   const colors = {
-    T20I: "text-[#94d5a9]",
+    T20I: "text-[#94d5a5]",
     T20: "text-[#94d5a5]",
-    ODI: "text-[#97d940]",
-    TEST: "text-[#ff4d4d]",
+    ODI: "text-[#c7f36b]",
+    TEST: "text-[#ff6b6b]",
   };
+
   return (
     <span
-      className={`text-[10px] bg-[#282a2d] px-1 py-[2px] rounded font-bold ${colors[format] ?? "text-[#e2e2e6]"
-        }`}
+      className={`
+        text-[10px]
+        bg-[#1b2229]
+        border border-white/5
+        px-2
+        py-1
+        rounded-full
+        font-bold
+        tracking-wide
+        ${colors[format] ?? "text-white"}
+      `}
     >
       {format}
     </span>
   );
 }
 
-/** Section date divider */
+/** Section divider */
 function SectionDivider({ label, date }) {
   return (
     <div className="flex items-center gap-4 mb-6">
-      <h3 className="text-2xl font-bold text-[#e2e2e6] whitespace-nowrap">{label}</h3>
+
+      <h3 className="text-2xl font-bold text-white whitespace-nowrap">
+        {label}
+      </h3>
+
       {date && (
-        <span className="px-2 py-1 bg-[#333538] rounded text-xs font-semibold text-[#8a938a]">
+        <span
+          className="
+            px-3
+            py-1
+            rounded-full
+            bg-[#94d5a5]/10
+            border border-[#94d5a5]/20
+            text-[#94d5a5]
+            text-xs
+            font-semibold
+          "
+        >
           {date}
         </span>
       )}
-      <div className="h-px flex-grow bg-white/10" />
+
+      <div className="h-px flex-grow bg-[#94d5a5]/10" />
     </div>
   );
 }
 
-/** Notification round button */
+/** Notification button */
 function NotifyButton({ className = "" }) {
   return (
     <button
-      className={`p-2 rounded-full bg-[#282a2d] text-[#e2e2e6] hover:bg-[#94d5a5] hover:text-[#00391c] transition-all group-hover:scale-110 ${className}`}
+      className={`
+        p-2.5
+        rounded-full
+        bg-[#1b2229]
+        border border-white/5
+        text-gray-300
+        hover:bg-[#94d5a5]
+        hover:text-[#08110d]
+        hover:shadow-[0_0_20px_rgba(148,213,165,0.25)]
+        transition-all
+        duration-300
+        group-hover:scale-110
+        ${className}
+      `}
     >
       <Bell className="w-5 h-5" />
     </button>
   );
 }
-
 // ─── Match Cards ─────────────────────────────────────────────────────────────
 
 /** Live / Upcoming card with full scorecard layout */
@@ -634,124 +688,271 @@ export default function FixturesPage() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #111316; color: #e2e2e6; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #111316; }
-        ::-webkit-scrollbar-thumb { background: #333538; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #404941; }
+
+        * {
+          font-family: 'Inter', sans-serif;
+        }
+
+        body {
+          background:
+            linear-gradient(
+              180deg,
+              #070b12 0%,
+              #0d1318 50%,
+              #11161c 100%
+            );
+          color: #e2e2e6;
+          overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #070b12;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #2b343d;
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #3b4650;
+        }
+
         @keyframes pulse-dot {
-          0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(148,213,165,0.7); }
-          70%  { transform: scale(1);    box-shadow: 0 0 0 6px rgba(148,213,165,0); }
-          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(148,213,165,0); }
+          0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(148,213,165,0.7);
+          }
+
+          70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 6px rgba(148,213,165,0);
+          }
+
+          100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(148,213,165,0);
+          }
         }
       `}</style>
 
       <TopNav />
       <Sidebar />
 
-      <main className="lg:ml-[280px] pt-20 px-4 md:px-6 min-h-screen pb-10">
-        {/* Page header */}
-        <header className="py-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <nav className="flex items-center gap-2 text-[#8a938a] mb-1">
-              <span className="text-xs font-semibold">HOME</span>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-xs font-semibold text-[#94d5a5]">FIXTURES</span>
-            </nav>
-            <h1 className="text-[32px] font-bold text-[#e2e2e6] leading-tight">
-              Match Schedule
-            </h1>
-            <p className="text-[#c0c9bf] text-base mt-1 max-w-lg">
-              Track upcoming internationals, domestic leagues, and world championships
-              in one place.
-            </p>
-          </div>
-          <ViewToggle view={view} onChange={setView} />
-        </header>
+      <main
+        className="
+          relative
+          lg:ml-[280px]
+          pt-20
+          px-4
+          md:px-6
+          min-h-screen
+          pb-10
+        "
+      >
+        {/* Background Glow */}
+        <div
+          className="
+            absolute
+            top-0
+            right-0
+            w-[450px]
+            h-[450px]
+            bg-[#94d5a5]/5
+            blur-[140px]
+            rounded-full
+            pointer-events-none
+          "
+        />
 
-        <FiltersBar />
+        <div className="max-w-[1500px] mx-auto">
 
-        {/* ── Today ──────────────────────────────────────────────────────── */}
-        <section className="mb-10">
-          <SectionDivider label="Today" date="OCT 24" />
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {/* Live card */}
-            <MatchCardFull
-              format="t20"
-              seriesName="ICC Men's T20 World Cup"
-              subtitle="Final • Barbados"
-              status="LIVE"
-              team1={{ code: "IND", name: "India", score: "176/7", scoreStyle: "primary" }}
-              team2={{ code: "SA", name: "S. Africa", score: "Yet to bat", scoreStyle: "muted" }}
-              footer={
-                <>
-                  <button className="text-[#94d5a5] text-xs font-semibold flex items-center gap-1 hover:gap-2 transition-all">
-                    FULL SCORECARD <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <button className="text-[#c0c9bf] hover:text-[#94d5a5] transition-colors">
-                    <BellRing className="w-5 h-5" />
-                  </button>
-                </>
-              }
+          {/* Header */}
+          <header className="py-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+
+            <div>
+              <nav className="flex items-center gap-2 text-gray-500 mb-2">
+                <span className="text-xs font-semibold">
+                  HOME
+                </span>
+
+                <ChevronRight className="w-3 h-3" />
+
+                <span className="text-xs font-semibold text-[#94d5a5]">
+                  FIXTURES
+                </span>
+              </nav>
+
+              <h1
+                className="
+                  text-4xl
+                  md:text-5xl
+                  font-bold
+                  tracking-tight
+                  text-white
+                "
+              >
+                Match Schedule
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-gray-400">
+                Track upcoming internationals, domestic leagues,
+                ICC tournaments and world championships in one place.
+              </p>
+            </div>
+
+            <ViewToggle
+              view={view}
+              onChange={setView}
+            />
+          </header>
+
+          <FiltersBar />
+
+          {/* TODAY */}
+          <section className="mb-14">
+            <SectionDivider
+              label="Today"
+              date="OCT 24"
             />
 
-            {/* Upcoming countdown */}
-            <MatchCardCountdown
-              seriesName="Bilateral Series"
-              subtitle="1st ODI • London"
-              team1={{ code: "ENG", name: "England" }}
-              team2={{ code: "AUS", name: "Australia" }}
-              countdown="04:32:15"
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8">
+
+              <MatchCardFull
+                format="t20"
+                seriesName="ICC Men's T20 World Cup"
+                subtitle="Final • Barbados"
+                status="LIVE"
+                team1={{
+                  code: "IND",
+                  name: "India",
+                  score: "176/7",
+                  scoreStyle: "primary",
+                }}
+                team2={{
+                  code: "SA",
+                  name: "South Africa",
+                  score: "Yet to bat",
+                  scoreStyle: "muted",
+                }}
+              />
+
+              <MatchCardCountdown
+                seriesName="Bilateral Series"
+                subtitle="1st ODI • London"
+                team1={{
+                  code: "ENG",
+                  name: "England",
+                }}
+                team2={{
+                  code: "AUS",
+                  name: "Australia",
+                }}
+                countdown="04:32:15"
+              />
+
+              <MatchCardResult
+                seriesName="ICC WTC Final"
+                subtitle="Day 5 • The Oval"
+                team1={{
+                  name: "New Zealand",
+                  score: "245 & 140/2",
+                }}
+                team2={{
+                  name: "Pakistan",
+                  score: "217 & 167",
+                }}
+                resultText="Pakistan won by 8 wickets"
+              />
+            </div>
+          </section>
+
+          {/* TOMORROW */}
+          <section className="mb-14">
+            <SectionDivider
+              label="Tomorrow"
+              date="OCT 25"
             />
 
-            {/* Result */}
-            <MatchCardResult
-              seriesName="ICC WTC Final"
-              subtitle="Day 5 • The Oval"
-              team1={{ name: "New Zealand", score: "245 & 140/2" }}
-              team2={{ name: "Pakistan", score: "217 & 167" }}
-              resultText="Pakistan won by 8 wickets"
-            />
-          </div>
-        </section>
+            <GlassPanel className="rounded-2xl overflow-hidden divide-y divide-white/5">
+              <TomorrowRow
+                time="14:00"
+                team1Code="SL"
+                team2Code="BAN"
+                seriesLabel="Asia Cup • Match 12"
+                venue="Pallekele Int. Stadium"
+              />
 
-        {/* ── Tomorrow ───────────────────────────────────────────────────── */}
-        <section className="mb-10">
-          <SectionDivider label="Tomorrow" date="OCT 25" />
-          <GlassPanel className="rounded-2xl overflow-hidden divide-y divide-white/5">
-            <TomorrowRow
-              time="14:00"
-              team1Code="SL"
-              team2Code="BAN"
-              seriesLabel="Asia Cup • Match 12"
-              venue="Pallekele Int. Stadium"
-            />
-            <TomorrowRow
-              time="19:30"
-              team1Code="WI"
-              team2Code="AFG"
-              seriesLabel="T20 Series • Match 3"
-              venue="Kensington Oval, Barbados"
-            />
-          </GlassPanel>
-        </section>
-
-        {/* ── Later this month ───────────────────────────────────────────── */}
-        <section className="mb-10">
-          <SectionDivider label="Later This Month" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <MiniMatchCard date="OCT 28" format="T20I" team1="AUS" team2="SA" />
-            <MiniMatchCard date="OCT 30" format="TEST" team1="PAK" team2="NZ" />
-            <MiniMatchCard date="NOV 02" format="ODI" team1="IND" team2="ENG" />
-
-            {/* View full month tile */}
-            <GlassPanel className="p-4 rounded-xl bg-[#94d5a5]/5 border border-[#94d5a5]/20 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#94d5a5]/10 transition-all">
-              <CalendarCheck className="w-6 h-6 text-[#94d5a5] mb-1" />
-              <span className="text-xs font-semibold text-[#94d5a5]">View Full Month</span>
+              <TomorrowRow
+                time="19:30"
+                team1Code="WI"
+                team2Code="AFG"
+                seriesLabel="T20 Series • Match 3"
+                venue="Kensington Oval, Barbados"
+              />
             </GlassPanel>
-          </div>
-        </section>
+          </section>
+
+          {/* LATER THIS MONTH */}
+          <section className="mb-14">
+            <SectionDivider
+              label="Later This Month"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <MiniMatchCard
+                date="OCT 28"
+                format="T20I"
+                team1="AUS"
+                team2="SA"
+              />
+
+              <MiniMatchCard
+                date="OCT 30"
+                format="TEST"
+                team1="PAK"
+                team2="NZ"
+              />
+
+              <MiniMatchCard
+                date="NOV 02"
+                format="ODI"
+                team1="IND"
+                team2="ENG"
+              />
+
+              <GlassPanel
+                className="
+                  p-4
+                  rounded-xl
+                  bg-[#94d5a5]/5
+                  border border-[#94d5a5]/20
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  text-center
+                  cursor-pointer
+                  hover:bg-[#94d5a5]/10
+                  transition-all
+                "
+              >
+                <CalendarCheck className="w-6 h-6 text-[#94d5a5] mb-2" />
+
+                <span className="text-sm font-semibold text-[#94d5a5]">
+                  View Full Month
+                </span>
+              </GlassPanel>
+
+            </div>
+          </section>
+
+        </div>
       </main>
 
       <Footer />

@@ -1,4 +1,5 @@
 import { asyncHandler } from "../../../shared/utils/asyncHandler.js";
+import ApiResponse from "../../../shared/utils/ApiResponse.js";
 import ScoreService from "./score.service.js";
 
 class ScoreController {
@@ -12,11 +13,7 @@ class ScoreController {
       req.user?._id || null,
     );
 
-    return res.status(201).json({
-      success: true,
-      message: "Score created successfully",
-      data: score,
-    });
+    return new ApiResponse(201, "Score created successfully", score).send(res);
   });
 
   updateScore = asyncHandler(async (req, res) => {
@@ -26,32 +23,13 @@ class ScoreController {
       req.user?._id || null,
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Score updated successfully",
-      data: score,
-    });
-  });
-
-  getScoresByMatch = asyncHandler(async (req, res) => {
-    const scores = await this.scoreService.getScoresByMatch(
-      req.validated.params.matchId,
-    );
-
-    return res.status(200).json({
-      success: true,
-      data: scores,
-    });
+    return new ApiResponse(200, "Score updated successfully", score).send(res);
   });
 
   deleteScore = asyncHandler(async (req, res) => {
     const score = await this.scoreService.deleteScore(req.validated.params.id);
 
-    return res.status(200).json({
-      success: true,
-      message: "Score deleted successfully",
-      data: score,
-    });
+    return new ApiResponse(200, "Score deleted successfully", score).send(res);
   });
 }
 

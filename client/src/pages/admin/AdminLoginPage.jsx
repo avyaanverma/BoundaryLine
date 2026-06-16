@@ -1,5 +1,5 @@
-import { BrandPanel } from '../../features/admin-login/components/BrandPanel'
-import { LoginForm } from '../../features/admin-login/components/LoginForm'
+import { BrandPanel } from "../../features/auth/admin/components/BrandPanel";
+import AdminLoginForm from "../../features/auth/admin/components/AdminLoginForm";
 
 export const AdminLoginPage = () => {
   return (
@@ -13,7 +13,7 @@ export const AdminLoginPage = () => {
                 <p className="text-2xl font-bold text-[#9adca7]">BoundaryLine</p>
                 <p className="mt-1 text-sm text-[#aeb8b0]">Admin Control Center</p>
               </div>
-              <LoginForm />
+              <AdminLoginForm />
             </div>
           </section>
         </div>
