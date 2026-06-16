@@ -639,6 +639,9 @@ const matchSlice = createSlice({
           break;
       }
 
+      notation = notation || `out b ${bowlerName}`;
+      detailDesc = detailDesc || `OUT! Dismissed.`;
+
       // Dismiss batter
       if (outBatter && outBatter.battingStats) {
         outBatter.battingStats.isOut = true;
@@ -908,6 +911,9 @@ const matchSlice = createSlice({
         cTitle = `${runsIncurred} Run${runsIncurred === 1 ? "" : "s"} • ${bowlerName} to ${batterName}`;
         cDesc = `${batterName} guides ${bowlerName}'s delivery through the gap to pick up ${runsIncurred} run${runsIncurred === 1 ? "" : "s"}.`;
       }
+
+      cTitle = cTitle || `${commentaryOver} • ${runsIncurred} Run${runsIncurred === 1 ? "" : "s"}`;
+      cDesc = cDesc || "";
 
       const item = {
         id: `c-add-${Date.now()}`,

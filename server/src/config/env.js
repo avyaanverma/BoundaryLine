@@ -32,6 +32,17 @@ const envSchema = z.object({
   // Token Secrets
   ACCESS_TOKEN_SECRET: z.string().trim().min(16),
   REFRESH_TOKEN_SECRET: z.string().trim().min(16),
+}).superRefine((value, context) => {
+  // What: require production deployments to provide their own MongoDB URI.
+  // Why: the local fallback is useful for development but dangerous in production.
+  // How: inspect the raw environment so the default cannot mask a missing value.
+  if (value.NODE_ENV === "production" && !process.env.MONGO_URI?.trim()) {
+    context.addIssue({
+      code: "custom",
+      path: ["MONGO_URI"],
+      message: "MONGO_URI is required when NODE_ENV is production",
+    });
+  }
 });
 
 // parsing env for correct format
