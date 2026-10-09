@@ -1,0 +1,104 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  client:
+    name: Client (lint + build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push'
+        with:
+          name: client-dist
+          path: client/dist
+          retention-days: 7
+
+  server:
+    name: Server (check + test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - run: npm ci
+
+      - name: Syntax check
+        run: |
+          node --check server.js
+          find src -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Test
+        run: |
+          if [ -d test ]; then
+            npm test
+          else
+            echo "No server/test directory yet - skipping tests"
+          fi
+
+  deploy:
+    name: Deploy
+    needs: [client, server]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      # Client: Vercel's Git integration deploys main automatically.
+      # Server: Render's Git integration deploys main automatically. If you set
+      # Render's Auto-Deploy to "Off" and add a RENDER_DEPLOY_HOOK_URL secret,
+      # this step makes Render deploy only after CI has passed.
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -n "$RENDER_DEPLOY_HOOK_URL" ]; then
+            curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+            echo "Render deploy triggered"
+          else
+            echo "RENDER_DEPLOY_HOOK_URL not set - relying on Render auto-deploy"
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Client → Vercel (Git integration)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Server → Render (deploy hook or auto-deploy)" >> "$GITHUB_STEP_SUMMARY"
