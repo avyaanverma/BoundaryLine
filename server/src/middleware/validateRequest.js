@@ -1,20 +1,26 @@
 import { ZodError } from "zod";
 
-export const  validateRequest = (schemas) => {
+export const validateRequest = (schemas) => {
   return (req, res, next) => {
     try {
-      const validated = {};
+      const validated = {
+        body: req.body,
+        params: req.params,
+        query: req.query,
+      };
 
-      if (schemas.body) {
-        validated.body = schemas.body.parse(req.body);
+      const shape = schemas?.shape || schemas || {};
+
+      if (shape.body && typeof shape.body.parse === "function") {
+        validated.body = shape.body.parse(req.body);
       }
 
-      if (schemas.params) {
-        validated.params = schemas.params.parse(req.params);
+      if (shape.params && typeof shape.params.parse === "function") {
+        validated.params = shape.params.parse(req.params);
       }
 
-      if (schemas.query) {
-        validated.query = schemas.query.parse(req.query);
+      if (shape.query && typeof shape.query.parse === "function") {
+        validated.query = shape.query.parse(req.query);
       }
 
       req.validated = validated;

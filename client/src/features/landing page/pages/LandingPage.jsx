@@ -1,5 +1,6 @@
-import { useRef,useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 import {
   Zap,
   ChevronLeft,
@@ -12,8 +13,10 @@ import {
   Mail,
   Smartphone,
   BookOpen,
+  Plus,
 } from "lucide-react";
 import Navbar from "../../../shared/components/NavBar";
+import { useMatchesQuery, useTournamentsQuery } from "../../../shared/hooks/useQueries.js";
 
 
 // ─── Tailwind config (injected via CDN in real app; kept as reference) ───────
@@ -352,8 +355,10 @@ const newsArticles = [
 // ─── Main App ─────────────────────────────────────────────────────────────────
 
 export default function BoundaryLine() {
-  const navigate = useNavigate()
-  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  useMatchesQuery();
+  useTournamentsQuery();
   const carouselRef = useRef(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -427,7 +432,18 @@ export default function BoundaryLine() {
                   variant="primary"
                   onClick={() => navigate("/matches")}
                 > View Live Scores </Button>
-                <Button variant="secondary">Get Started</Button>
+                {isAuthenticated ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() => navigate("/tournaments")}
+                  >
+                    <Plus className="w-5 h-5 inline mr-1" /> Create Tournament
+                  </Button>
+                ) : (
+                  <Button variant="secondary" onClick={() => navigate("/userlogin")}>
+                    Get Started
+                  </Button>
+                )}
               </div>
             </div>
 

@@ -6,7 +6,7 @@ import { Award, Sparkles } from "lucide-react";
  * Accepts optional `scores` and `match` from backend.
  * Falls back to a minimal display when no score data is available.
  */
-export const TopPerformers = ({ scores = [], match }) => {
+export const TopPerformers = ({ scores = [] }) => {
   // Compute top performer hints from score aggregates
   const { topRuns, bestBowling } = useMemo(() => {
     if (scores.length === 0) return { topRuns: null, bestBowling: null };

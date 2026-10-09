@@ -93,22 +93,23 @@ export const useCommentarySync = () => {
   }, [match, matchId]);
 
   // Watch Redux commentary for new entries
-  useEffect(() => {
-    const commentary = match?.commentary;
-    if (!commentary || commentary.length === 0) return;
+  const latestEntry = match?.commentary?.[0];
+  const latestId = latestEntry?.id;
 
-    const latest = commentary[0];
-    if (!latest || !latest.id) return;
+  useEffect(() => {
+    if (!latestEntry || !latestId) return;
 
     // Only sync non-milestone entries that we haven't synced yet
-    if (latest.id === lastSyncedIdRef.current) return;
-    if (latest.type === "MILESTONE") {
-      lastSyncedIdRef.current = latest.id;
+    if (latestId === lastSyncedIdRef.current) return;
+    if (latestEntry.type === "MILESTONE") {
+      lastSyncedIdRef.current = latestId;
       return;
     }
 
-    syncBall(latest);
-  }, [match?.commentary?.[0]?.id, syncBall]);
+    queueMicrotask(() => {
+      syncBall(latestEntry);
+    });
+  }, [latestId, latestEntry, syncBall]);
 
   return {
     isSyncing: syncState.isSyncing,

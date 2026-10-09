@@ -16,13 +16,6 @@ export const AuthSessionGate = ({ children }) => {
         return;
       }
 
-      const shouldRestore =
-        window.sessionStorage.getItem(ADMIN_SESSION_RESTORE_KEY) === "1";
-
-      if (!shouldRestore) {
-        return;
-      }
-
       try {
         const response = await apiClient.get("/auth/me");
         const user = response.data?.data;
@@ -33,7 +26,6 @@ export const AuthSessionGate = ({ children }) => {
         }
       } catch {
         window.sessionStorage.removeItem(ADMIN_SESSION_RESTORE_KEY);
-        // A missing/expired cookie is a normal logged-out state.
       }
     };
 

@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import env from "./config/env.js";
 import morgan from "morgan";
 import securityMiddleware from "./middleware/security.middleware.js";
@@ -68,6 +69,7 @@ export default function createApp() {
   }
 
   securityMiddleware(app); // security middleware added
+  app.use(cookieParser());
   googleOAuthMiddleware(app); // google auth middleware
 
   registerFeatureRoutes(app, "/api");

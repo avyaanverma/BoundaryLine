@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-  Search,
   Globe,
   Bell,
   Share2,
@@ -23,10 +22,10 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../../shared/components/NavBar";
 import { useMatchesQuery } from "../../../shared/hooks/useQueries.js";
-import { UserRole } from "../../scorer-console/pages/type.js";
-import {useSelector} from "react-redux";
+import { loadExternalMatch } from "../../scoreboard/store/mathSlice.js";
 
 // ─── Colour / design tokens (mirrors tailwind config) ────────────────────────
 // Primary:  #94d5a5  |  Secondary: #97d940  |  Tertiary: #ffb3b0
@@ -178,20 +177,15 @@ function NotifyButton({ className = "" }) {
 
 
 /** Live / active match card with score display */
-function MatchCardFull({ match, onClick }) {
+function MatchCardFull({ match }) {
   const format = "t20";
-  const userRole = useSelector((state)=> state.auth.role);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const role = useSelector((state) => state.auth.role);
   
-  const handleClick = (id)=>{
-    const hasAdminAccess = userRole === UserRole.SUPER_ADMIN || userRole === UserRole.ADMIN;
-    console.log(hasAdminAccess);
-    if(hasAdminAccess){
-      navigate(`/admin/matches`)
-    }else{
-      navigate(`/matches/${id}`);
-    }
-  }
+  const handleClick = (id) => {
+    navigate(`/matches/${id}`);
+  };
 
   return (
     <GlassPanel
@@ -238,7 +232,23 @@ function MatchCardFull({ match, onClick }) {
           <span className="text-xs text-[#8a938a]">
             {new Date(match.startTime).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
           </span>
-          <span className="text-xs font-semibold text-[#94d5a5]">VIEW DETAILS →</span>
+          
+          <div className="flex items-center gap-2">
+            {(role === "SCORER" || role === "ADMIN" || role === "SUPER_ADMIN") && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(loadExternalMatch({ match, autoLive: true }));
+                  navigate("/scorer");
+                }}
+                className="px-3 py-1 rounded-lg bg-[#94d5a5] text-[#04210e] font-extrabold text-xs hover:opacity-90 transition shadow-sm cursor-pointer"
+              >
+                Score ⚡
+              </button>
+            )}
+            <span className="text-xs font-semibold text-[#94d5a5]">VIEW DETAILS →</span>
+          </div>
         </div>
       </div>
     </GlassPanel>
@@ -246,7 +256,7 @@ function MatchCardFull({ match, onClick }) {
 }
 
 /** Upcoming countdown card */
-function MatchCardCountdown({ match }) {
+export function MatchCardCountdown({ match }) {
   const startTime = new Date(match.startTime);
   const now = new Date();
   const diffMs = Math.max(0, startTime - now);

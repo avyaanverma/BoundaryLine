@@ -27,6 +27,12 @@ const tournamentSchema = mongoose.Schema({
         ref: "Team",
         default: null
     },
+    authorizedScorers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }
+    ],
     isDeleted: {
         type: Boolean,
         default: false

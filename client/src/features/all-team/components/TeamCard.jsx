@@ -31,17 +31,17 @@ function TeamCard({ team }) {
 
       {/* Header */}
       <div className="flex items-start justify-between">
-        <img
-          src={team.flag}
-          alt={team.name}
-          className="
-                        w-14
-                        h-10
-                        rounded-lg
-                        object-cover
-                        border border-white/10
-                    "
-        />
+        {team.logo || team.flag ? (
+          <img
+            src={team.logo || team.flag}
+            alt={team.name}
+            className="w-12 h-12 rounded-xl object-cover border border-white/10 p-0.5 bg-black/40"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-xl bg-[#94d5a5]/10 border border-[#94d5a5]/20 flex items-center justify-center font-extrabold text-[#94d5a5] text-sm">
+            {team.shortName || "TM"}
+          </div>
+        )}
 
         <div className="text-right">
           <p

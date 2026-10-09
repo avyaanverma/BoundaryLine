@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useCreateTeamMutation, useDeleteTeamMutation } from "../api/adminMutations.js";
 import apiClient from "../../../shared/lib/axios.js";
@@ -9,7 +9,6 @@ import {
   AlertCircle,
   Trash2,
   Check,
-  X,
 } from "lucide-react";
 
 export default function AdminTeamsPage() {

@@ -23,6 +23,9 @@ import AdminMatchesPage from "../features/admin-dashboard/pages/AdminMatchesPage
 import AdminTeamsPage from "../features/admin-dashboard/pages/AdminTeamsPage.jsx";
 import AdminPlayersPage from "../features/admin-dashboard/pages/AdminPlayersPage.jsx";
 import AdminSeriesPage from "../features/admin-dashboard/pages/AdminSeriesPage.jsx";
+import TournamentsPage from "../features/tournaments/pages/TournamentsPage.jsx";
+import TournamentDetailPage from "../features/tournaments/pages/TournamentDetailPage.jsx";
+import HowToPage from "../features/how-to/pages/HowToPage.jsx";
 import { ComingSoonPage } from "./TestRouter.jsx";
 
 const ProtectedAdminRoute = ({ children }) => {
@@ -103,21 +106,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/tournaments",
-    element: (
-      <ComingSoonPage
-        title="Tournaments"
-        description="Browse leagues, bilateral series, domestic competitions, and tournament dashboards."
-      />
-    ),
+    element: <TournamentsPage />,
   },
   {
     path: "/tournaments/:tournamentId",
-    element: (
-      <ComingSoonPage
-        title="Tournament Details"
-        description="Fixtures, squads, points table, stats, and tournament news will connect here."
-      />
-    ),
+    element: <TournamentDetailPage />,
   },
   {
     path: "/teams",
@@ -139,6 +132,10 @@ const router = createBrowserRouter([
   {
     path: "/ranking",
     element: <RankingPage />,
+  },
+  {
+    path: "/how-to",
+    element: <HowToPage />,
   },
   {
     element: <MainLayout />,

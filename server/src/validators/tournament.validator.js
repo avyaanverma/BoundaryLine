@@ -90,3 +90,15 @@ export const tournamentIdSchema = {
         id: objectIdSchema
     })
 };
+
+export const scorerIdSchema = {
+    params: z.object({
+        id: objectIdSchema,
+        scorerId: objectIdSchema,
+    })
+};
+
+export const scorerEmailSchema = {
+    params: z.object({ id: objectIdSchema }),
+    body: z.object({ email: z.string().trim().email() }),
+};

@@ -1,9 +1,11 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { undoScore, syncScores, changeBowler, dismissBanner, updateBallEvent } from "../../scoreboard/store/mathSlice.js";
+import { undoScore, changeBowler, dismissBanner, hydratePersistedScores, loadExternalMatch, updateBallEvent } from "../../scoreboard/store/mathSlice.js";
 import { useSocket } from "../../../shared/services/socket/useSocket.js";
-import { useMatchesQuery } from "../../../shared/hooks/useQueries.js";
-import { Undo, Save, Settings, X, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { useMatchesQuery, useMatchScoresQuery, useSquadPlayersQuery } from "../../../shared/hooks/useQueries.js";
+import { bulkAddPlayersToRoster } from "../../scoreboard/store/mathSlice.js";
+import { useParams } from "react-router";
+import { Undo, Save, Settings, X, Loader2, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useWicketFlow } from "../hooks/useWicketFlow.js";
 import { useMatchSetup } from "../hooks/useMatchSetup.js";
@@ -18,6 +20,7 @@ const EMPTY_ROSTER = [];
 const getRosterPlayerKey = (player) => player?.id || player?.playerId || player?._id || player?.name || "";
 
 export const ScorerConsolePage = ({ onViewScoreboard }) => {
+  const { matchId: routeMatchId } = useParams();
   const dispatch = useDispatch(), match = useSelector(s => s.match.currentMatch);
   const matchesList = useSelector(s => s.match.matchesList || []), activeInnings = match.innings[match.currentInningsNum - 1];
   const isSynced = useSelector(s => s.match.isSynced), { emitScoreUpdate } = useSocket();
@@ -74,6 +77,31 @@ export const ScorerConsolePage = ({ onViewScoreboard }) => {
 
   // Fetch backend matches for the SetupWizard to display
   const { data: backendMatches = [], isLoading: backendMatchesLoading } = useMatchesQuery();
+  const activeMatchId = match._id || match.id;
+  const { data: persistedScores = [] } = useMatchScoresQuery(activeMatchId);
+  const { data: teamAPlayers = [] } = useSquadPlayersQuery(match.seriesId, match.teamA.id);
+  const { data: teamBPlayers = [] } = useSquadPlayersQuery(match.seriesId, match.teamB.id);
+  const loadedRouteMatch = useRef("");
+
+  useEffect(() => {
+    if (!routeMatchId || loadedRouteMatch.current === routeMatchId || !backendMatches.length) return;
+    const routeMatch = backendMatches.find((item) => String(item._id || item.id) === String(routeMatchId));
+    if (routeMatch) {
+      dispatch(loadExternalMatch({ match: routeMatch, autoLive: routeMatch.status === "LIVE" }));
+      loadedRouteMatch.current = routeMatchId;
+    }
+  }, [backendMatches, dispatch, routeMatchId]);
+
+  useEffect(() => {
+    if (persistedScores.length && activeMatchId) {
+      dispatch(hydratePersistedScores({ matchId: activeMatchId, scores: persistedScores }));
+    }
+  }, [activeMatchId, dispatch, persistedScores]);
+
+  useEffect(() => {
+    if (match.teamA.id && teamAPlayers.length) dispatch(bulkAddPlayersToRoster({ teamId: match.teamA.id, players: teamAPlayers }));
+    if (match.teamB.id && teamBPlayers.length) dispatch(bulkAddPlayersToRoster({ teamId: match.teamB.id, players: teamBPlayers }));
+  }, [dispatch, match.teamA.id, match.teamB.id, teamAPlayers, teamBPlayers]);
 
   const { handleSync: handlePubLiveSync, isSaving, error: syncError, success: syncSuccess, clearError } = useSyncScores();
   useCommentarySync();

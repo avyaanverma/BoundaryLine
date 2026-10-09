@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-
 import MatchCardCountdown from "../components/MatchCardCountdown";
 import MatchCardFull from "../components/MatchCardFull";
 import MatchCardResult from "../components/MatchCardResult";
 import MiniMatchCard from "../components/MiniMatchCard";
 import SectionDivider from "../components/SectionDivider";
-import GlassPanel from "../components/GlassPanel";
-
 
 function DuplicateFixture() {
-    const [view, setView] = useState("list");
 
 
     return (
