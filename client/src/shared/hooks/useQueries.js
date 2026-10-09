@@ -239,9 +239,9 @@ export const useCommentaryQuery = (matchId) => {
  * Fetch squad players for a given team from the backend.
  * GET /api/squads/:teamId returns players in that squad.
  */
-export const useSquadPlayersQuery = (teamId) => {
+export const useSquadPlayersQuery = (seriesId, teamId) => {
   return useQuery({
-    queryKey: ["squad-players", teamId],
+    queryKey: ["squad-players", seriesId, teamId],
     queryFn: async () => {
       if (!teamId) return [];
       try {
@@ -255,7 +255,8 @@ export const useSquadPlayersQuery = (teamId) => {
         const teamSquad = squadsArray
           .filter((s) => {
             const squadTeamId = s.teamId?._id || s.teamId || "";
-            return squadTeamId === teamId;
+            const squadSeriesId = s.seriesId?._id || s.seriesId || "";
+            return String(squadTeamId) === String(teamId) && (!seriesId || String(squadSeriesId) === String(seriesId));
           })
           .pop();
 
@@ -310,5 +311,44 @@ export const usePublishScoreMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["scores", variables.matchId] });
       queryClient.invalidateQueries({ queryKey: ["match", variables.matchId] });
     },
+  });
+};
+
+/**
+ * Custom hook to get all tournaments from backend.
+ */
+export const useTournamentsQuery = () => {
+  return useQuery({
+    queryKey: ["tournaments"],
+    queryFn: async () => {
+      try {
+        const response = await apiClient.get("/tournaments");
+        const rawData = response.data?.data || response.data || [];
+        return Array.isArray(rawData) ? rawData : rawData.tournaments || [];
+      } catch (error) {
+        console.warn("[BoundaryLine Query] Failed to fetch tournaments:", error.message);
+        return [];
+      }
+    },
+  });
+};
+
+/**
+ * Custom hook to get a single tournament detail.
+ */
+export const useTournamentDetailQuery = (tournamentId) => {
+  return useQuery({
+    queryKey: ["tournament", tournamentId],
+    queryFn: async () => {
+      if (!tournamentId) return null;
+      try {
+        const response = await apiClient.get(`/tournaments/${tournamentId}`);
+        return response.data?.data || response.data;
+      } catch (error) {
+        console.warn("[BoundaryLine Query] Failed to fetch tournament detail:", error.message);
+        return null;
+      }
+    },
+    enabled: !!tournamentId,
   });
 };

@@ -5,12 +5,10 @@ import {
   createTournamentSchema,
   updateTournamentSchema,
   tournamentIdSchema,
+  scorerIdSchema,
+  scorerEmailSchema,
 } from "../../../validators/tournament.validator.js";
-import {
-  authMiddleware,
-  authorizationMiddleware,
-} from "../../../middleware/auth.middleware.js";
-import { ROLES } from "../../../constant/role.constant.js";
+import { authMiddleware } from "../../../middleware/auth.middleware.js";
 
 class TournamentRoute {
   constructor(tournamentController = new TournamentController()) {
@@ -20,12 +18,9 @@ class TournamentRoute {
   }
 
   registerRoutes() {
-    const ADMIN_ROLES = [ROLES.ADMIN, ROLES.SUPER_ADMIN];
-
     this.router.post(
       "/",
       authMiddleware,
-      authorizationMiddleware(ADMIN_ROLES),
       validateRequest(createTournamentSchema),
       this.tournamentController.createTournament,
     );
@@ -33,7 +28,6 @@ class TournamentRoute {
     this.router.patch(
       "/:id",
       authMiddleware,
-      authorizationMiddleware(ADMIN_ROLES),
       validateRequest({
         ...tournamentIdSchema,
         ...updateTournamentSchema,
@@ -41,10 +35,30 @@ class TournamentRoute {
       this.tournamentController.updateTournament,
     );
 
+    this.router.post(
+      "/:id/scorers",
+      authMiddleware,
+      validateRequest(scorerEmailSchema),
+      this.tournamentController.addScorerByEmail,
+    );
+
+    this.router.post(
+      "/:id/scorers/:scorerId",
+      authMiddleware,
+      validateRequest(scorerIdSchema),
+      this.tournamentController.addScorer,
+    );
+
+    this.router.delete(
+      "/:id/scorers/:scorerId",
+      authMiddleware,
+      validateRequest(scorerIdSchema),
+      this.tournamentController.removeScorer,
+    );
+
     this.router.delete(
       "/:id",
       authMiddleware,
-      authorizationMiddleware(ADMIN_ROLES),
       validateRequest(tournamentIdSchema),
       this.tournamentController.deleteTournament,
     );

@@ -21,9 +21,9 @@ export const createCommentarySchema = z.object({
     runsScored: z.coerce.number().min(0).default(0).optional(),
     extraRuns: z.coerce.number().min(0).default(0).optional(),
     isLegalDelivery: z.boolean().default(true).optional(),
-    batterId: objectIdSchema.optional(),
-    bowlerId: objectIdSchema.optional(),
-    nonStrikerId: objectIdSchema.optional(),
+    batterId: objectIdSchema.optional().nullable(),
+    bowlerId: objectIdSchema.optional().nullable(),
+    nonStrikerId: objectIdSchema.optional().nullable(),
     dismissal: dismissalSchema,
   }),
 });

@@ -79,12 +79,13 @@ const matchSlice = createSlice({
      * Called when user selects a match from the backend API in SetupWizard.
      */
     loadExternalMatch: (state, action) => {
-      const { match } = action.payload;
+      const { match, autoLive } = action.payload || {};
       if (!match) return;
 
       const team1 = match.team1 || match.teamA || {};
       const team2 = match.team2 || match.teamB || {};
       const matchId = match._id || match.id || "";
+      const isOngoingOrLive = autoLive || match.status === "LIVE" || match.status === "COMPLETED" || (match.scorecards && match.scorecards.length > 0);
 
       const newMatch = {
         id: matchId,
@@ -92,7 +93,7 @@ const matchSlice = createSlice({
         title: `${team1.shortName || "T1"} vs ${team2.shortName || "T2"}`,
         subtitle: match.venue || match.subtitle || `${match.series || "Match"}`,
         status: match.status || "UPCOMING",
-        matchPhase: "SETUP",
+        matchPhase: isOngoingOrLive ? "LIVE" : "SETUP",
         teamA: {
           id: team1._id || team1.id || "",
           name: team1.name || team1.shortName || "Team A",
@@ -149,7 +150,51 @@ const matchSlice = createSlice({
       state.currentMatch = newMatch;
       state.history = [];
       state.isSynced = true;
-      state.statusMessage = "Match loaded from backend. Proceed with setup.";
+      state.statusMessage = isOngoingOrLive ? "Match active for live scoring." : "Match loaded from backend. Proceed with setup.";
+    },
+
+    // Apply the server's persisted aggregate when a scorer opens an in-progress match.
+    // This prevents a new scorer session from silently starting a live innings at 0/0.
+    hydratePersistedScores: (state, action) => {
+      const { matchId, scores = [] } = action.payload || {};
+      const match = state.currentMatch;
+      if (!match || !matchId || String(match.id) !== String(matchId) || !scores.length) return;
+
+      const ordered = [...scores].sort((a, b) => a.innings - b.innings);
+      const latest = ordered.reduce((current, score) => {
+        const currentTime = new Date(current.updatedAt || current.createdAt || 0).getTime();
+        const nextTime = new Date(score.updatedAt || score.createdAt || 0).getTime();
+        return nextTime >= currentTime ? score : current;
+      }, ordered[0]);
+
+      ordered.forEach((score) => {
+        const index = Math.max(0, Number(score.innings || 1) - 1);
+        const overs = String(score.overs || "0.0").split(".");
+        const existing = match.innings[index] || {};
+        match.innings[index] = {
+          ...existing,
+          teamId: score.battingTeam?._id || score.battingTeam || existing.teamId,
+          runs: Number(score.score || 0),
+          wickets: Number(score.wickets || 0),
+          overs: Number(overs[0] || 0),
+          balls: Number(overs[1] || 0),
+          target: score.target ?? existing.target ?? 0,
+        };
+      });
+
+      match.currentInningsNum = Number(latest.innings || 1);
+      match.matchPhase = "LIVE";
+      state.isSynced = true;
+      state.statusMessage = "Loaded the current live score from the server.";
+      updateMatchesList(state);
+    },
+
+    skipWizardAndStartScoring: (state) => {
+      if (state.currentMatch) {
+        state.currentMatch.matchPhase = "LIVE";
+        state.currentMatch.status = "LIVE";
+        state.statusMessage = "Scoring console active.";
+      }
     },
 
     setActiveMatch: (state, action) => {
@@ -431,7 +476,7 @@ const matchSlice = createSlice({
       const activeInnings = match.innings?.[match.currentInningsNum - 1];
       if (!activeInnings) return;
 
-      const { dismissalType, outBatterId, newBatterId, fielderId, bowlerId, keeperId } = action.payload;
+      const { dismissalType, outBatterId, newBatterId, fielderId, keeperId } = action.payload;
 
       state.history.push(JSON.parse(JSON.stringify(match)));
       state.isSynced = false;
@@ -440,37 +485,34 @@ const matchSlice = createSlice({
       const activeBowler = activeInnings.bowlers?.find((b) => b.playerId === match.activeBowlerId);
       const bowlerName = activeBowler?.name || "Bowler";
 
-      let notation, detailDesc;
+      let notation;
 
       switch (dismissalType) {
-        case "BOWLED": notation = `b ${bowlerName}`; detailDesc = "BOWLED!"; break;
+        case "BOWLED": notation = `b ${bowlerName}`; break;
         case "CAUGHT": {
           const fielderName = fielderId
             ? activeInnings.bowlers?.find((b) => b.playerId === fielderId)?.name ||
               activeInnings.batters?.find((b) => b.playerId === fielderId)?.name || ""
             : "";
           notation = fielderName ? `c ${fielderName} b ${bowlerName}` : `c & b ${bowlerName}`;
-          detailDesc = "CAUGHT!";
           break;
         }
-        case "LBW": notation = `lbw b ${bowlerName}`; detailDesc = "LBW!"; break;
+        case "LBW": notation = `lbw b ${bowlerName}`; break;
         case "RUN_OUT": {
           const fielderNameRun = fielderId
             ? activeInnings.bowlers?.find((b) => b.playerId === fielderId)?.name ||
               activeInnings.batters?.find((b) => b.playerId === fielderId)?.name || ""
             : "";
           notation = fielderNameRun ? `run out (${fielderNameRun})` : "run out";
-          detailDesc = "RUN OUT!";
           break;
         }
         case "STUMPED":
           notation = keeperId
             ? `st ${activeInnings.bowlers?.find((b) => b.playerId === keeperId)?.name || "Keeper"} b ${bowlerName}`
             : `stumped b ${bowlerName}`;
-          detailDesc = "STUMPED!";
           break;
-        case "HIT_WICKET": notation = `hit wicket b ${bowlerName}`; detailDesc = "HIT WICKET!"; break;
-        default: notation = `out b ${bowlerName}`; detailDesc = "OUT!";
+        case "HIT_WICKET": notation = `hit wicket b ${bowlerName}`; break;
+        default: notation = `out b ${bowlerName}`;
       }
 
       if (outBatter?.battingStats) {
@@ -548,6 +590,7 @@ const matchSlice = createSlice({
       state.history.push(JSON.parse(JSON.stringify(match)));
       state.isSynced = false;
 
+      // eslint-disable-next-line no-useless-assignment
       let ballRepresentative = "";
       let isBallValid = true;
       let runsToAdding = runs;
@@ -672,6 +715,8 @@ const matchSlice = createSlice({
 
 export const {
   loadExternalMatch,
+  hydratePersistedScores,
+  skipWizardAndStartScoring,
   setActiveMatch,
   createDynamicMatch,
   addPlayerToRoster,

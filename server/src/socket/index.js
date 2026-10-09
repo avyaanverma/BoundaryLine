@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import { SOCKET_EVENTS } from "../constant/socket-events.constant.js";
 import { setIoInstance } from "../shared/socket/emitToMatch.js";
@@ -18,6 +19,21 @@ export const initializeSocket = (server) => {
 
   // Register the io instance so emitToMatch can broadcast to rooms
   setIoInstance(io);
+
+  // Socket middleware for optional JWT handshake authentication
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, env.ACCESS_TOKEN_SECRET);
+        socket.user = decoded;
+      } catch {
+        // Continue as unauthenticated guest for public match subscriptions
+        socket.user = null;
+      }
+    }
+    next();
+  });
 
   io.on("connection", (socket) => {
     console.log(`[Socket Connected] ${socket.id}`);

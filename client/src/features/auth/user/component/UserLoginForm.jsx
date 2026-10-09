@@ -24,23 +24,21 @@ function UserLoginForm() {
                 <div className="mb-10 text-center">
                     <div className="flex items-center justify-center gap-2">
                         <Target
-                            size={32}
+                            size={24}
                             className="text-[#63E39B]"
                         />
 
-                        <h1 className="text-5xl font-bold text-[#63E39B]">
+                        <h1 className="text-2xl font-extrabold text-[#63E39B] tracking-tight">
                             BoundaryLine
                         </h1>
                     </div>
 
-                    <h2 className="mt-6 text-5xl font-bold text-white">
+                    <h2 className="mt-4 text-xl sm:text-2xl font-bold text-white">
                         Welcome Back
                     </h2>
 
-                    <p className="mt-4 text-lg leading-relaxed text-[#B7C0BC]">
-                        Enter your credentials to access your
-                        <br />
-                        cricket analytics dashboard.
+                    <p className="mt-2 text-xs sm:text-sm text-[#B7C0BC]">
+                        Enter your credentials to access your cricket analytics dashboard.
                     </p>
                 </div>
 
@@ -171,6 +169,26 @@ function UserLoginForm() {
                             Sign In →
                         </button>
                     </form>
+
+                    <div className="my-6 flex items-center gap-4">
+                        <span className="h-px flex-1 bg-[#1C3B32]" />
+                        <span className="text-sm font-semibold uppercase text-[#7D8780]">Or continue with</span>
+                        <span className="h-px flex-1 bg-[#1C3B32]" />
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            window.sessionStorage.setItem("boundaryline_restore_session", "1");
+                            window.location.href = "http://localhost:5000/api/v1/auth/google";
+                        }}
+                        className="w-full rounded-xl border border-[#204135] bg-[#020D16] py-4 text-lg font-semibold text-white transition-all duration-300 hover:border-[#63E39B] hover:bg-[#041A12]"
+                    >
+                        <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded bg-white text-sm font-black text-black">
+                            G
+                        </span>
+                        Continue with Google
+                    </button>
                 </div>
 
                 {/* Footer */}

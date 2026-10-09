@@ -1,7 +1,6 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
-  Trophy,
   UsersRound,
   UserPlus,
   CalendarPlus,
@@ -46,7 +45,6 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const role = useSelector((state) => state.auth.role);
 
   const handleLogout = async () => {

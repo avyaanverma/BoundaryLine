@@ -82,7 +82,6 @@ export const ScoreboardPage = () => {
 
   const {
     data: commentaryEntries = [],
-    isLoading: commentaryLoading,
   } = useCommentaryQuery(matchId);
 
   // ─── Redux match state ───
@@ -94,13 +93,13 @@ export const ScoreboardPage = () => {
     : (reduxMatch && reduxMatch.id ? reduxMatch : null);
 
   // Normalize team references
-  const match = displayMatch ? {
+  const match = useMemo(() => displayMatch ? {
     ...displayMatch,
     teamA: displayMatch.teamA || displayMatch.team1 || { id: "", name: "", shortName: "" },
     teamB: displayMatch.teamB || displayMatch.team2 || { id: "", name: "", shortName: "" },
     team1: displayMatch.team1 || displayMatch.teamA || { _id: "", name: "", shortName: "" },
     team2: displayMatch.team2 || displayMatch.teamB || { _id: "", name: "", shortName: "" },
-  } : null;
+  } : null, [displayMatch]);
 
   const [activeTab, setActiveTab] = useState("LIVE");
 
@@ -152,7 +151,6 @@ const latestScore = useMemo(() => {
     ? (activeInnings.runs / totalOversPlayed).toFixed(2)
     : "0.00";
 
-  const target = activeInnings?.target || match?.target || 0;
   const isSecondInnings = !!innings1 && !!(scores.find(s => s.innings === 2));
   const runsNeeded = isSecondInnings ? Math.max(0, (innings1?.score || 0) + 1 - (activeInnings?.runs || 0)) : 0;
   const totalBallsPerInnings = 120; // T20

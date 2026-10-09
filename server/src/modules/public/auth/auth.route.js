@@ -66,4 +66,9 @@ router.get(
   asyncHandler(authController.getMe.bind(authController)),
 );
 
+router.post(
+  "/logout",
+  asyncHandler(authController.logoutController.bind(authController)),
+);
+
 export default router;

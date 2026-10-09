@@ -4,8 +4,6 @@ import socketService from "../../../shared/services/socket/socket.js";
 import { SOCKET_EVENTS } from "../../../shared/services/socket/socket-events.js";
 import {
   updateBallEvent,
-  addCommentaryRealtime,
-  removeCommentaryRealtime,
 } from "../../scoreboard/store/mathSlice.js";
 
 export const useScoreSocket = (matchId) => {
@@ -77,11 +75,14 @@ export const useScoreSocket = (matchId) => {
     [matchId, dispatch]
   );
 
-  // Setup socket listeners on mount, cleanup on unmount
+  // Setup socket listeners & room join on mount, cleanup on unmount
   useEffect(() => {
     if (!matchId) return;
 
-    console.log(`[useScoreSocket] Registering listeners for match: ${matchId}`);
+    console.log(`[useScoreSocket] Connecting and joining room for match: ${matchId}`);
+
+    socketService.connect();
+    socketService.emit(SOCKET_EVENTS.MATCH_JOIN, { matchId });
 
     // Register all score-related listeners
     socketService.listen(SOCKET_EVENTS.SCORE_CREATED, handleScoreCreated);
@@ -89,11 +90,12 @@ export const useScoreSocket = (matchId) => {
     socketService.listen(SOCKET_EVENTS.SCORE_DELETED, handleScoreDeleted);
     socketService.listen(SOCKET_EVENTS.OVER_COMPLETED, handleOverCompleted);
 
-    // Cleanup listeners on unmount or matchId change
+    // Cleanup listeners & leave room on unmount or matchId change
     return () => {
       console.log(
-        `[useScoreSocket] Removing listeners for match: ${matchId}`
+        `[useScoreSocket] Leaving room and removing listeners for match: ${matchId}`
       );
+      socketService.emit(SOCKET_EVENTS.MATCH_LEAVE, { matchId });
       socketService.removeListener(SOCKET_EVENTS.SCORE_CREATED, handleScoreCreated);
       socketService.removeListener(SOCKET_EVENTS.SCORE_UPDATED, handleScoreUpdated);
       socketService.removeListener(SOCKET_EVENTS.SCORE_DELETED, handleScoreDeleted);

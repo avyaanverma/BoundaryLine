@@ -3,7 +3,7 @@ import AuthService from "./auth.service.js";
 import { StatusCodes } from "http-status-codes";
 import env from "../../../config/env.js";
 import buildSuccessResponse from "../../../shared/successResponse/buildSuccessResponse.js";
-import { setAuthCookies } from "../../../shared/utils/authCookies.js";
+import { setAuthCookies, clearAuthCookies } from "../../../shared/utils/authCookies.js";
 
 export default class AuthController {
   constructor() {
@@ -27,10 +27,25 @@ export default class AuthController {
   }
 
   async refreshAccessToken(req, res) {
-    const { accessToken } = this.userService.refreshAccessToken(req.cookies);
+    const refreshToken =
+      req.cookies?.refreshToken || req.headers["x-refresh-token"];
+
+    if (!refreshToken) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Refresh token is required",
+      });
+    }
+
+    const { accessToken } =
+      await this.userService.refreshAccessToken(refreshToken);
+
     res.cookie("accessToken", accessToken, app_config().cookie.accessToken);
+
     return res.status(StatusCodes.OK).json({
-      messgae: "Token generated successfully",
+      success: true,
+      message: "Token generated successfully",
+      data: { accessToken },
     });
   }
 

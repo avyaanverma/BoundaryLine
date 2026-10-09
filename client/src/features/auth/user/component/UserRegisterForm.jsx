@@ -13,12 +13,12 @@ function UserRegisterForm() {
             <div className="w-full max-w-xl">
                 {/* Card */}
                 <div className="rounded-2xl border border-[#2D3B35] bg-[#0E1720] p-8 shadow-xl">
-                    <h2 className="text-center text-4xl font-bold text-white">
-                        Create User Account
+                    <h2 className="text-center text-xl sm:text-2xl font-bold text-white tracking-tight">
+                        Create BoundaryLine Account
                     </h2>
 
-                    <p className="mt-2 text-center text-[#AEB8B0]">
-                        Join the platform to track your cricket stats and performance.
+                    <p className="mt-2 text-center text-xs sm:text-sm text-[#AEB8B0]">
+                        Join the platform to host tournaments, track cricket stats, and manage teams.
                     </p>
 
                     <form

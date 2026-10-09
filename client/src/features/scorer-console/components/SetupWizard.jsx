@@ -1,6 +1,6 @@
-import { setActiveMatch, loadExternalMatch } from "../../scoreboard/store/mathSlice.js";
+import { setActiveMatch, loadExternalMatch, skipWizardAndStartScoring } from "../../scoreboard/store/mathSlice.js";
 import PremiumSelect from "./PremiumSelect.jsx";
-import { ArrowRight, Award, FolderSync, Play, Users, Loader2, Database } from "lucide-react";
+import { ArrowRight, Award, FolderSync, Play, Users, Loader2, Zap } from "lucide-react";
 /**
  * SetupWizard component extract from ScorerConsolePage
  */
@@ -95,7 +95,7 @@ export const SetupWizard = ({
                             key={matchId}
                             type="button"
                             onClick={() => {
-                              dispatch(loadExternalMatch({ match: m }));
+                              dispatch(loadExternalMatch({ match: m, autoLive: m.status === "LIVE" }));
                             }}
                             className={`p-3 rounded-xl border flex items-center justify-between text-left transition-all ${
                               isSelected
@@ -217,16 +217,28 @@ export const SetupWizard = ({
               </form>
             </div>
 
-            <div className="flex items-center justify-between border-t border-zinc-800 pt-4">
-              <span className="text-[10px] text-zinc-500 font-medium">Selected current target: <span className="font-bold text-white uppercase">{match.teamA.name} vs {match.teamB.name}</span></span>
-              <button
-                type="button"
-                onClick={() => setSetupStep(2)}
-                className="py-3 px-6 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold uppercase rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md shadow-emerald-500/10"
-              >
-                Proceed to Roster Builder
-                <ArrowRight className="w-4 h-4" />
-              </button>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-zinc-800 pt-4">
+              <span className="text-[10px] text-zinc-500 font-medium">Selected target: <span className="font-bold text-white uppercase">{match.teamA.name || "Team A"} vs {match.teamB.name || "Team B"}</span></span>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => dispatch(skipWizardAndStartScoring())}
+                  className="py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black uppercase rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/20 active:scale-95 transition"
+                >
+                  <Zap className="w-4 h-4 fill-black" />
+                  Score Match Directly
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSetupStep(2)}
+                  className="py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-bold uppercase rounded-xl text-xs flex items-center gap-1.5 cursor-pointer transition"
+                >
+                  Configure Wizard
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -15,6 +15,13 @@ class ScoreRepository {
       isDeleted: false,
     }).sort({ createdAt: -1 });
   }
+  async findOneByMatchAndInnings(matchId, innings) {
+    return Score.findOne({
+      matchId,
+      innings,
+      isDeleted: false,
+    });
+  }
   async updateById(id, payload) {
     return Score.findOneAndUpdate({ _id: id, isDeleted: false }, payload, {
       new: true,

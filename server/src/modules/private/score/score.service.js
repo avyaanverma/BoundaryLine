@@ -1,5 +1,5 @@
 import ScoreRepository from "../../../repository/score.repository.js";
-import { Match } from "../../shared/models/reference.model.js";
+import Match from "../../../model/match.model.js";
 import BadRequest from "../../../shared/error/BadRequest.js";
 import NotFound from "../../../shared/error/NotFound.js";
 import { emitToMatch } from "../../../shared/socket/emitToMatch.js";
@@ -36,11 +36,21 @@ class ScoreService {
     logger.info(
       {
         matchId: scoreData.matchId,
+        innings: scoreData.innings,
       },
-      "Creating score",
+      "Upserting score",
     );
 
     await this.ensureLiveMatch(scoreData.matchId);
+
+    const existingScore = await this.scoreRepository.findOneByMatchAndInnings(
+      scoreData.matchId,
+      scoreData.innings,
+    );
+
+    if (existingScore) {
+      return this.updateScore(existingScore._id, scoreData, userId);
+    }
 
     const payload = {
       ...scoreData,
